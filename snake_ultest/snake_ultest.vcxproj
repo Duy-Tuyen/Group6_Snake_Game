@@ -116,12 +116,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ASUS\Documents\SDL2\SDL2-2.30.1\include;C:\Users\ASUS\Documents\SDL2\SDL2_ttf-2.22.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_mixer-2.8.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_image-2.8.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Project Folder\Group6_Snake_Game\Library Include;C:\Users\ASUS\Documents\SDL2\SDL2-2.30.1\include;C:\Users\ASUS\Documents\SDL2\SDL2_ttf-2.22.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_mixer-2.8.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_image-2.8.2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ASUS\Documents\SDL2\SDL2_mixer-2.8.0\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2-2.30.1\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2_ttf-2.22.0\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2_image-2.8.2\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Project Folder\Group6_Snake_Game\Library resource files;C:\Users\ASUS\Documents\SDL2\SDL2_mixer-2.8.0\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2-2.30.1\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2_ttf-2.22.0\lib\x64;C:\Users\ASUS\Documents\SDL2\SDL2_image-2.8.2\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;Shell32.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -133,14 +133,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Project Folder\Group6_Snake_Game\Library Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Project Folder\Group6_Snake_Game\Library Include;C:\Project Folder\Group6_Snake_Game\Library Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Project Folder\Group6_Snake_Game\Library resource files;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Project Folder\Group6_Snake_Game\Library resource files;C:\Project Folder\Group6_Snake_Game\Library resource files;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -195,17 +195,20 @@ void Level(int levelNumber) {
     case 1:
         // Level 1 settings
         // Set obstacle position and dimensions for level 1
+        SNAKE_SPEED = 20;
         Obstacle_level_1();
         break;
     case 2:
         // Level 2 settings
         // Set obstacle position and dimensions for level 2
+        SNAKE_SPEED = 25;
         Obstacle_level_2();
         break;
         // Add more cases for additional levels
     case 3:
         // Level 3 settings
         // Set obstacle position and dimensions for level 3
+        SNAKE_SPEED = 30;
         Obstacle_level_3();
         break;
     default:

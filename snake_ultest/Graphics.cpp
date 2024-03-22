@@ -445,12 +445,15 @@ void RenderLevelStats() {
     std::string levelText = "Level: " + std::to_string(level);
     std::string foodText = "Food: " + std::to_string(foodCount);
     std::string lengthText = "Length: " + std::to_string(snakeLength);
+    std::string speedText = "Speed: " + std::to_string(SNAKE_SPEED);
     std::string scoreText = "Score: " + std::to_string(score);
 
     RenderText(levelText, 740, 10);
     RenderText(foodText, 720, 70);
     RenderText(lengthText, 720, 120);
-    RenderText(scoreText, 720, 170);
+    RenderText(speedText, 720, 170);
+    RenderText(scoreText, 720, 220);
+
     int foodBarWidth, foodBarHeight;
     SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
     if (foodCount >= 0 && foodCount <= 5 && g_statsBars != nullptr) {
