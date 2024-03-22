@@ -37,6 +37,7 @@ int level = 1;
 int foodCount = 0;
 int snakeLength = 1;
 int score = 0;
+int foodBarWidth, foodBarHeight;
 // Font for rendering text
 TTF_Font* g_font = nullptr;
 
@@ -450,9 +451,10 @@ void RenderLevelStats() {
     RenderText(foodText, 720, 70);
     RenderText(lengthText, 720, 120);
     RenderText(scoreText, 720, 170);
-
+    int foodBarWidth, foodBarHeight;
+    SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
     if (foodCount >= 0 && foodCount <= 5 && g_statsBars != nullptr) {
-        ApplyTexture1(g_statsBars, 800, 300);
+        ApplyTexture2(g_statsBars, 800, 250,foodBarWidth * 2,foodBarHeight*2);
     }
 }
 
@@ -493,7 +495,7 @@ void RenderPlaying() {
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
     SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
     if (show_food) {
-        ApplyTexture2(g_food, foodX, foodY, foodWidth * 3, foodHeight * 3);
+        ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
         SDL_QueryTexture(g_food, NULL, NULL, &foodWidth, &foodHeight);
     }
     ApplyTexture2(g_snake, snakeX, snakeY, snakeWidth * 1.5, snakeHeight * 1.5);
