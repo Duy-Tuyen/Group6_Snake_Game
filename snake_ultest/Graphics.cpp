@@ -501,7 +501,7 @@ void RenderPlaying() {
         ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
         SDL_QueryTexture(g_food, NULL, NULL, &foodWidth, &foodHeight);
     }
-    ApplyTexture2(g_snake, snakeX, snakeY, snakeWidth * 1.5, snakeHeight * 1.5);
+    ApplyTexture2(g_snake, snakeX, snakeY, (int)(snakeWidth * 1.5), (int)(snakeHeight * 1.5));
     SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth, &snakeHeight);
     RenderLevelStats();
     SDL_RenderPresent(g_renderer);

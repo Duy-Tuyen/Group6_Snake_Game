@@ -50,7 +50,7 @@ void reset() {
         do {
             foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth * 2) + PLAY_AREA_LEFT + foodWidth * 2;
             foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight * 2) + PLAY_AREA_TOP + foodHeight * 2;
-        } while (CheckCollision_food_obstacle());
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
     show_food = true;
 
     foodEaten = 0;
@@ -70,25 +70,49 @@ bool CheckEat() {
     // Calculate the distance between the snake and the food
     int distanceX = abs(snakeX - foodX);
     int distanceY = abs(snakeY - foodY);
+    int edgeDistanceX = ((int)(snakeWidth * 1.5) + foodWidth * 2) / 2;
+    int edgeDistanceY = ((int)(snakeHeight * 1.5) + foodHeight * 2) / 2;
 
     // If the snake is close enough to the food, consider it a collision
-    return (!foodSpawnedThisFrame && distanceX < foodWidth && distanceY < foodHeight);
+    return (!foodSpawnedThisFrame && distanceX <= edgeDistanceX - 10 && distanceY <= edgeDistanceY - 10);
 }
 
 bool CheckCollision_food_obstacle() {
     for (int i = 0; i < obstacles.size(); i++) {
-        double distanceX = abs(foodX - obstacles[i].x);
-        double distanceY = abs(foodY - obstacles[i].y);
-        double distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-        double edgeDistanceX = obstacles[i].w + foodWidth;
-        double edgeDistanceY = obstacles[i].h + foodHeight;
-        double edgeDistance = sqrt(edgeDistanceX * edgeDistanceX + edgeDistanceY * edgeDistanceY);
-        if (distance - edgeDistance <= 0) {
+        int distanceX = abs(foodX - obstacles[i].x);
+        int distanceY = abs(foodY - obstacles[i].y);
+        int edgeDistanceX = (foodWidth * 2 + obstacles[i].w) / 2;
+        int edgeDistanceY = (foodHeight * 2 + obstacles[i].h) / 2;
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
             std::cout << "Collision with obstacle\n";
             return true;
         }
-
     }
+    return false;
+}
+
+
+bool CheckCollision_food_snake() {
+    for (int i = 0; i < tailX.size(); i++) {
+		double distanceX = abs(foodX - tailX[i]);
+		double distanceY = abs(foodY - tailY[i]);
+		double edgeDistanceX = (int)(snakeWidth * 1.5) + foodWidth * 2;
+		double edgeDistanceY = (int)(snakeHeight * 1.5) + foodHeight * 2;
+        if (distanceX <= edgeDistanceX && distanceY <= edgeDistanceY) {
+			std::cout << "Collision with tail\n";
+			return true;
+		}
+	}
+
+    double distanceX = abs(foodX - snakeX);
+    double distanceY = abs(foodY - snakeY);
+    double edgeDistanceX = (int)(snakeWidth * 1.5) + foodWidth * 2;
+    double edgeDistanceY = (int)(snakeHeight * 1.5) + foodHeight * 2;
+    if (distanceX <= edgeDistanceX && distanceY <= edgeDistanceY) {
+        std::cout << "Collision with tail\n";
+        return true;
+    }
+    
     return false;
 }
 
@@ -111,7 +135,7 @@ void EatFood() {
                 foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth * 2) + PLAY_AREA_LEFT + foodWidth * 2;
                 foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight * 2) + PLAY_AREA_TOP + foodHeight * 2;
                 ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
-            } while (CheckCollision_food_obstacle());
+            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
 
         foodEaten++;
         if (foodEaten == FOOD_TO_EAT) {

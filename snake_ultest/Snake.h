@@ -56,6 +56,7 @@ bool CheckEat();
 void EatFood();
 
 bool CheckCollision_food_obstacle();
+bool CheckCollision_food_snake();
 bool CheckCollision();
 bool CheckCollision_tail();
 

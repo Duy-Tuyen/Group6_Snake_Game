@@ -223,5 +223,5 @@ void nextLevel() {
     currentLevel++;
     Level(currentLevel);
     g_food = LoadTexture("Food.png");
-    ApplyTexture2(g_food, foodX, foodY, foodWidth * 3, foodHeight * 3);
+    ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
 }
