@@ -28,8 +28,8 @@ int foodEaten = 0; // Number of food items eaten by the snake
 bool hasEaten = false;
 
 
-int foodX = rand () % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT - foodWidth * 3) + 1;
-int foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP - foodHeight * 3) + 1;
+int foodX = rand () % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 + 2 * foodWidth * 2) + PLAY_AREA_LEFT + foodWidth * 2;
+int foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 + 2 * foodHeight * 2) + PLAY_AREA_TOP + foodHeight * 2;
 int foodWidth, foodHeight;
 int bkWidth, bkHeight;
 int snakeWidth, snakeHeight;
@@ -48,8 +48,8 @@ void reset() {
     
 
         do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT - foodWidth * 3) + 1;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP - foodHeight * 3) + 1;
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth * 2) + PLAY_AREA_LEFT + foodWidth * 2;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight * 2) + PLAY_AREA_TOP + foodHeight * 2;
         } while (CheckCollision_food_obstacle());
     show_food = true;
 
@@ -103,9 +103,9 @@ void EatFood() {
             do {
                 SDL_DestroyTexture(g_food);
                 g_food = LoadTexture("Food.png");
-                foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT - foodWidth * 3) + 1;
-                foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP - foodHeight * 3) + 1;
-                ApplyTexture2(g_food, foodX, foodY, foodWidth * 3, foodHeight * 3);
+                foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth * 2) + PLAY_AREA_LEFT + foodWidth * 2;
+                foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight * 2) + PLAY_AREA_TOP + foodHeight * 2;
+                ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
             } while (CheckCollision_food_obstacle());
 
         foodEaten++;

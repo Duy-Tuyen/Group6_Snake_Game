@@ -57,15 +57,15 @@ int main(int argc, char** argv) {
             }
 
             if (CheckCollision() == true) {
-                running = false;
+                //running = false;
             }
 
             if (CheckCollisionWithObstacles(snakeX, snakeY, 20, 20)) {
                 PlayHurtMusic();
-                running = false;
+                //running = false;
             }
             if (CheckCollision_tail()) {
-                running = false;
+                //running = false;
             }
 
             if (CheckCollisionWithPortals(snakeX, snakeY, 20, 20)) {
