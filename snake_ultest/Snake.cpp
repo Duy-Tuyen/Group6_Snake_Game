@@ -77,12 +77,17 @@ bool CheckEat() {
 
 bool CheckCollision_food_obstacle() {
     for (int i = 0; i < obstacles.size(); i++) {
-        int distanceX = abs(foodX - obstacles[i].x);
-        int distanceY = abs(foodY - obstacles[i].y);
-        if (distanceX < foodWidth + 20 && distanceY < foodHeight + 20) {
+        double distanceX = abs(foodX - obstacles[i].x);
+        double distanceY = abs(foodY - obstacles[i].y);
+        double distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+        double edgeDistanceX = obstacles[i].w + foodWidth;
+        double edgeDistanceY = obstacles[i].h + foodHeight;
+        double edgeDistance = sqrt(edgeDistanceX * edgeDistanceX + edgeDistanceY * edgeDistanceY);
+        if (distance - edgeDistance <= 0) {
             std::cout << "Collision with obstacle\n";
             return true;
         }
+
     }
     return false;
 }
