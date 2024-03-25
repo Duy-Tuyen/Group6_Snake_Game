@@ -42,9 +42,12 @@ extern bool hasEaten;
 
 extern int foodX;
 extern int foodY;
+extern int foodWidth_png, foodHeight_png;
+extern int snakeWidth_png, snakeHeight_png;
+extern float snakeScale, foodScale;
 extern int foodWidth, foodHeight;
-extern int bkWidth, bkHeight;
 extern int snakeWidth, snakeHeight;
+extern int bkWidth, bkHeight;
 extern bool show_food;
 
 

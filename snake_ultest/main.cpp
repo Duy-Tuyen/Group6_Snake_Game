@@ -45,8 +45,7 @@ int main(int argc, char** argv) {
 
             RenderPlaying();
             DrawTail();
-            RenderObstacles(g_renderer);
-            RenderPortals(g_renderer);
+            
             SDL_RenderPresent(g_renderer);
 
 

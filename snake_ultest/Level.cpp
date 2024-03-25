@@ -28,6 +28,12 @@ void RenderPortals(SDL_Renderer* renderer) {
     }
 }
 
+void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h) {
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Set hitbox color (green)
+	SDL_Rect hitboxRect = { x, y, w, h };
+	SDL_RenderDrawRect(renderer, &hitboxRect); // Render hitbox
+}
+
 // Function to check collision between the snake and obstacles
 bool CheckCollisionWithObstacles(int posX, int posY, int width, int height) {
     // Calculate the distance between the snake's head and the food
@@ -37,6 +43,7 @@ bool CheckCollisionWithObstacles(int posX, int posY, int width, int height) {
 
         // If the snake's head is close enough to the food, consider it a collision
         if (distanceX < width * 1 && distanceY < height * 1) {
+            std::cout << "Collision with obstacle at (" << obstacle.x << ", " << obstacle.y << ")" << std::endl;
             return true;
         }
     }
@@ -223,5 +230,5 @@ void nextLevel() {
     currentLevel++;
     Level(currentLevel);
     g_food = LoadTexture("Food.png");
-    ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
+    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
 }

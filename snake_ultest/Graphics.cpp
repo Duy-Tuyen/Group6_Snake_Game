@@ -495,14 +495,24 @@ void RenderQuitScreen() {
 }
 
 void RenderPlaying() {
+    foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
+    snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
     SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
+
+
     if (show_food) {
-        ApplyTexture2(g_food, foodX, foodY, foodWidth * 2, foodHeight * 2);
-        SDL_QueryTexture(g_food, NULL, NULL, &foodWidth, &foodHeight);
+        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+        SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
     }
-    ApplyTexture2(g_snake, snakeX, snakeY, (int)(snakeWidth * 1.5), (int)(snakeHeight * 1.5));
-    SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth, &snakeHeight);
+    ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
+    SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+
+    RenderObstacles(g_renderer);
+    RenderPortals(g_renderer);
+
     RenderLevelStats();
+
     SDL_RenderPresent(g_renderer);
 }

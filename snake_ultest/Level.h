@@ -48,3 +48,5 @@ void gate();
 void Level(int levelNumber);
 
 void nextLevel();
+
+void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);
