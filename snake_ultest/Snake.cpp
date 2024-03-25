@@ -3,8 +3,8 @@
 Direction snakeDirection = RIGHT;
 Direction lastDirection = STOP;
 
-int snakeX = 200;
-int snakeY = 270;
+int snakeX = 242;
+int snakeY = 290;
 bool eaten;
 
 std::vector<int> tailX;  // Snake tail segment X positions
@@ -33,7 +33,7 @@ int foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 + 2 * foodHeight) + P
 int foodWidth_png, foodHeight_png;
 int bkWidth, bkHeight;
 int snakeWidth_png, snakeHeight_png;
-float snakeScale = 2, foodScale = 2;
+float snakeScale = 1, foodScale = 1;
 int foodWidth, foodHeight;
 int snakeWidth, snakeHeight;
 bool show_food = true;
@@ -43,8 +43,8 @@ const int TAIL_SPACE = 35;
 
 void reset() {
     // Reset snake position
-    snakeX = 200; // Reset snake X position
-    snakeY = 270; // Reset snake Y position
+    snakeX = 242; // Reset snake X position
+    snakeY = 290; // Reset snake Y position
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
 

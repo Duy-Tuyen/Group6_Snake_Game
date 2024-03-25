@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
             // Draw the tail on every frame
 
             RenderPlaying();
-            DrawTail();
+            
             
             SDL_RenderPresent(g_renderer);
 
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
                 nextLevel();
             }
 
-            SDL_Delay(100); // Adjust delay for smoother movement
+            SDL_Delay(60); // Adjust delay for smoother movement
             break;
         default:
             break;

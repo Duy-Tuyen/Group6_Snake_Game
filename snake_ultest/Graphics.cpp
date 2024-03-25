@@ -447,12 +447,16 @@ void RenderLevelStats() {
     std::string lengthText = "Length: " + std::to_string(snakeLength);
     std::string speedText = "Speed: " + std::to_string(SNAKE_SPEED);
     std::string scoreText = "Score: " + std::to_string(score);
+    std::string snakex = "SnakeX: " + std::to_string(snakeX);
+    std::string snakey = "SnakeY: " + std::to_string(snakeY);
 
     RenderText(levelText, 740, 10);
     RenderText(foodText, 720, 70);
     RenderText(lengthText, 720, 120);
     RenderText(speedText, 720, 170);
     RenderText(scoreText, 720, 220);
+    RenderText(snakex, 720, 270);
+    RenderText(snakey, 720, 320);
 
     int foodBarWidth, foodBarHeight;
     SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
@@ -503,11 +507,16 @@ void RenderPlaying() {
 
 
     if (show_food) {
+        RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
     }
+
+    RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+
+    DrawTail();
 
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);

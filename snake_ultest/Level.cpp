@@ -2,9 +2,9 @@
 
 // Define the playable area boundaries
 const int PLAY_AREA_LEFT = 50;
-const int PLAY_AREA_RIGHT = 623;
+const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
-const int PLAY_AREA_BOTTOM = 462;
+const int PLAY_AREA_BOTTOM = 466;
 
 int currentLevel = 1; // Current level of the game
 
@@ -13,17 +13,18 @@ std::vector<Obstacle> portals; // Vector to store portals
 
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Set obstacle color (red)
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0); // Set obstacle color (red)
     for (const auto& obstacle : obstacles) {
-        SDL_Rect obstacleRect = { obstacle.x, obstacle.y, obstacle.w, obstacle.h };
+        SDL_Rect obstacleRect = { obstacle.x - obstacle.w / 2, obstacle.y - obstacle.h / 2, obstacle.w, obstacle.h };
         SDL_RenderFillRect(renderer, &obstacleRect); // Render obstacle
     }
+    
 }
 
 void RenderPortals(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0); // Set portals color (blue)
     for (const auto& portal : portals) {
-        SDL_Rect obstacleRect = { portal.x, portal.y, portal.w, portal.h };
+        SDL_Rect obstacleRect = { portal.x - portal.w / 2, portal.y - portal.h / 2, portal.w, portal.h };
         SDL_RenderFillRect(renderer, &obstacleRect); // Render portals
     }
 }
@@ -40,9 +41,11 @@ bool CheckCollisionWithObstacles(int posX, int posY, int width, int height) {
     for (const auto& obstacle : obstacles) {
         int distanceX = abs(posX - obstacle.x);
         int distanceY = abs(posY - obstacle.y);
+        int edgeDistanceX = snakeWidth / 2 + obstacle.w / 2;
+        int edgeDistanceY = snakeHeight / 2 + obstacle.h / 2;
 
         // If the snake's head is close enough to the food, consider it a collision
-        if (distanceX < width * 1 && distanceY < height * 1) {
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
             std::cout << "Collision with obstacle at (" << obstacle.x << ", " << obstacle.y << ")" << std::endl;
             return true;
         }
@@ -83,116 +86,194 @@ void RemoveObstacle(int x, int y) {
 
 void Obstacle_level_1() {
     int x, y;
-    int obstacle_size = 10;
-    y = (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4 + PLAY_AREA_TOP;
-    for (x = PLAY_AREA_LEFT + 80; x <= (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8 + PLAY_AREA_LEFT; x ++) {
+    int obstacle_size = 16;
+    
+    y = PLAY_AREA_TOP + 16 * 9;
+    for (x = PLAY_AREA_LEFT + 16 * 5; x <= PLAY_AREA_LEFT + 16 * 16; x += obstacle_size) {
         AddObstacle(x, y, obstacle_size, obstacle_size);
     }
+    for (x = PLAY_AREA_LEFT + 16 * 22; x <= PLAY_AREA_LEFT + 16 * 33; x += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+    }
+    y = PLAY_AREA_TOP + 16 * 17;
+    for (x = PLAY_AREA_LEFT + 16 * 5; x <= PLAY_AREA_LEFT + 16 * 16; x += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
+    for (x = PLAY_AREA_LEFT + 16 * 22; x <= PLAY_AREA_LEFT + 16 * 33; x += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
 
-    x = (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8 + PLAY_AREA_LEFT;
-    for (y = PLAY_AREA_TOP + 20; y <= (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4 + PLAY_AREA_TOP; y ++) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
+	x = PLAY_AREA_LEFT + 16 * 16;
+    for (y = PLAY_AREA_TOP + 16 * 3; y <= PLAY_AREA_TOP + 16 * 9; y += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
+    for (y = PLAY_AREA_TOP + 16 * 17; y <= PLAY_AREA_TOP + 16 * 23; y += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
 
-    y = (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4 + PLAY_AREA_TOP;
-    for (x = PLAY_AREA_RIGHT - 80; x >= PLAY_AREA_RIGHT - (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8; x --) {
+    x = PLAY_AREA_LEFT + 16 * 22;
+    for (y = PLAY_AREA_TOP + 16 * 3; y <= PLAY_AREA_TOP + 16 * 9; y += obstacle_size) {
         AddObstacle(x, y, obstacle_size, obstacle_size);
     }
-
-    x = PLAY_AREA_RIGHT - (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8;
-    for (y = PLAY_AREA_TOP + 20; y <= (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4 + PLAY_AREA_TOP; y ++) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
-
-    y = PLAY_AREA_BOTTOM - (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4;
-    for (x = PLAY_AREA_LEFT + 80; x <= (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8 + PLAY_AREA_LEFT; x ++) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
-
-    x = (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8 + PLAY_AREA_LEFT;
-    for (y = PLAY_AREA_BOTTOM - 20; y >= PLAY_AREA_BOTTOM - (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4; y --) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
-
-    y = PLAY_AREA_BOTTOM - (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4;
-    for (x = PLAY_AREA_RIGHT - 80; x >= PLAY_AREA_RIGHT - (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8; x --) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
-
-    x = PLAY_AREA_RIGHT - (PLAY_AREA_RIGHT - PLAY_AREA_LEFT) * 3 / 8;
-    for (y = PLAY_AREA_BOTTOM - 20; y >= PLAY_AREA_BOTTOM - (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 4; y --) {
-        AddObstacle(x, y, obstacle_size, obstacle_size);
-    }
+    for (y = PLAY_AREA_TOP + 16 * 17; y <= PLAY_AREA_TOP + 16 * 23; y += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
+    
 }
 
 void Obstacle_level_2() {
-    // Define the center of the play area
-    int centerX = (PLAY_AREA_RIGHT + PLAY_AREA_LEFT) / 2;
-    int centerY = (PLAY_AREA_BOTTOM + PLAY_AREA_TOP) / 2 + 15;
-    int obstacle_size = 10;
-    // Define the length of the X arms (adjust as needed)
-    int armLength = 140;
+    int x, y;
+    int n = 9, m = 11;
+    int obstacle_size = 16;
 
-    // Add obstacles for the diagonal arms of the X
-    for (int i = -armLength; i <= armLength; ++i) {
-        if (i != 0) { // Skip the center position
-            AddObstacle((centerX + i) * 1, (centerY + i) * 1, obstacle_size, obstacle_size);
-            AddObstacle((centerX + i) * 1, (centerY - i) * 1, obstacle_size, obstacle_size);
+    y = PLAY_AREA_TOP + 16 * 3;
+    for (x = PLAY_AREA_LEFT + 16 * 9; x <= PLAY_AREA_LEFT + 16 * 10; x += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
+    n = 9, m = 11;
+    for (int i = 4; i <= 13; i++) {
+        for (int j = n; j <= m; j++) {
+            AddObstacle(PLAY_AREA_LEFT + 16 * j, PLAY_AREA_TOP + 16 * i, obstacle_size, obstacle_size);
+        }
+        n++;
+        m++;
+    }
+
+    y = PLAY_AREA_TOP + 16 * 3;
+    for (x = PLAY_AREA_RIGHT - 16 * 9; x >= PLAY_AREA_RIGHT - 16 * 10; x -= obstacle_size) {
+        AddObstacle(x, y, obstacle_size, obstacle_size);
+    }
+    n = 9, m = 11;
+    for (int i = 4; i <= 13; i++) {
+        for (int j = n; j <= m; j++) {
+            AddObstacle(PLAY_AREA_RIGHT - 16 * j, PLAY_AREA_TOP + 16 * i, obstacle_size, obstacle_size);
+        }
+        n++;
+        m++;
+    }
+
+    y = PLAY_AREA_BOTTOM - 16 * 3;
+    for (x = PLAY_AREA_LEFT + 16 * 9; x <= PLAY_AREA_LEFT + 16 * 10; x += obstacle_size) {
+		AddObstacle(x, y, obstacle_size, obstacle_size);
+	}
+    n = 9, m = 11;
+    for (int i = 4; i <= 13; i++) {
+        for (int j = n; j <= m; j++) {
+			AddObstacle(PLAY_AREA_LEFT + 16 * j, PLAY_AREA_BOTTOM - 16 * i, obstacle_size, obstacle_size);
+		}
+		n++;
+		m++;
+	}
+
+    y = PLAY_AREA_BOTTOM - 16 * 3;
+    for (x = PLAY_AREA_RIGHT - 16 * 9; x >= PLAY_AREA_RIGHT - 16 * 10; x -= obstacle_size) {
+        AddObstacle(x, y, obstacle_size, obstacle_size);
+    }
+    n = 9, m = 11;
+    for (int i = 4; i <= 13; i++) {
+        for (int j = n; j <= m; j++) {
+			AddObstacle(PLAY_AREA_RIGHT - 16 * j, PLAY_AREA_BOTTOM - 16 * i, obstacle_size, obstacle_size);
+		}
+		n++;
+		m++;
+	}
+
+    x = PLAY_AREA_LEFT + 16 * 18;
+    y = PLAY_AREA_TOP + 16 * 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+			AddObstacle(x + j * 16, y + i * 16, obstacle_size, obstacle_size);
+		}
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 18;
+    y = PLAY_AREA_BOTTOM - 16 * 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            AddObstacle(x - j * 16, y - i * 16, obstacle_size, obstacle_size);
         }
     }
 
-    int obstacleWidth = 10; // Adjust as needed
-    int obstacleHeight = 10; // Adjust as needed
+    x = PLAY_AREA_LEFT + 16 * 9;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            AddObstacle(x + j * 16, y + i * 16, obstacle_size, obstacle_size);
+        }
+    }
 
-    // Calculate the center coordinates of each edge
-    int topEdgeCenterX = (PLAY_AREA_RIGHT + PLAY_AREA_LEFT) / 2;
-    int topEdgeCenterY = PLAY_AREA_TOP + (obstacleHeight / 2) + 10; // Adjust for spacing from top edge
-    int bottomEdgeCenterX = (PLAY_AREA_RIGHT + PLAY_AREA_LEFT) / 2;
-    int bottomEdgeCenterY = PLAY_AREA_BOTTOM - (obstacleHeight / 2) - 10; // Adjust for spacing from bottom edge
-
-    // Add obstacles for the four squares
-    AddObstacle(topEdgeCenterX, topEdgeCenterY, obstacleWidth, obstacleHeight);
-    AddObstacle(bottomEdgeCenterX, bottomEdgeCenterY, obstacleWidth, obstacleHeight);
+    x = PLAY_AREA_RIGHT - 16 * 9;
+    y = PLAY_AREA_BOTTOM - 16 * 12;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+			AddObstacle(x - j * 16, y - i * 16, obstacle_size, obstacle_size);
+		}
+	}
 }
 
 void Obstacle_level_3() {
-    // Define the width and height of the obstacles
-    int obstacleWidth = 10; // Adjust as needed
-    int obstacleHeight = 10; // Adjust as needed
-
-    // Define the offset for obstacles
-    int offsetX = 100; // Adjust as needed
-    int offsetY = 90; // Adjust as needed
-
-    // Iterate over the play area and add obstacles with offset
-    for (int y = PLAY_AREA_TOP + offsetY; y < PLAY_AREA_BOTTOM - obstacleHeight; y += offsetY + obstacleHeight) {
-        for (int x = PLAY_AREA_LEFT + offsetX; x < PLAY_AREA_RIGHT - obstacleWidth; x += offsetX + obstacleWidth) {
-            AddObstacle(x, y, obstacleWidth, obstacleHeight);
+    int x, y;
+    int obstacle_size = 16;
+    
+    for (y = PLAY_AREA_TOP + 16 * 2 + 8; y <= PLAY_AREA_TOP + 16 * 10 + 8; y += obstacle_size * 4) {
+        for (x = PLAY_AREA_LEFT + 16 * 3 + 8; x <= PLAY_AREA_LEFT + 16 * 15 + 8; x += obstacle_size * 4) {
+            AddObstacle(x, y, obstacle_size * 2, obstacle_size * 2);
         }
     }
+
+    for (y = PLAY_AREA_TOP + 16 * 2 + 8; y <= PLAY_AREA_TOP + 16 * 10 + 8; y += obstacle_size * 4) {
+        for (x = PLAY_AREA_RIGHT - 16 * 3 - 8; x >= PLAY_AREA_RIGHT - 16 * 15 - 8; x -= obstacle_size * 4) {
+			AddObstacle(x, y, obstacle_size * 2, obstacle_size * 2);
+		}
+	}
+
+    for (y = PLAY_AREA_BOTTOM - 16 * 2 - 8; y >= PLAY_AREA_BOTTOM - 16 * 10 - 8; y -= obstacle_size * 4) {
+        for (x = PLAY_AREA_LEFT + 16 * 3 + 8; x <= PLAY_AREA_LEFT + 16 * 15 + 8; x += obstacle_size * 4) {
+            AddObstacle(x, y, obstacle_size * 2, obstacle_size * 2);
+        }
+    }
+
+    for (y = PLAY_AREA_BOTTOM - 16 * 2 - 8; y >= PLAY_AREA_BOTTOM - 16 * 10 - 8; y -= obstacle_size * 4) {
+        for (x = PLAY_AREA_RIGHT - 16 * 3 - 8; x >= PLAY_AREA_RIGHT - 16 * 15 - 8; x -= obstacle_size * 4) {
+			AddObstacle(x, y, obstacle_size * 2, obstacle_size * 2);
+		}
+	}
 }
 
 void gate() {
-    // Define gate properties
-    const int gateWidth = 80; // Adjust as needed
-    const int gateHeight = 100; // Adjust as needed
-    const int gateX = PLAY_AREA_LEFT; // Center the gate horizontally
-    const int gateY = (PLAY_AREA_BOTTOM - PLAY_AREA_TOP) / 2 + PLAY_AREA_TOP; // Center the gate vertically
+    int x, y;
+    int obstacle_size = 16;
+    int portal_size = 16;
 
+    x = PLAY_AREA_RIGHT - 12;
+    y = PLAY_AREA_TOP + 16 * 12;
+    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
 
-    int y = gateY - gateHeight / 2;
-    for (int x = gateX; x < gateX + gateWidth; x += 20) {
-        AddObstacle(x, y, 20, 20);
+    x = PLAY_AREA_RIGHT - 12;
+    y = PLAY_AREA_BOTTOM - 16 * 12;
+    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+
+    x = PLAY_AREA_RIGHT - 4;
+    y = PLAY_AREA_TOP + 16 * 13;
+    AddPortal(x, y, portal_size * 5 / 4, portal_size);
+}
+
+void wall() {
+    int top = PLAY_AREA_TOP;
+    int bottom = PLAY_AREA_BOTTOM;
+    int left = PLAY_AREA_LEFT;
+    int right = PLAY_AREA_RIGHT;
+
+    int x, y;
+
+    for (x = left; x <= right; x++) {
+        AddObstacle(x, top, 16, 16);
+		AddObstacle(x, bottom, 16, 16);
     }
 
-    y = gateY + gateHeight / 2;
-    for (int x = gateX; x < gateX + gateWidth; x += 20) {
-        AddObstacle(x, y, 20, 20);
-    }
-
-    int x = gateX;
-    for (int y = gateY - gateHeight / 2 + 20; y <= gateY + gateHeight / 2 - 20; y += 20) {
-        AddPortal(x, y, 20, 20);
+    for (y = top; y <= bottom; y++) {
+		AddObstacle(left, y, 16, 16);
+        AddObstacle(right, y, 16, 16);
     }
 }
 
@@ -202,20 +283,23 @@ void Level(int levelNumber) {
     case 1:
         // Level 1 settings
         // Set obstacle position and dimensions for level 1
-        SNAKE_SPEED = 20;
+        SNAKE_SPEED = 16;
+        wall();
         Obstacle_level_1();
         break;
     case 2:
         // Level 2 settings
         // Set obstacle position and dimensions for level 2
-        SNAKE_SPEED = 25;
+        SNAKE_SPEED = 16;
+        wall();
         Obstacle_level_2();
         break;
         // Add more cases for additional levels
     case 3:
         // Level 3 settings
         // Set obstacle position and dimensions for level 3
-        SNAKE_SPEED = 30;
+        SNAKE_SPEED = 32;
+        wall();
         Obstacle_level_3();
         break;
     default:
@@ -225,10 +309,18 @@ void Level(int levelNumber) {
         break;
     }
 }
+
 void nextLevel() {
     reset();
     currentLevel++;
     Level(currentLevel);
     g_food = LoadTexture("Food.png");
     ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+}
+
+//hitbox purple
+void RenderHitbox(int x, int y, int w, int h) {
+    SDL_SetRenderDrawColor(g_renderer, 255, 0, 255, 255); // Set hitbox color (purple)
+	SDL_Rect hitboxRect = { x, y, w, h };
+	SDL_RenderDrawRect(g_renderer, &hitboxRect); // Render hitbox
 }

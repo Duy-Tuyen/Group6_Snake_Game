@@ -37,6 +37,8 @@ void AddPortal(int x, int y, int w, int h);
 
 void RemoveObstacle(int x, int y);
 
+void wall();
+
 void Obstacle_level_1();
 
 void Obstacle_level_2();
