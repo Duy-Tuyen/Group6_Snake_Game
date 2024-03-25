@@ -3,12 +3,13 @@
 Direction snakeDirection = RIGHT;
 Direction lastDirection = STOP;
 
-int snakeX = 242;
-int snakeY = 290;
+int snakeX = PLAY_AREA_LEFT + 16 * 1;
+int snakeY = PLAY_AREA_TOP + 16 * 13;
 bool eaten;
 
 std::vector<int> tailX;  // Snake tail segment X positions
 std::vector<int> tailY;  // Snake tail segment Y positions
+std::vector<bool> tailShow;  // Snake tail segment visibility
 int tailLength = 5;  // Length of the snake's tail
 int lock;
 
@@ -42,21 +43,22 @@ bool show_food = true;
 const int TAIL_SPACE = 35;
 
 void reset() {
-    // Reset snake position
-    snakeX = 242; // Reset snake X position
-    snakeY = 290; // Reset snake Y position
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
 
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+    do {
+        foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
+        foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
+    } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
     show_food = true;
+
 
     foodEaten = 0;
     foodCount = 0;
     g_statsBars = nullptr;
+
+    g_food = LoadTexture("Food.png");
+    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
 
     // Remove all obstacles
     obstacles.clear();
@@ -65,6 +67,9 @@ void reset() {
     portals.clear();
 
     // Reset any other game state variables as needed
+    //
+
+    goOutGate_progress = true;
 }
 
 bool CheckEat() {
@@ -84,6 +89,7 @@ bool CheckCollision_food_obstacle() {
         int distanceY = abs(foodY - obstacles[i].y);
         int edgeDistanceX = (foodWidth + obstacles[i].w) / 2;
         int edgeDistanceY = (foodHeight + obstacles[i].h) / 2;
+
         if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
             std::cout << "Collision with obstacle\n";
             return true;
@@ -130,20 +136,20 @@ void EatFood() {
 
         foodSpawnedThisFrame = true;
 
-            do {
-                SDL_DestroyTexture(g_food);
-                g_food = LoadTexture("Food.png");
-                foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
-                foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
-                ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        do {
+            SDL_DestroyTexture(g_food);
+            g_food = LoadTexture("Food.png");
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
+            ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
 
         foodEaten++;
         if (foodEaten == FOOD_TO_EAT) {
-            gate();
+            gate_in();
             SDL_DestroyTexture(g_food);
-            foodX = 0;
-            foodY = 0;
+            foodX = 960;
+            foodY = 540;
             show_food = false;
 
         }
@@ -154,6 +160,7 @@ void EatFood() {
 }
 
 bool CheckCollision_tail() {
+    if (goInGate_progress) return false;
 	for (int i = 0; i < tailX.size(); i++) {
 		int distanceX = abs(snakeX - tailX[i]);
         int distanceY = abs(snakeY - tailY[i]);
@@ -207,6 +214,7 @@ void AddTailSegment() {
 
         tailX.push_back(newTailX);
         tailY.push_back(newTailY);
+        tailShow.push_back(true);
     }
 }
 
@@ -246,19 +254,20 @@ void UpdateTailPosition() {
 
 void DrawTail() {
     for (int i = 0; i < tailX.size(); i++) {
-
+        if (tailShow[i]) {
         std::string filePath = std::to_string(a[i]) + ".png";
 
 
         SDL_Texture* numberTexture = LoadTexture(filePath);
 
-        if (numberTexture != nullptr) {
+            if (numberTexture != nullptr) {
+                ApplyTexture2(numberTexture, tailX[i] - snakeWidth / 2, tailY[i] - snakeHeight / 2, snakeWidth, snakeHeight);
 
-            ApplyTexture2(numberTexture, tailX[i] - snakeWidth / 2, tailY[i] - snakeHeight / 2, snakeWidth, snakeHeight);
-
-        }
-        else {
-            std::cout << "Failed";
+            }
+            else {
+                std::cout << "Failed";
+            }
+        
         }
     }
 }
@@ -324,6 +333,15 @@ void MoveSnake(bool& running) {
                 snakeX -= SNAKE_SPEED;
                 lastDirection = LEFT;
             }
+        }
+        break;
+
+    case PAUSE:
+        if (pause == 0) {
+            pause = 1;
+        }
+        else {
+            pause = 0;
         }
         break;
     }

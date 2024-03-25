@@ -67,9 +67,8 @@ int main(int argc, char** argv) {
                 //running = false;
             }
 
-            if (CheckCollisionWithPortals(snakeX, snakeY, 20, 20)) {
-                nextLevel();
-            }
+            goInGate_check();
+            goOutGate_check();
 
             SDL_Delay(60); // Adjust delay for smoother movement
             break;

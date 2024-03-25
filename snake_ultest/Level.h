@@ -14,6 +14,9 @@ extern const int PLAY_AREA_BOTTOM;
 
 extern int currentLevel; // Current level of the game
 
+extern bool goInGate_progress;
+extern bool goOutGate_progress;
+
 // Structure to represent an obstacle
 struct Obstacle {
     int x, y, w, h;
@@ -45,7 +48,13 @@ void Obstacle_level_2();
 
 void Obstacle_level_3();
 
-void gate();
+void gate_in();
+
+void gate_out();
+
+void goInGate_check();
+
+void goOutGate_check();
 
 void Level(int levelNumber);
 

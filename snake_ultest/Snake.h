@@ -21,6 +21,7 @@ extern bool eaten;
 
 extern std::vector<int> tailX;  // Snake tail segment X positions
 extern std::vector<int> tailY;  // Snake tail segment Y positions
+extern std::vector<bool> tailShow;  // Snake tail segment visibility
 extern int tailLength;  // Length of the snake's tail
 extern int lock;
 

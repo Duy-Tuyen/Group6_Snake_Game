@@ -8,6 +8,10 @@ const int PLAY_AREA_BOTTOM = 466;
 
 int currentLevel = 1; // Current level of the game
 
+bool goInGate_progress = false;
+bool goOutGate_progress = false;
+
+
 std::vector<Obstacle> obstacles; // Vector to store obstacles
 std::vector<Obstacle> portals; // Vector to store portals
 
@@ -240,7 +244,7 @@ void Obstacle_level_3() {
 	}
 }
 
-void gate() {
+void gate_in() {
     int x, y;
     int obstacle_size = 16;
     int portal_size = 16;
@@ -255,7 +259,27 @@ void gate() {
 
     x = PLAY_AREA_RIGHT - 4;
     y = PLAY_AREA_TOP + 16 * 13;
-    AddPortal(x, y, portal_size * 5 / 4, portal_size);
+    AddPortal(x, y, portal_size * 3 / 2, portal_size);
+}
+
+void gate_out() {
+    int x, y;
+    int obstacle_size = 16;
+    int portal_size = 16;
+
+    x = PLAY_AREA_LEFT + 12;
+    y = PLAY_AREA_TOP + 16 * 12;
+    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+
+    x = PLAY_AREA_LEFT + 12;
+    y = PLAY_AREA_BOTTOM - 16 * 12;
+    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+
+    x = PLAY_AREA_LEFT + 4;
+    y = PLAY_AREA_TOP + 16 * 13;
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0); // Set obstacle color (red)
+    SDL_Rect obstacleRect = { x - obstacle_size * 3 / 2 / 2, y - obstacle_size / 2, obstacle_size * 3 / 2, obstacle_size };
+    SDL_RenderFillRect(g_renderer, &obstacleRect); // Render obstacle
 }
 
 void wall() {
@@ -298,14 +322,14 @@ void Level(int levelNumber) {
     case 3:
         // Level 3 settings
         // Set obstacle position and dimensions for level 3
-        SNAKE_SPEED = 32;
+        SNAKE_SPEED = 16;
         wall();
         Obstacle_level_3();
         break;
     default:
         // Default level settings
         // Set default obstacle position and dimensions
-
+        wall();
         break;
     }
 }
@@ -314,8 +338,6 @@ void nextLevel() {
     reset();
     currentLevel++;
     Level(currentLevel);
-    g_food = LoadTexture("Food.png");
-    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
 }
 
 //hitbox purple
@@ -323,4 +345,56 @@ void RenderHitbox(int x, int y, int w, int h) {
     SDL_SetRenderDrawColor(g_renderer, 255, 0, 255, 255); // Set hitbox color (purple)
 	SDL_Rect hitboxRect = { x, y, w, h };
 	SDL_RenderDrawRect(g_renderer, &hitboxRect); // Render hitbox
+}
+
+void goInGate_check() {
+    if (CheckCollisionWithPortals(snakeX, snakeY, 16 * 3 / 2, 16)) {
+        SDL_DestroyTexture(g_snake);
+        snakeX = 0; snakeY = 0;
+        //lockMovement = true;
+        snakeDirection = Direction::STOP;
+        goInGate_progress = true;
+    }
+
+    if (tailLength > 5 && goInGate_progress) {
+        for (int i = 0; i < tailLength - 6; i++) {
+            if (tailX[i] < PLAY_AREA_LEFT - 8 || tailX[i] > PLAY_AREA_RIGHT + 8 || tailY[i] < PLAY_AREA_TOP - 8 || tailY[i] > PLAY_AREA_BOTTOM + 8) {
+                tailShow[i] = false;
+                SDL_Delay(10);
+                std::cout << "tail " << i << " disappeared" << std::endl;
+            }
+        }
+
+        if (tailX[tailLength - 6] < PLAY_AREA_LEFT - 8 || tailX[tailLength - 6] > PLAY_AREA_RIGHT + 8 || tailY[tailLength - 6] < PLAY_AREA_TOP - 8 || tailY[tailLength - 6] > PLAY_AREA_BOTTOM + 8) {
+            tailShow[tailLength - 6] = false;
+            SDL_Delay(10);
+            goInGate_progress = false;
+            nextLevel();
+        }
+    }
+}
+
+void goOutGate_check() {
+    if (goOutGate_progress) {
+        snakeX = PLAY_AREA_LEFT + 16 * 1;
+        snakeY = PLAY_AREA_TOP + 16 * 13;
+        g_snake = LoadTexture("2.png");
+        ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
+        SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+
+        if (tailLength > 5 && goOutGate_progress) {
+            for (int i = 0; i < tailLength - 6; i++) {
+                if (tailX[i] >= PLAY_AREA_LEFT - 8 || tailX[i] <= PLAY_AREA_RIGHT + 8 || tailY[i] >= PLAY_AREA_TOP - 8 || tailY[i] <= PLAY_AREA_BOTTOM + 8) {
+                    tailShow[i] = true;
+                    SDL_Delay(10);
+                }
+            }
+
+            if (tailX[tailLength - 6] >= PLAY_AREA_LEFT - 8 || tailX[tailLength - 6] <= PLAY_AREA_RIGHT + 8 || tailY[tailLength - 6] >= PLAY_AREA_TOP - 8 || tailY[tailLength - 6] <= PLAY_AREA_BOTTOM + 8) {
+                tailShow[tailLength - 6] = true;
+                SDL_Delay(10);
+                goOutGate_progress = false;
+            }
+        }
+    }
 }

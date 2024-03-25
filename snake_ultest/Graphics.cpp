@@ -505,6 +505,7 @@ void RenderPlaying() {
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
     SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
 
+    gate_out();
 
     if (show_food) {
         RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
