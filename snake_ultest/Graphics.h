@@ -123,3 +123,5 @@ void RenderAboutScreen();
 void RenderQuitScreen();
 
 void RenderPlaying();
+
+void setupAndQuery();

@@ -22,7 +22,7 @@ bool foodSpawnedThisFrame = false;
 
 int tailDelayCounter = 0;
 const int TAIL_DELAY = 5;
-int SNAKE_SPEED = 20; // Adjust the speed as needed
+int SNAKE_SPEED = 16; // Adjust the speed as needed
 int FOOD_TO_EAT = 5; // Number of food items to eat to pass the level
 const int MAX_LEVEL = 3; // Maximum number of levels in the game
 int foodEaten = 0; // Number of food items eaten by the snake
@@ -40,11 +40,22 @@ int snakeWidth, snakeHeight;
 bool show_food = true;
 
 
-const int TAIL_SPACE = 35;
+const int TAIL_SPACE = 16;
 
 void reset() {
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
+
+    // Remove all obstacles
+    obstacles.clear();
+
+    // Remove all portals
+    portals.clear();
+
+    // Reset any other game state variables as needed
+    //
+
+    Level(currentLevel);
 
     do {
         foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
@@ -59,15 +70,6 @@ void reset() {
 
     g_food = LoadTexture("Food.png");
     ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-
-    // Remove all obstacles
-    obstacles.clear();
-
-    // Remove all portals
-    portals.clear();
-
-    // Reset any other game state variables as needed
-    //
 
     goOutGate_progress = true;
 }
@@ -174,7 +176,7 @@ bool CheckCollision_tail() {
 
 bool CheckCollision() {
     //Check collision with the boundaries of the play area
-    if (snakeX < PLAY_AREA_LEFT || snakeX >= PLAY_AREA_RIGHT - 25 || snakeY < PLAY_AREA_TOP || snakeY >= PLAY_AREA_BOTTOM - 25) {
+    if (snakeX - snakeWidth / 2 < PLAY_AREA_LEFT + 8 || snakeX + snakeWidth / 2 > PLAY_AREA_RIGHT - 8 || snakeY - snakeHeight / 2 < PLAY_AREA_TOP + 8 || snakeY + snakeHeight / 2 > PLAY_AREA_BOTTOM - 8) {
         return true; // Snake collided with the wall
     }
 
@@ -211,7 +213,6 @@ void AddTailSegment() {
             break;
         }
 
-
         tailX.push_back(newTailX);
         tailY.push_back(newTailY);
         tailShow.push_back(true);
@@ -219,7 +220,6 @@ void AddTailSegment() {
 }
 
 void UpdateTailPosition() {
-
     for (size_t i = tailX.size() - 1; i > 0; --i) {
 
         float distanceX = tailX[i - 1] - tailX[i];
@@ -280,7 +280,7 @@ void MoveSnake(bool& running) {
     // Update the position of the snake's head based on the direction
     switch (snakeDirection) {
     case UP:
-        if (lastDirection != DOWN || tailLength == 5) {
+        if (lastDirection != DOWN) {
             if (snakeY > PLAY_AREA_TOP) {
                 snakeY -= SNAKE_SPEED;
                 lastDirection = UP;
@@ -294,7 +294,7 @@ void MoveSnake(bool& running) {
         }
         break;
     case DOWN:
-        if (lastDirection != UP || tailLength == 5) {
+        if (lastDirection != UP) {
             if (snakeY < PLAY_AREA_BOTTOM) {
                 snakeY += SNAKE_SPEED;
                 lastDirection = DOWN;
@@ -308,7 +308,7 @@ void MoveSnake(bool& running) {
         }
         break;
     case LEFT:
-        if (lastDirection != RIGHT || tailLength == 5) {
+        if (lastDirection != RIGHT) {
             if (snakeX > PLAY_AREA_LEFT) {
                 snakeX -= SNAKE_SPEED;
                 lastDirection = LEFT;
@@ -322,7 +322,7 @@ void MoveSnake(bool& running) {
         }
         break;
     case RIGHT:
-        if (lastDirection != LEFT || tailLength == 5) {
+        if (lastDirection != LEFT) {
             if (snakeX < PLAY_AREA_RIGHT) {
                 snakeX += SNAKE_SPEED;
                 lastDirection = RIGHT;

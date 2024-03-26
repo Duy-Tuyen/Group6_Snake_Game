@@ -35,7 +35,7 @@ const int SOUND_OFF_BUTTON_Y = 300;
 // Level statistics
 int level = 1;
 int foodCount = 0;
-int snakeLength = 1;
+int snakeLength = 6;
 int score = 0;
 int foodBarWidth, foodBarHeight;
 // Font for rendering text
@@ -272,12 +272,13 @@ void HandleMenuInput() {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
 
+            int buttonWidth = 200, buttonHeight = 50;
             // Define the regions for the buttons based on the menu background image
-            SDL_Rect startButtonRect = { 400, 150, 50, 30 };
-            SDL_Rect loadButtonRect = { 400, 230, 50, 30 };
-            SDL_Rect settingsButtonRect = { 400, 315, 50, 30 };
-            SDL_Rect aboutButtonRect = { 400, 390, 50, 30 };
-            SDL_Rect quitButtonRect = { 400, 460, 50, 30 };
+            SDL_Rect startButtonRect = { 400, 150, buttonWidth, buttonHeight };
+            SDL_Rect loadButtonRect = { 400, 230, buttonWidth, buttonHeight };
+            SDL_Rect settingsButtonRect = { 400, 315, buttonWidth, buttonHeight };
+            SDL_Rect aboutButtonRect = { 400, 390, buttonWidth, buttonHeight };
+            SDL_Rect quitButtonRect = { 400, 460, buttonWidth, buttonHeight };
 
             // Define the coordinates and dimensions of other buttons here
 
@@ -499,30 +500,36 @@ void RenderQuitScreen() {
 }
 
 void RenderPlaying() {
-    foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
-    snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
-
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
-    SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
 
-    gate_out();
+    RenderLevelStats();
 
     if (show_food) {
         RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-        SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
     }
 
     RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
-    SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
 
     DrawTail();
 
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);
 
-    RenderLevelStats();
+    gate_out();
 
     SDL_RenderPresent(g_renderer);
+}
+
+void setupAndQuery() {
+    SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
+	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
+	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+
+	foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
+	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+
+	// Initialize level
+	Level(1);
 }

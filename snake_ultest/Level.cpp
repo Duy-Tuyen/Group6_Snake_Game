@@ -275,10 +275,11 @@ void gate_out() {
     y = PLAY_AREA_BOTTOM - 16 * 12;
     AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
 
-    x = PLAY_AREA_LEFT + 4;
+    x = PLAY_AREA_LEFT + 16 * 1;
     y = PLAY_AREA_TOP + 16 * 13;
+
     SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0); // Set obstacle color (red)
-    SDL_Rect obstacleRect = { x - obstacle_size * 3 / 2 / 2, y - obstacle_size / 2, obstacle_size * 3 / 2, obstacle_size };
+    SDL_Rect obstacleRect = { x - obstacle_size / 2, y - obstacle_size / 2, obstacle_size, obstacle_size };
     SDL_RenderFillRect(g_renderer, &obstacleRect); // Render obstacle
 }
 
@@ -307,37 +308,61 @@ void Level(int levelNumber) {
     case 1:
         // Level 1 settings
         // Set obstacle position and dimensions for level 1
-        SNAKE_SPEED = 16;
         wall();
         Obstacle_level_1();
+
+        // Avoid food - obstacle collision when first going to the current level
+        do {
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+
         break;
     case 2:
         // Level 2 settings
         // Set obstacle position and dimensions for level 2
-        SNAKE_SPEED = 16;
         wall();
         Obstacle_level_2();
+
+        // Avoid food - obstacle collision when first going to the current level
+        do {
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+
         break;
         // Add more cases for additional levels
     case 3:
         // Level 3 settings
         // Set obstacle position and dimensions for level 3
-        SNAKE_SPEED = 16;
         wall();
         Obstacle_level_3();
+
+        // Avoid food - obstacle collision when first going to the current level
+        do {
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+
         break;
     default:
         // Default level settings
         // Set default obstacle position and dimensions
         wall();
+
+        // Avoid food - obstacle collision when first going to the current level
+        do {
+            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
+            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+
         break;
     }
 }
 
 void nextLevel() {
-    reset();
     currentLevel++;
-    Level(currentLevel);
+    reset();
 }
 
 //hitbox purple
@@ -356,8 +381,8 @@ void goInGate_check() {
         goInGate_progress = true;
     }
 
-    if (tailLength > 5 && goInGate_progress) {
-        for (int i = 0; i < tailLength - 6; i++) {
+    if (tailLength > 0 && goInGate_progress) {
+        for (int i = 0; i < tailLength - 1; i++) {
             if (tailX[i] < PLAY_AREA_LEFT - 8 || tailX[i] > PLAY_AREA_RIGHT + 8 || tailY[i] < PLAY_AREA_TOP - 8 || tailY[i] > PLAY_AREA_BOTTOM + 8) {
                 tailShow[i] = false;
                 SDL_Delay(10);
@@ -365,8 +390,8 @@ void goInGate_check() {
             }
         }
 
-        if (tailX[tailLength - 6] < PLAY_AREA_LEFT - 8 || tailX[tailLength - 6] > PLAY_AREA_RIGHT + 8 || tailY[tailLength - 6] < PLAY_AREA_TOP - 8 || tailY[tailLength - 6] > PLAY_AREA_BOTTOM + 8) {
-            tailShow[tailLength - 6] = false;
+        if (tailX[tailLength - 1] < PLAY_AREA_LEFT - 8 || tailX[tailLength - 1] > PLAY_AREA_RIGHT + 8 || tailY[tailLength - 1] < PLAY_AREA_TOP - 8 || tailY[tailLength - 1] > PLAY_AREA_BOTTOM + 8) {
+            tailShow[tailLength - 1] = false;
             SDL_Delay(10);
             goInGate_progress = false;
             nextLevel();
@@ -380,18 +405,17 @@ void goOutGate_check() {
         snakeY = PLAY_AREA_TOP + 16 * 13;
         g_snake = LoadTexture("2.png");
         ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
-        SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
 
-        if (tailLength > 5 && goOutGate_progress) {
-            for (int i = 0; i < tailLength - 6; i++) {
+        if (tailLength > 0 && goOutGate_progress) {
+            for (int i = 0; i < tailLength - 1; i++) {
                 if (tailX[i] >= PLAY_AREA_LEFT - 8 || tailX[i] <= PLAY_AREA_RIGHT + 8 || tailY[i] >= PLAY_AREA_TOP - 8 || tailY[i] <= PLAY_AREA_BOTTOM + 8) {
                     tailShow[i] = true;
                     SDL_Delay(10);
                 }
             }
 
-            if (tailX[tailLength - 6] >= PLAY_AREA_LEFT - 8 || tailX[tailLength - 6] <= PLAY_AREA_RIGHT + 8 || tailY[tailLength - 6] >= PLAY_AREA_TOP - 8 || tailY[tailLength - 6] <= PLAY_AREA_BOTTOM + 8) {
-                tailShow[tailLength - 6] = true;
+            if (tailX[tailLength - 1] >= PLAY_AREA_LEFT - 8 || tailX[tailLength - 1] <= PLAY_AREA_RIGHT + 8 || tailY[tailLength - 1] >= PLAY_AREA_TOP - 8 || tailY[tailLength - 1] <= PLAY_AREA_BOTTOM + 8) {
+                tailShow[tailLength - 1] = true;
                 SDL_Delay(10);
                 goOutGate_progress = false;
             }

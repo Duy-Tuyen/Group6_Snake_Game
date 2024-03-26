@@ -6,8 +6,8 @@ int main(int argc, char** argv) {
     if (!Init()) {
         return 1;
     }
-    // Initialize obstacles
-    Level(1);
+
+    setupAndQuery();
 
     // Play background music when rendering the menu
     PlayBackgroundMusic();
@@ -35,14 +35,10 @@ int main(int argc, char** argv) {
             MoveSnake(running);
             foodSpawnedThisFrame = false;
 
-            // Update the tail position on every frame
-            if (!tailX.empty() && !tailY.empty()) {
-                UpdateTailPosition();
-            }
+            AddTailSegment();
 
             SDL_RenderClear(g_renderer);
             // Draw the tail on every frame
-
             RenderPlaying();
             
             
@@ -55,11 +51,12 @@ int main(int argc, char** argv) {
 
             }
 
+            if (!goInGate_progress)
             if (CheckCollision() == true) {
                 //running = false;
             }
 
-            if (CheckCollisionWithObstacles(snakeX, snakeY, 20, 20)) {
+            if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
                 //running = false;
             }
@@ -70,7 +67,7 @@ int main(int argc, char** argv) {
             goInGate_check();
             goOutGate_check();
 
-            SDL_Delay(60); // Adjust delay for smoother movement
+            SDL_Delay(100); // Adjust delay for smoother movement
             break;
         default:
             break;
