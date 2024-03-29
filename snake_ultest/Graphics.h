@@ -27,6 +27,8 @@ enum class GameState {
     QUIT
 };
 
+extern int loopCounter;
+
 extern SDL_Window* g_window;
 extern SDL_Renderer* g_renderer;
 extern SDL_Texture* g_bkground;
@@ -41,6 +43,8 @@ extern SDL_Texture* g_quit;
 extern SDL_Texture* g_returnButton;
 extern SDL_Texture* g_soundOnButton;
 extern SDL_Texture* g_soundOffButton;
+extern SDL_Texture* g_monster1;
+extern SDL_Texture* g_monster2;
 
 extern Mix_Music* g_backgroundMusic;
 extern Mix_Music* g_scoreMusic;

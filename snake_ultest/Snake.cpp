@@ -13,6 +13,8 @@ std::vector<bool> tailShow;  // Snake tail segment visibility
 int tailLength = 5;  // Length of the snake's tail
 int lock;
 
+std::vector<Direction> moving_obstacles_direction; // Vector to store moving obstacles direction
+
 std::deque<std::pair<int, int>> positions;
 int a[32] = { 3,1,2,7,3,0,7,2,3,1,2,7,3,1,6,2,3,1,2,7,1,4,0,2,3,1,2,7,4,1,9 };
 int pause = 0;

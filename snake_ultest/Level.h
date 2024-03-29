@@ -24,10 +24,15 @@ struct Obstacle {
 
 extern std::vector<Obstacle> obstacles; // Vector to store obstacles
 extern std::vector<Obstacle> portals; // Vector to store portals
+extern std::vector<Obstacle> moving_obstacles; // Vector to store moving obstacles
+
+extern std::vector<Obstacle> monsters; // Vector to store monsters
+
 
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer);
 void RenderPortals(SDL_Renderer* renderer);
+void RenderMovingObstacles(SDL_Renderer* renderer);
 
 // Function to check collision between the snake and obstacles
 bool CheckCollisionWithObstacles(int posX, int posY, int width, int height);
@@ -61,3 +66,15 @@ void Level(int levelNumber);
 void nextLevel();
 
 void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);
+
+void movingObstalceLevel4();
+
+void renderMonster();
+
+void toggleObstacleLevel3();
+
+void RenderToggleObstacles_Draw_Level3();
+
+void RenderToggleObstacles_Fill_Level3();
+
+bool toggleObstacleCollision();

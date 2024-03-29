@@ -9,9 +9,11 @@ int main(int argc, char** argv) {
 
     setupAndQuery();
 
-    // Play background music when rendering the menu
-    PlayBackgroundMusic();
     while (g_gameState != GameState::QUIT && running) {
+        loopCounter++;
+        if (loopCounter > 1000) {
+			loopCounter = 0;
+		}
         switch (g_gameState) {
         case GameState::MENU:
             HandleMenuInput();
@@ -37,6 +39,8 @@ int main(int argc, char** argv) {
 
             AddTailSegment();
 
+            movingObstalceLevel4();
+
             SDL_RenderClear(g_renderer);
             // Draw the tail on every frame
             RenderPlaying();
@@ -52,7 +56,7 @@ int main(int argc, char** argv) {
             }
 
             if (!goInGate_progress)
-            if (CheckCollision() == true) {
+            if (CheckCollision() == true || toggleObstacleCollision()) {
                 //running = false;
             }
 
@@ -72,7 +76,7 @@ int main(int argc, char** argv) {
         default:
             break;
         }
-        SDL_Delay(10); // Adjust delay for smoother rendering
+        SDL_Delay(1); // Adjust delay for smoother rendering
     }
     CleanUp();
     return 0;

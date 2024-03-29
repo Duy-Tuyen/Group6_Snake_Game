@@ -15,6 +15,8 @@ enum Direction { STOP, UP, DOWN, LEFT, RIGHT, PAUSE };
 extern Direction snakeDirection;
 extern Direction lastDirection;
 
+extern std::vector<Direction> moving_obstacles_direction; // Vector to store moving obstacles direction
+
 extern int snakeX;
 extern int snakeY;
 extern bool eaten;

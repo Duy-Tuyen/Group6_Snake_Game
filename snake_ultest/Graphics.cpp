@@ -3,6 +3,8 @@
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 540;
 
+int loopCounter = 0;
+
 SDL_Window* g_window = nullptr;
 SDL_Renderer* g_renderer = nullptr;
 SDL_Texture* g_bkground = nullptr;
@@ -17,6 +19,8 @@ SDL_Texture* g_quit = nullptr;
 SDL_Texture* g_returnButton = nullptr;
 SDL_Texture* g_soundOnButton = nullptr;
 SDL_Texture* g_soundOffButton = nullptr;
+SDL_Texture* g_monster1 = nullptr;
+SDL_Texture* g_monster2 = nullptr;
 
 Mix_Music* g_backgroundMusic = nullptr;
 Mix_Music* g_scoreMusic = nullptr;
@@ -443,21 +447,17 @@ void RenderText(const std::string& text, int x, int y) {
 
 
 void RenderLevelStats() {
-    std::string levelText = "Level: " + std::to_string(level);
+    std::string levelText = "Level: " + std::to_string(currentLevel);
     std::string foodText = "Food: " + std::to_string(foodCount);
     std::string lengthText = "Length: " + std::to_string(snakeLength);
     std::string speedText = "Speed: " + std::to_string(SNAKE_SPEED);
     std::string scoreText = "Score: " + std::to_string(score);
-    std::string snakex = "SnakeX: " + std::to_string(snakeX);
-    std::string snakey = "SnakeY: " + std::to_string(snakeY);
 
     RenderText(levelText, 740, 10);
     RenderText(foodText, 720, 70);
     RenderText(lengthText, 720, 120);
     RenderText(speedText, 720, 170);
     RenderText(scoreText, 720, 220);
-    RenderText(snakex, 720, 270);
-    RenderText(snakey, 720, 320);
 
     int foodBarWidth, foodBarHeight;
     SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
@@ -499,10 +499,32 @@ void RenderQuitScreen() {
     SDL_RenderPresent(g_renderer);
 }
 
+void setupAndQuery() {
+
+    SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
+	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
+	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+
+	foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
+	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+
+    // Play background music when rendering the menu
+    //PlayBackgroundMusic();
+
+	// Initialize level
+	Level(currentLevel);
+
+    g_monster1 = LoadTexture("monster1.gif");
+    g_monster2 = LoadTexture("monster2.gif");
+}
+
 void RenderPlaying() {
+
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
 
     RenderLevelStats();
+    
+    RenderToggleObstacles_Draw_Level3();
 
     if (show_food) {
         RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
@@ -514,6 +536,12 @@ void RenderPlaying() {
 
     DrawTail();
 
+    renderMonster();
+
+    RenderToggleObstacles_Fill_Level3();
+
+    RenderMovingObstacles(g_renderer);
+
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);
 
@@ -522,14 +550,3 @@ void RenderPlaying() {
     SDL_RenderPresent(g_renderer);
 }
 
-void setupAndQuery() {
-    SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
-	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
-	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
-
-	foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
-	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
-
-	// Initialize level
-	Level(1);
-}
