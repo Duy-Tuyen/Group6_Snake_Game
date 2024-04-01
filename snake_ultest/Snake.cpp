@@ -189,7 +189,7 @@ bool CheckCollision() {
 
 void AddTailSegment() {
 
-    if (tailLength > tailX.size()) {
+    if (tailLength > tailX.size() && !pause) {
         int newTailX, newTailY;
 
         if (tailX.empty() || tailY.empty()) {
@@ -274,22 +274,28 @@ void DrawTail() {
     }
 }
 
+int prevX;
+int prevY;
 void MoveSnake(bool& running) {
-    // Store the previous position of the snake's head
-    int prevX = snakeX;
-    int prevY = snakeY;
-    positions.push_front({ snakeX, snakeY });
+    if (!pause) {
+        // Store the previous position of the snake's head
+        prevX = snakeX;
+        prevY = snakeY;
+        positions.push_front({ snakeX, snakeY });
+    }
     // Update the position of the snake's head based on the direction
     switch (snakeDirection) {
     case UP:
         if (lastDirection != DOWN) {
             if (snakeY > PLAY_AREA_TOP) {
+                pause = 0;
                 snakeY -= SNAKE_SPEED;
                 lastDirection = UP;
             }
         }
         else {
             if (snakeY < PLAY_AREA_BOTTOM) {
+                if (pause) break;
                 snakeY += SNAKE_SPEED;
                 lastDirection = DOWN;
             }
@@ -298,12 +304,14 @@ void MoveSnake(bool& running) {
     case DOWN:
         if (lastDirection != UP) {
             if (snakeY < PLAY_AREA_BOTTOM) {
+                pause = 0;
                 snakeY += SNAKE_SPEED;
                 lastDirection = DOWN;
             }
         }
         else {
             if (snakeY > PLAY_AREA_TOP) {
+                if (pause) break;
                 snakeY -= SNAKE_SPEED;
                 lastDirection = UP;
             }
@@ -312,12 +320,14 @@ void MoveSnake(bool& running) {
     case LEFT:
         if (lastDirection != RIGHT) {
             if (snakeX > PLAY_AREA_LEFT) {
+                pause = 0;
                 snakeX -= SNAKE_SPEED;
                 lastDirection = LEFT;
             }
         }
         else {
             if (snakeX < PLAY_AREA_RIGHT) {
+                if (pause) break;
                 snakeX += SNAKE_SPEED;
                 lastDirection = RIGHT;
             }
@@ -326,12 +336,14 @@ void MoveSnake(bool& running) {
     case RIGHT:
         if (lastDirection != LEFT) {
             if (snakeX < PLAY_AREA_RIGHT) {
+                pause = 0;
                 snakeX += SNAKE_SPEED;
                 lastDirection = RIGHT;
             }
         }
         else {
             if (snakeX > PLAY_AREA_LEFT) {
+                if (pause) break;
                 snakeX -= SNAKE_SPEED;
                 lastDirection = LEFT;
             }
@@ -342,39 +354,39 @@ void MoveSnake(bool& running) {
         if (pause == 0) {
             pause = 1;
         }
-        else {
-            pause = 0;
-        }
         break;
     }
     if (positions.size() > tailX.size()) {
         positions.pop_back();
     }
 
-    // Update the position of the tail segments to the positions stored in the deque
-    for (int i = 0; i < tailX.size(); ++i) {
-        tailX[i] = positions[i].first;
-        tailY[i] = positions[i].second;
-    }
-    // Move the tail
-    if (!tailX.empty() && !tailY.empty() && tailX.size() == tailY.size()) {
-        // Only move the tail segments after a certain number of frames have passed
-        if (tailDelayCounter >= TAIL_DELAY) {
-            // Move each tail segment to the position of the segment in front of it
-            for (size_t i = tailX.size() - 1; i > 0; --i) {
-                tailX[i] = tailX[i - 1];
-                tailY[i] = tailY[i - 1];
-            }
-            // Move the first tail segment to the previous position of the head
-            tailX[0] = prevX;
-            tailY[0] = prevY;
+    if (!pause) {
 
-            // Reset the delay counter
-            tailDelayCounter = 0;
+        // Update the position of the tail segments to the positions stored in the deque
+        for (int i = 0; i < tailX.size(); ++i) {
+            tailX[i] = positions[i].first;
+            tailY[i] = positions[i].second;
         }
-        else {
-            // Increment the delay counter
-            tailDelayCounter++;
+        // Move the tail
+        if (!tailX.empty() && !tailY.empty() && tailX.size() == tailY.size()) {
+            // Only move the tail segments after a certain number of frames have passed
+            if (tailDelayCounter >= TAIL_DELAY) {
+                // Move each tail segment to the position of the segment in front of it
+                for (size_t i = tailX.size() - 1; i > 0; --i) {
+                    tailX[i] = tailX[i - 1];
+                    tailY[i] = tailY[i - 1];
+                }
+                // Move the first tail segment to the previous position of the head
+                tailX[0] = prevX;
+                tailY[0] = prevY;
+
+                // Reset the delay counter
+                tailDelayCounter = 0;
+            }
+            else {
+                // Increment the delay counter
+                tailDelayCounter++;
+            }
         }
     }
 }

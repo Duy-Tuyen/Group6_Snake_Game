@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 1; // Current level of the game
+int currentLevel = 3; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -55,13 +55,36 @@ void RenderMovingObstacles(SDL_Renderer* renderer) {
 	}
 }
 
+bool fixed1WhenPause = false;
+bool fixed2WhenPause = false;
 void renderMonster() {
+    if (!pause) {
+		fixed1WhenPause = false;
+		fixed2WhenPause = false;
+	}
     for (int i = 0; i < monsters.size(); i++) {
+        if (fixed1WhenPause) {
+            fixed2WhenPause = false;
+            ApplyTexture2(g_monster1, monsters[i].x - monsters[i].w / 2, monsters[i].y - monsters[i].h / 2, monsters[i].w, monsters[i].h);
+            continue;
+        }
+        if (fixed2WhenPause) {
+            fixed1WhenPause = false;
+            ApplyTexture2(g_monster2, monsters[i].x - monsters[i].w / 2, monsters[i].y - monsters[i].h / 2, monsters[i].w, monsters[i].h);
+            continue;
+        }
+        
         if (loopCounter % 6 == 1 || loopCounter % 6 == 2 || loopCounter % 6 == 3) {
             ApplyTexture2(g_monster2, monsters[i].x - monsters[i].w / 2, monsters[i].y - monsters[i].h / 2, monsters[i].w, monsters[i].h);
+            if (pause) {
+                fixed2WhenPause = true;
+            }
         }
         else {
             ApplyTexture2(g_monster1, monsters[i].x - monsters[i].w / 2, monsters[i].y - monsters[i].h / 2, monsters[i].w, monsters[i].h);
+            if (pause) {
+				fixed1WhenPause = true;
+            }
         }
     }
 }
@@ -424,13 +447,11 @@ void goInGate_check() {
         for (int i = 0; i < tailLength - 1; i++) {
             if (tailX[i] < PLAY_AREA_LEFT - 8 || tailX[i] > PLAY_AREA_RIGHT + 8 || tailY[i] < PLAY_AREA_TOP - 8 || tailY[i] > PLAY_AREA_BOTTOM + 8) {
                 tailShow[i] = false;
-                SDL_Delay(1);
             }
         }
 
         if (tailX[tailLength - 1] < PLAY_AREA_LEFT - 8 || tailX[tailLength - 1] > PLAY_AREA_RIGHT + 8 || tailY[tailLength - 1] < PLAY_AREA_TOP - 8 || tailY[tailLength - 1] > PLAY_AREA_BOTTOM + 8) {
             tailShow[tailLength - 1] = false;
-            SDL_Delay(1);
             goInGate_progress = false;
             nextLevel();
         }
@@ -561,7 +582,6 @@ void RenderToggleObstacles_Fill_Level3() {
     }
 }
 
-
 bool toggleObstacleCollision() {
     if (currentLevel == 3) {
         if (loopCounter % 100 >= 0 && loopCounter % 100 <= 49) {
@@ -629,7 +649,7 @@ void movingObstalceLevel4() {
     }
     movingObstacleLevel4_start = false;
     int moving_obstacle_speed = 16;
-    if (loopCounter % 2 == 0) {
+    if (loopCounter % 2 == 0 && !pause) {
         for (int i = 0; i < monsters.size(); i++) {
             if (currentLevel == 4) {
                 switch (moving_obstacles_direction[i]) {

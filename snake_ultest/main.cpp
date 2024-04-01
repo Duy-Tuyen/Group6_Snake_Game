@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
     setupAndQuery();
 
     while (g_gameState != GameState::QUIT && running) {
-        loopCounter++;
+        if (!pause) loopCounter++;
         if (loopCounter > 1000) {
 			loopCounter = 0;
 		}
@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
             break;
         case GameState::PLAYING:
             StopBackgroundMusic();
+            HandlePauseMenuInput();
             HandlePlayingInput();
             MoveSnake(running);
             foodSpawnedThisFrame = false;

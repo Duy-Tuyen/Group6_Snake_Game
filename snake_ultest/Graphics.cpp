@@ -19,6 +19,8 @@ SDL_Texture* g_quit = nullptr;
 SDL_Texture* g_returnButton = nullptr;
 SDL_Texture* g_soundOnButton = nullptr;
 SDL_Texture* g_soundOffButton = nullptr;
+SDL_Texture* g_pauseMenu = nullptr;
+
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
@@ -42,6 +44,7 @@ int foodCount = 0;
 int snakeLength = 6;
 int score = 0;
 int foodBarWidth, foodBarHeight;
+int pauseMenuWidth, pauseMenuHeight;
 // Font for rendering text
 TTF_Font* g_font = nullptr;
 
@@ -137,6 +140,11 @@ bool Init() {
 
     g_quit = LoadTexture("quit.png");
     if (g_quit == nullptr) {
+        return false;
+    }
+
+    g_pauseMenu = LoadTexture("pauseMenu.png");
+    if (g_pauseMenu == nullptr) {
         return false;
     }
 
@@ -499,14 +507,59 @@ void RenderQuitScreen() {
     SDL_RenderPresent(g_renderer);
 }
 
+
+void RenderPauseMenu() {
+
+    // Clear the renderer
+    //SDL_RenderClear(g_renderer);
+    // Render the pause menu texture onto the screen
+    ApplyTexture2(g_pauseMenu,705, 270, 194, 205);
+
+    // Present the renderer
+    SDL_RenderPresent(g_renderer);
+}
+
+void HandlePauseMenuInput() {
+    if (snakeDirection == PAUSE) {
+        while (SDL_PollEvent(&g_event)) {
+            if (g_event.type == SDL_QUIT) {
+                SDL_Quit();
+                exit(0);
+            }
+            else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+                SDL_Rect ContinueButtonRect = { 736, 344, 131, 18};
+                SDL_Rect QuitGameButtonRect = { 501,445, 200, 300 };
+
+                if (IsPointInRect(mouseX, mouseY, ContinueButtonRect)) {
+                    HandleContinueButtonInput();
+                }
+                else if (IsPointInRect(mouseX, mouseY, QuitGameButtonRect)) {
+                    //HandleQuitGameButtonInput();
+                }
+            }
+        }
+    }
+}
+
+void HandleContinueButtonInput() {
+
+    snakeDirection = lastDirection;
+
+}
+
+
 void setupAndQuery() {
 
     SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
 	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
 	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+    SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
 
 	foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
 	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+
 
     // Play background music when rendering the menu
     //PlayBackgroundMusic();
@@ -546,6 +599,11 @@ void RenderPlaying() {
     RenderPortals(g_renderer);
 
     gate_out();
+
+    if (snakeDirection == PAUSE) {
+
+        RenderPauseMenu();
+    }
 
     SDL_RenderPresent(g_renderer);
 }

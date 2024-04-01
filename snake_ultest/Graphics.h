@@ -43,6 +43,7 @@ extern SDL_Texture* g_quit;
 extern SDL_Texture* g_returnButton;
 extern SDL_Texture* g_soundOnButton;
 extern SDL_Texture* g_soundOffButton;
+extern SDL_Texture* g_pauseMenu;
 extern SDL_Texture* g_monster1;
 extern SDL_Texture* g_monster2;
 
@@ -129,3 +130,7 @@ void RenderQuitScreen();
 void RenderPlaying();
 
 void setupAndQuery();
+
+void RenderPauseMenu();
+void HandlePauseMenuInput();
+void HandleContinueButtonInput();
