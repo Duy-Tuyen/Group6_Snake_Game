@@ -44,6 +44,30 @@ bool show_food = true;
 
 const int TAIL_SPACE = 16;
 
+void spawnFood() {
+    int x_16pixel_range = 38;
+    int y_16pixel_range = 26;
+    int x_index;
+    int y_index;
+    if (currentLevel == 5) {
+        do {
+            x_index = rand() % x_16pixel_range;
+            y_index = rand() % y_16pixel_range;
+            foodX = PLAY_AREA_LEFT + 16 * x_index;
+            foodY = PLAY_AREA_TOP + 16 * y_index;
+        } while ((CheckCollision_food_obstacle() || CheckCollision_food_snake())
+            && !(foodX >= PLAY_AREA_RIGHT - 16* 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
+    }
+    else {
+        do {
+            x_index = rand() % x_16pixel_range;
+            y_index = rand() % y_16pixel_range;
+            foodX = PLAY_AREA_LEFT + 16 * x_index;
+            foodY = PLAY_AREA_TOP + 16 * y_index;
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+    }
+}
+
 void reset() {
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
@@ -61,10 +85,7 @@ void reset() {
 
     Level(currentLevel);
 
-    do {
-        foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-        foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-    } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+    spawnFood();
     show_food = true;
 
     foodEaten = 0;
@@ -84,7 +105,7 @@ bool CheckEat() {
     int edgeDistanceY = (snakeHeight + foodHeight) / 2;
 
     // If the snake is close enough to the food, consider it a collision
-    return (!foodSpawnedThisFrame && distanceX <= edgeDistanceX && distanceY <= edgeDistanceY);
+    return (!foodSpawnedThisFrame && distanceX < edgeDistanceX && distanceY < edgeDistanceY);
 }
 
 bool CheckCollision_food_obstacle() {
@@ -140,15 +161,12 @@ void EatFood() {
 
         foodSpawnedThisFrame = true;
 
-        
-            do {
-                SDL_DestroyTexture(g_food);
-                g_food = LoadTexture("Food.png");
-                foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
-                foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
-                ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
-            }
+        SDL_DestroyTexture(g_food);
+        g_food = LoadTexture("Food.png");
+        spawnFood();
+        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+
+    }
 
         foodEaten++;
         if (foodEaten == FOOD_TO_EAT) {

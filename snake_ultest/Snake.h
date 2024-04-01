@@ -56,6 +56,8 @@ extern bool show_food;
 
 extern const int TAIL_SPACE;
 
+void spawnFood();
+
 void reset();
 
 bool CheckEat();

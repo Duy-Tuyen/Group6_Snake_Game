@@ -561,7 +561,7 @@ void setupAndQuery() {
 	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
     SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
 
-	foodWidth = foodWidth_png * foodScale, foodHeight = foodHeight_png * foodScale;
+	foodWidth = 16, foodHeight = 16;
 	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
 
 

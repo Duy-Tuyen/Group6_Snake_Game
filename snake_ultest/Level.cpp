@@ -414,10 +414,7 @@ void Level(int levelNumber) {
         wall();
 
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
     case 2:
@@ -426,10 +423,7 @@ void Level(int levelNumber) {
         wall();
         Obstacle_level_2();
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
         // Add more cases for additional levels
@@ -440,10 +434,7 @@ void Level(int levelNumber) {
         toggleObstacleLevel3();
         toggleObstacleLevel3_start = true;
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
     case 4:
@@ -453,10 +444,7 @@ void Level(int levelNumber) {
         Obstacle_level_4();
         movingObstacleLevel4_start = true;
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
     case 5:
@@ -464,10 +452,7 @@ void Level(int levelNumber) {
         subPortalLevel5();
 
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
 
@@ -477,10 +462,7 @@ void Level(int levelNumber) {
         wall();
 
         // Avoid food - obstacle collision when first going to the current level
-        do {
-            foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth - 16) + PLAY_AREA_LEFT + 8 + foodWidth;
-            foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+        spawnFood();
 
         break;
     }
@@ -599,7 +581,13 @@ void RenderToggleObstacles_Draw_Level3() {
                     SDL_SetRenderDrawColor(g_renderer, 0, 0, 255, 0); // Set obstacles color (blue)
                     SDL_Rect hitboxRect = { toggle_obstacles[i].x - toggle_obstacles[i].w / 2, toggle_obstacles[i].y - toggle_obstacles[i].h / 2, toggle_obstacles[i].w, toggle_obstacles[i].h };
                     SDL_RenderDrawRect(g_renderer, &hitboxRect); // Render obstacles
-                    std::string countText = std::to_string(loopCounter % 50);
+                    std::string countText;
+                    if (loopCounter % 50 >= 1 && loopCounter % 50 <= 10) {
+                        countText = "0" + std::to_string(loopCounter % 50);
+                    }
+                    else {
+                        countText = std::to_string(loopCounter % 50);
+                    }
                     RenderToggleText(countText, toggle_obstacles[i].x - toggle_obstacles[i].w / 2, toggle_obstacles[i].y - toggle_obstacles[i].h / 2);
                 }
             }
@@ -610,7 +598,13 @@ void RenderToggleObstacles_Draw_Level3() {
                     SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 0); // Set obstacles color (blue)
                     SDL_Rect hitboxRect = { toggle_obstacles[i].x - toggle_obstacles[i].w / 2, toggle_obstacles[i].y - toggle_obstacles[i].h / 2, toggle_obstacles[i].w, toggle_obstacles[i].h };
                     SDL_RenderDrawRect(g_renderer, &hitboxRect); // Render obstacles
-                    std::string countText = std::to_string(loopCounter % 50);
+                    std::string countText;
+                    if (loopCounter % 50 >= 1 && loopCounter % 50 <= 10) {
+                        countText = "0" + std::to_string(loopCounter % 50);
+                    }
+                    else {
+                        countText = std::to_string(loopCounter % 50);
+                    }
                     RenderToggleText(countText, toggle_obstacles[i].x - toggle_obstacles[i].w / 2, toggle_obstacles[i].y - toggle_obstacles[i].h / 2);
                 }
             }
@@ -961,9 +955,6 @@ void subPortalLevel5() {
 
     }
 
-
-
-
     //...
 
     // Portal setup
@@ -1014,5 +1005,4 @@ void subPortalLevel5() {
         1
         });
     //...
-
 }
