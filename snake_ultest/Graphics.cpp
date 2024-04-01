@@ -602,6 +602,8 @@ void RenderPlaying() {
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);
 
+    RenderSubPortal(g_renderer);
+
     gate_out();
 
     if (snakeDirection == PAUSE) {

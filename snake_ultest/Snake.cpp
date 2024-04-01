@@ -54,6 +54,8 @@ void reset() {
     // Remove all portals
     portals.clear();
 
+    subPortals.clear();
+
     // Reset any other game state variables as needed
     //
 
@@ -64,7 +66,6 @@ void reset() {
         foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
     } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
     show_food = true;
-    g_specialFood = LoadTexture("SpecialFood.png");
 
     foodEaten = 0;
     foodCount = 0;
@@ -142,11 +143,10 @@ void EatFood() {
         
             do {
                 SDL_DestroyTexture(g_food);
-                g_food = LoadTexture("SpecialFood.png");
+                g_food = LoadTexture("Food.png");
                 foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
                 foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
-                ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-                foodEaten+=2;
+                ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
             } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
             }
 
@@ -285,6 +285,9 @@ void MoveSnake(bool& running) {
         prevY = snakeY;
         positions.push_front({ snakeX, snakeY });
     }
+
+    
+
     // Update the position of the snake's head based on the direction
     switch (snakeDirection) {
     case UP:
@@ -391,4 +394,7 @@ void MoveSnake(bool& running) {
             }
         }
     }
+
+    snakeTeleport_in_to_out();
+    snakeTeleport_out_to_in();
 }

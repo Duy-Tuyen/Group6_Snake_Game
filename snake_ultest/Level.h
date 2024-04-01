@@ -22,11 +22,20 @@ struct Obstacle {
     int x, y, w, h;
 };
 
+struct subPortal {
+    struct Obstacle in;
+    struct Obstacle out;
+    int color_code;
+    bool parallel;
+};
+
 extern std::vector<Obstacle> obstacles; // Vector to store obstacles
 extern std::vector<Obstacle> portals; // Vector to store portals
 extern std::vector<Obstacle> moving_obstacles; // Vector to store moving obstacles
 
 extern std::vector<Obstacle> monsters; // Vector to store monsters
+
+extern std::vector<subPortal> subPortals; // Vector to store subPortals
 
 
 // Function to render obstacles on the screen
@@ -78,3 +87,10 @@ void RenderToggleObstacles_Draw_Level3();
 void RenderToggleObstacles_Fill_Level3();
 
 bool toggleObstacleCollision();
+
+void RenderSubPortal(SDL_Renderer* renderer);
+
+void subPortalLevel5();
+
+void snakeTeleport_in_to_out();
+void snakeTeleport_out_to_in();
