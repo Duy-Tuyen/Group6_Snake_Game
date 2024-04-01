@@ -6,7 +6,7 @@ Direction lastDirection = STOP;
 int snakeX = PLAY_AREA_LEFT + 16 * 1;
 int snakeY = PLAY_AREA_TOP + 16 * 13;
 bool eaten;
-
+int chance = 100;
 std::vector<int> tailX;  // Snake tail segment X positions
 std::vector<int> tailY;  // Snake tail segment Y positions
 std::vector<bool> tailShow;  // Snake tail segment visibility
@@ -43,7 +43,15 @@ bool show_food = true;
 
 
 const int TAIL_SPACE = 16;
+bool SpawnChance() {
+   srand(time(nullptr));
 
+    
+    int randomNumber = rand() % 100;
+
+    
+    return (randomNumber <= chance);
+}
 void reset() {
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
@@ -64,15 +72,19 @@ void reset() {
         foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight - 16) + PLAY_AREA_TOP + 8 + foodHeight;
     } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
     show_food = true;
-
+    g_specialFood = LoadTexture("SpecialFood.png");
 
     foodEaten = 0;
     foodCount = 0;
     g_statsBars = nullptr;
 
     g_food = LoadTexture("Food.png");
-    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-
+    if (SpawnChance()) {
+        ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+    }
+    else {
+        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+    }
     goOutGate_progress = true;
 }
 
@@ -141,11 +153,22 @@ void EatFood() {
         foodSpawnedThisFrame = true;
 
         do {
-            SDL_DestroyTexture(g_food);
+            if (SpawnChance()){
+            SDL_DestroyTexture(g_specialFood);
             g_food = LoadTexture("Food.png");
             foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
             foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
-            ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+            ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+                
+            }
+            else {
+                SDL_DestroyTexture(g_food);
+                g_food = LoadTexture("Food.png");
+                foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
+                foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
+                ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+                ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+            }
         } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
 
         foodEaten++;

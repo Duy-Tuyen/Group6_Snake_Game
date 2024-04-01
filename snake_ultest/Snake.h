@@ -73,3 +73,4 @@ void UpdateTailPosition();
 void DrawTail();
 
 void MoveSnake(bool& running);
+bool SpawnChance();

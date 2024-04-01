@@ -20,7 +20,7 @@ SDL_Texture* g_returnButton = nullptr;
 SDL_Texture* g_soundOnButton = nullptr;
 SDL_Texture* g_soundOffButton = nullptr;
 SDL_Texture* g_pauseMenu = nullptr;
-
+SDL_Texture* g_specialFood = nullptr;
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
@@ -161,6 +161,10 @@ bool Init() {
 
     g_food = LoadTexture("Food.png");
     if (g_food == nullptr) {
+        return 1;
+    }
+    g_specialFood = LoadTexture("SpecialFood.png");
+    if (g_specialFood == nullptr) {
         return 1;
     }
 

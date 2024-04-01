@@ -46,7 +46,7 @@ extern SDL_Texture* g_soundOffButton;
 extern SDL_Texture* g_pauseMenu;
 extern SDL_Texture* g_monster1;
 extern SDL_Texture* g_monster2;
-
+extern SDL_Texture* g_specialFood;
 extern Mix_Music* g_backgroundMusic;
 extern Mix_Music* g_scoreMusic;
 extern Mix_Music* g_hurtMusic;
