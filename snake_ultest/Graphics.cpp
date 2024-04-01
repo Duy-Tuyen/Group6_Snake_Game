@@ -6,30 +6,51 @@ const int SCREEN_HEIGHT = 540;
 int loopCounter = 0;
 
 SDL_Window* g_window = nullptr;
+
 SDL_Renderer* g_renderer = nullptr;
+
 SDL_Texture* g_bkground = nullptr;
+SDL_Texture* g_menuBackground = nullptr;
+SDL_Texture* g_loadGame = nullptr;
+SDL_Texture* g_aboutUs = nullptr;
+SDL_Texture* g_settings = nullptr;
+
+SDL_Texture* g_timer;
+SDL_Texture* g_quit = nullptr;
+
 SDL_Texture* g_snake = nullptr;
 SDL_Texture* g_food = nullptr;
-SDL_Texture* g_statsBars = nullptr; // Array to hold textures for six stats bars
-SDL_Texture* g_menuBackground = nullptr;
-SDL_Texture* g_aboutUs = nullptr;
-SDL_Texture* g_loadGame = nullptr;
-SDL_Texture* g_settings = nullptr;
-SDL_Texture* g_quit = nullptr;
+SDL_Texture* g_statsBars = nullptr;
+
 SDL_Texture* g_returnButton = nullptr;
 SDL_Texture* g_soundOnButton = nullptr;
 SDL_Texture* g_soundOffButton = nullptr;
+
+SDL_Texture* g_leaderboardButton = nullptr;
+SDL_Texture* g_leaderboard = nullptr;
+
+SDL_Texture* g_skinButton = nullptr;
+SDL_Texture* g_skinBackground = nullptr;
+SDL_Texture* g_speedBars = nullptr;
+SDL_Texture* g_colorSkin = nullptr;
+SDL_Texture* g_colorSnake = nullptr;
+SDL_Texture* g_intro = nullptr;
+SDL_Texture* g_outro = nullptr;
+SDL_Texture* g_gameOver = nullptr;
+SDL_Texture* g_snakeEnter = nullptr;
+
 SDL_Texture* g_pauseMenu = nullptr;
-SDL_Texture* g_specialFood = nullptr;
+
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
 Mix_Music* g_backgroundMusic = nullptr;
 Mix_Music* g_scoreMusic = nullptr;
 Mix_Music* g_hurtMusic = nullptr;
+Mix_Music* g_countMusic = nullptr;
 
 SDL_Event g_event;
-GameState g_gameState = GameState::MENU;
+GameState g_gameState = GameState::INTRO;
 
 const int RETURN_BUTTON_X = 450;
 const int RETURN_BUTTON_Y = 490;
@@ -37,6 +58,14 @@ const int SOUND_ON_BUTTON_X = 100;
 const int SOUND_ON_BUTTON_Y = 100;
 const int SOUND_OFF_BUTTON_X = 100;
 const int SOUND_OFF_BUTTON_Y = 300;
+const int SKIN_BUTTON_X = 600;
+const int SKIN_BUTTON_Y = 100;
+const int LEADER_BUTTON_X = 600;
+const int LEADER_BUTTON_Y = 300;
+
+int speed = 1;
+const int minSpeed = 1;
+const int maxSpeed = 3;
 
 // Level statistics
 int level = 1;
@@ -45,8 +74,36 @@ int snakeLength = 6;
 int score = 0;
 int foodBarWidth, foodBarHeight;
 int pauseMenuWidth, pauseMenuHeight;
+
 // Font for rendering text
 TTF_Font* g_font = nullptr;
+
+// Define variables for color animation
+int currentFrame = 0;
+const int NUM_COLOR_FRAMES = 3;
+int COLOR_FRAME_RATE = 20;
+int INTRO_FRAME_RATE = 10;
+const int MAX_COLOR_FRAME_RATE = 60;
+const int MIN_COLOR_FRAME_RATE = 20;
+const int FRAME_RATE_INCREMENT = 20;
+
+const int frameWidth = 100;
+const int frameHeight = 100;
+
+// Define variables for color switch
+int currentColorIndex = 0;
+const int NUM_COLORS = 5;
+std::vector<std::string> colorFileNames = { "greenSnake.png", "redSnake.png", "blueSnake.png", "brownSnake.png", "pinkSnake.png" }; // File names for different colors
+
+const int TIMER_DURATION_SECONDS = 4;
+const int NUM_TIMER_FRAMES = 4;
+const int NUM_INTRO_FRAMES = 6;
+bool introFinished = false;
+int currentIntroFrame = 0;
+// Define variables for timer
+int currentTimerFrame = 0;
+
+
 
 bool Init() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
@@ -66,17 +123,27 @@ bool Init() {
         std::cerr << "Failed to load background music: " << Mix_GetError() << std::endl;
         return false;
     }
-    // Load background music
+
+    // Load score music
     g_scoreMusic = Mix_LoadMUS("score.wav");
     if (g_backgroundMusic == nullptr) {
         std::cerr << "Failed to load score music: " << Mix_GetError() << std::endl;
         return false;
-    }// Load background music
+
+    }// Load hurt music
     g_hurtMusic = Mix_LoadMUS("hurt.wav");
     if (g_backgroundMusic == nullptr) {
         std::cerr << "Failed to load hurt music: " << Mix_GetError() << std::endl;
         return false;
     }
+
+    // Load timer music
+    g_countMusic = Mix_LoadMUS("countdown.wav");
+    if (g_countMusic == nullptr) {
+        std::cerr << "Failed to load count music: " << Mix_GetError() << std::endl;
+        return false;
+    }
+
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
         std::cerr << "SDL_ttf initialization failed: " << TTF_GetError() << std::endl;
@@ -102,7 +169,18 @@ bool Init() {
         return false;
     }
 
+    // Load the GIF animation
+    g_outro = LoadTexture("menuBackground.png");
+    if (g_outro == nullptr) {
+        return false;
+    }
+
     // Load textures
+    g_intro = LoadTexture("intro-display.png");
+    if (g_intro == nullptr) {
+        return false;
+    }
+
     g_menuBackground = LoadTexture("menuBackground.png");
     if (g_menuBackground == nullptr) {
         return false;
@@ -125,6 +203,31 @@ bool Init() {
 
     g_soundOffButton = LoadTexture("Sound Off.png");
     if (g_returnButton == nullptr) {
+        return false;
+    }
+
+    g_leaderboardButton = LoadTexture("leaderboardButton.png");
+    if (g_leaderboardButton == nullptr) {
+        return false;
+    }
+
+    g_leaderboard = LoadTexture("Leaderboard.png");
+    if (g_leaderboard == nullptr) {
+        return false;
+    }
+
+    g_skinButton = LoadTexture("skinButton.png");
+    if (g_skinButton == nullptr) {
+        return false;
+    }
+
+    g_skinBackground = LoadTexture("skinBackground.png");
+    if (g_skinBackground == nullptr) {
+        return false;
+    }
+
+    g_colorSkin = LoadTexture("colorSkin.png");
+    if (g_colorSkin == nullptr) {
         return false;
     }
 
@@ -163,10 +266,17 @@ bool Init() {
     if (g_food == nullptr) {
         return 1;
     }
-    g_specialFood = LoadTexture("SpecialFood.png");
-    if (g_specialFood == nullptr) {
+
+    g_gameOver = LoadTexture("gameOver.png");
+    if (g_food == nullptr) {
         return 1;
     }
+
+    g_snakeEnter = LoadTexture("snakeEnter.png");
+    if (g_snakeEnter == nullptr) {
+        return 1;
+    }
+
 
     return true;
 }
@@ -206,15 +316,26 @@ void CleanUp() {
     Mix_CloseAudio();
 
     SDL_DestroyTexture(g_menuBackground);
+    SDL_DestroyTexture(g_bkground);
     SDL_DestroyTexture(g_aboutUs);
     SDL_DestroyTexture(g_loadGame);
     SDL_DestroyTexture(g_settings);
     SDL_DestroyTexture(g_quit);
-    SDL_DestroyTexture(g_bkground);
+
+    SDL_DestroyTexture(g_skinButton);
+    SDL_DestroyTexture(g_skinBackground);
+    SDL_DestroyTexture(g_colorSkin);
+    SDL_DestroyTexture(g_colorSnake);
+
+
+
     SDL_DestroyTexture(g_snake);
     SDL_DestroyTexture(g_statsBars);
+
     SDL_DestroyRenderer(g_renderer);
+
     SDL_DestroyWindow(g_window);
+
     TTF_CloseFont(g_font); // Close the font
     TTF_Quit(); // Quit SDL_ttf
 }
@@ -239,6 +360,11 @@ void PlayMenuBackgroundMusic() {
     }
 }
 
+void PlayCountMusic() {
+    Mix_PlayMusic(g_countMusic, 1);
+}
+
+
 void PlayScoreMusic() {
     if (Mix_PlayingMusic() == 0) {
         // If no music is playing, start playing the background music
@@ -261,6 +387,17 @@ void HandleReturnButtonInput() {
         g_gameState = GameState::MENU;
     }
 }
+
+void HandleReturnButtonSkinInput() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect returnButtonRect = { 880, 480, 20, 20 };
+    if (IsPointInRect(mouseX, mouseY, returnButtonRect)) {
+        g_gameState = GameState::SETTINGS;
+    }
+}
+
+
 void HandleSoundOnButtonInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
@@ -269,12 +406,190 @@ void HandleSoundOnButtonInput() {
         PlayBackgroundMusic();
     }
 }
+
 void HandleSoundOffButtonInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
     SDL_Rect soundOffButtonRect = { SOUND_OFF_BUTTON_X, SOUND_OFF_BUTTON_Y, 100, 300 };
     if (IsPointInRect(mouseX, mouseY, soundOffButtonRect)) {
         StopBackgroundMusic();
+    }
+}
+
+void UpdateTimer() {
+    // Get the elapsed time since the program started
+    Uint32 elapsedTime = SDL_GetTicks();
+
+    // Calculate the duration of each timer frame in milliseconds
+    Uint32 frameDuration = TIMER_DURATION_SECONDS * 1000 / NUM_TIMER_FRAMES;
+
+    // Calculate the index of the current frame based on elapsed time and frame duration
+    int currentFrameIndex = (elapsedTime / frameDuration) % NUM_TIMER_FRAMES;
+
+    // Update the current timer frame if it has changed
+    if (currentFrameIndex != currentTimerFrame) {
+        currentTimerFrame = currentFrameIndex;
+        UpdateCount(currentTimerFrame); // Update the timer display
+    }
+}
+
+
+
+void UpdateCount(int timerFrame) {
+    if (g_timer != nullptr) {
+        SDL_DestroyTexture(g_timer);
+        g_timer = nullptr;
+    }
+
+    std::string filePath = "Timer" + std::to_string(timerFrame) + ".png";
+    g_timer = LoadTexture(filePath);
+    if (g_timer == nullptr) {
+        g_timer = LoadTexture("Timer0.png");
+    }
+}
+
+
+void RenderCount() {
+    SDL_RenderClear(g_renderer);
+    ApplyTexture1(g_timer, 0, 0);
+    SDL_RenderPresent(g_renderer);
+}
+
+
+// Function to handle timer events
+void HandleTimerEvent() {
+    // Update the countdown timer
+    UpdateTimer();
+    // Render the countdown timer
+    RenderCount();
+}
+
+void RenderSkinSpeedScreen() {
+    std::string speedText = "SPEED";
+    std::string avatarText = "PICK AN AVATAR";
+    std::string colorText = "COLOR";
+
+
+    RenderText(speedText, 98, 4);
+    RenderText(avatarText, 490, 4);
+    RenderText(colorText, 50, 475);
+
+    if (speed >= 1 && speed <= 3 && g_speedBars != nullptr) {
+        ApplyTexture1(g_speedBars, 55, 41);
+    }
+}
+
+void RenderSkinAnimation(SDL_Renderer* renderer, SDL_Texture* spriteSheet, int frameWidth, int frameHeight, int NUM_COLOR_FRAMES, int numRows, int currentFrame, int x, int y, int sheetWidth, int sheetHeight) {
+    // Calculate the source rectangle for the current frame
+    int row = currentFrame / NUM_COLOR_FRAMES;
+    int col = currentFrame % NUM_COLOR_FRAMES;
+    SDL_Rect srcRect;
+    srcRect.x = col * frameWidth;
+    srcRect.y = row * frameHeight;
+    srcRect.w = frameWidth;
+    srcRect.h = frameHeight;
+
+    // Destination rectangle (where to render the frame on the screen)
+    SDL_Rect destRect = { x, y, sheetWidth, sheetHeight }; // Adjusted to the entire sprite sheet size
+
+    // Render the current frame
+    SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
+}
+
+// Function to update the current frame of the color animation
+void UpdateColorAnimationFrame() {
+    static Uint32 lastFrameTime = SDL_GetTicks();
+    Uint32 currentTime = SDL_GetTicks();
+    Uint32 elapsedTime = currentTime - lastFrameTime;
+
+    if (elapsedTime >= 1000 / COLOR_FRAME_RATE) {
+        currentFrame++;
+        if (currentFrame >= NUM_COLOR_FRAMES) {
+            currentFrame = 0;
+        }
+        lastFrameTime = currentTime;
+    }
+}
+
+void UpdateSnakeColor() {
+    // Load the texture for the selected color
+    if (g_colorSnake != nullptr) {
+        SDL_DestroyTexture(g_colorSnake);
+        g_colorSnake = nullptr;
+    }
+    std::string filePath = colorFileNames[currentColorIndex];
+    g_colorSnake = LoadTexture(filePath);
+    if (g_colorSnake == nullptr) {
+        g_colorSnake = LoadTexture("greenSnake.png"); // Load default texture if loading fails
+    }
+}
+// Function to render the color animation
+void RenderColorAnimation() {
+    UpdateSnakeColor();
+    UpdateColorAnimationFrame();
+    RenderSkinAnimation(g_renderer, g_colorSnake, frameWidth, frameHeight, NUM_COLOR_FRAMES, 1, currentFrame, 350, 0, 550, 550);
+}
+
+void UpdateIntroFrame() {
+    static Uint32 lastFrameTime = SDL_GetTicks();
+    Uint32 currentTime = SDL_GetTicks();
+    Uint32 elapsedTime = currentTime - lastFrameTime;
+
+    if (elapsedTime >= 1000 / INTRO_FRAME_RATE) {
+        // Update the current frame
+        currentIntroFrame++;
+        if (currentIntroFrame >= NUM_INTRO_FRAMES) {
+            introFinished = true;
+        }
+        lastFrameTime = currentTime;
+    }
+}
+
+void RenderIntroAnimation(SDL_Renderer* renderer, SDL_Texture* spriteSheet, int frameWidth, int frameHeight, int NUM_INTRO_FRAMES, int numRows, int currentFrame, int x, int y, int sheetWidth, int sheetHeight) {
+    // Calculate the source rectangle for the current frame
+    int row = currentFrame / NUM_INTRO_FRAMES;
+    int col = currentFrame % NUM_INTRO_FRAMES;
+    SDL_Rect srcRect;
+    srcRect.x = col * frameWidth;
+    srcRect.y = row * frameHeight;
+    srcRect.w = frameWidth;
+    srcRect.h = frameHeight;
+
+    // Destination rectangle (where to render the frame on the screen)
+    SDL_Rect destRect = { x, y, sheetWidth, sheetHeight }; // Adjusted to the entire sprite sheet size
+
+    // Render the current frame
+    SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
+}
+
+void RenderIntro() {
+    RenderIntroAnimation(g_renderer, g_intro, 315, 250, NUM_INTRO_FRAMES, 1, currentIntroFrame, 0, 0, 960, 540);
+    SDL_RenderPresent(g_renderer);
+}
+
+void RenderOutro() {
+    // Clear the screen
+    SDL_RenderClear(g_renderer);
+    ApplyTexture1(g_outro, 0, 0);
+    // Present the renderer
+    SDL_RenderPresent(g_renderer);
+}
+void RenderSkinScreen() {
+    ApplyTexture1(g_skinBackground, 0, 0);
+    ApplyTexture1(g_colorSkin, 173, 473);
+    ApplyTexture1(g_returnButton, 880, 480);
+    RenderColorAnimation();
+    RenderSkinSpeedScreen();
+    SDL_RenderPresent(g_renderer);
+}
+
+void HandleSkinButtonInput() {
+    // Open the skin selection screen when the skin button is clicked
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect skinButtonRect = { SKIN_BUTTON_X, SKIN_BUTTON_Y, 100, 100 };
+    if (IsPointInRect(mouseX, mouseY, skinButtonRect)) {
+        g_gameState = GameState::SKIN;
     }
 }
 
@@ -287,7 +602,7 @@ void HandleMenuInput() {
         else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
-
+            std::cout << "Mouse click at (" << mouseX << ", " << mouseY << ")" << std::endl;
             int buttonWidth = 200, buttonHeight = 50;
             // Define the regions for the buttons based on the menu background image
             SDL_Rect startButtonRect = { 400, 150, buttonWidth, buttonHeight };
@@ -312,7 +627,7 @@ void HandleMenuInput() {
                 g_gameState = GameState::ABOUT;
             }
             else if (IsPointInRect(mouseX, mouseY, quitButtonRect)) {
-                g_gameState = GameState::QUIT;
+                g_gameState = GameState::OUTRO;
             }
         }
     }
@@ -329,6 +644,18 @@ void HandleLoadInput() {
         }
     }
 }
+
+void HandleLeadButtonInput() {
+    // Open the skin selection screen when the skin button is clicked
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect skinButtonRect = { LEADER_BUTTON_X, LEADER_BUTTON_Y, 100, 100 };
+    if (IsPointInRect(mouseX, mouseY, skinButtonRect)) {
+        g_gameState = GameState::LEADERBOARD;
+    }
+}
+
+
 void HandleSettingsInput() {
     while (SDL_PollEvent(&g_event)) {
         if (g_event.type == SDL_QUIT) {
@@ -337,12 +664,10 @@ void HandleSettingsInput() {
         }
         else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             HandleReturnButtonInput();
-        }
-        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             HandleSoundOnButtonInput();
-        }
-        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             HandleSoundOffButtonInput();
+            HandleSkinButtonInput();
+            HandleLeadButtonInput();
         }
     }
 }
@@ -419,6 +744,9 @@ void HandlePlayingInput() {
                 snakeDirection = RIGHT;
 
                 break;
+            case SDLK_o:
+                g_gameState = GameState::ASK;
+                break;
             }
         }
     }
@@ -445,6 +773,70 @@ void UpdateStatsBar() {
     }
 }
 
+void UpdateSpeedSkinBar() {
+    if (g_speedBars != nullptr) {
+        SDL_DestroyTexture(g_speedBars);
+        g_speedBars = nullptr;
+    }
+
+    std::string filePath = "speed" + std::to_string(speed) + "Skin.png";
+    g_speedBars = LoadTexture(filePath);
+    if (g_speedBars == nullptr) {
+        g_speedBars = LoadTexture("speed1Skin.png");
+    }
+}
+
+void HandleSkinInput() {
+    while (SDL_PollEvent(&g_event)) {
+
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+
+        else if (g_event.type == SDL_KEYDOWN) {
+            switch (g_event.key.keysym.sym) {
+            case SDLK_UP:
+                speed++;
+                if (speed > 3) {
+                    speed = maxSpeed;
+                }
+                UpdateSpeedSkinBar();
+                COLOR_FRAME_RATE += FRAME_RATE_INCREMENT;
+                if (COLOR_FRAME_RATE > MAX_COLOR_FRAME_RATE) {
+                    COLOR_FRAME_RATE = MAX_COLOR_FRAME_RATE;
+                }
+                break;
+            case SDLK_DOWN:
+                speed--;
+                if (speed < 1) {
+                    speed = minSpeed;
+                }
+                UpdateSpeedSkinBar();
+                COLOR_FRAME_RATE -= FRAME_RATE_INCREMENT;
+                if (COLOR_FRAME_RATE < MIN_COLOR_FRAME_RATE) {
+                    COLOR_FRAME_RATE = MIN_COLOR_FRAME_RATE;
+                }
+                break;
+            case SDLK_LEFT:
+                currentColorIndex--;
+                if (currentColorIndex < 0) {
+                    currentColorIndex = NUM_COLORS - 1; // Wrap around to the last color
+                }
+                break;
+            case SDLK_RIGHT:
+                currentColorIndex++;
+                if (currentColorIndex >= NUM_COLORS) {
+                    currentColorIndex = 0;  // Wrap around to the first color
+                }
+                break;
+            }
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            HandleReturnButtonSkinInput();
+        }
+    }
+}
 
 void RenderText(const std::string& text, int x, int y) {
     SDL_Color color = { 0, 0, 0, 255 }; // Black color
@@ -470,9 +862,7 @@ void RenderLevelStats() {
     RenderText(lengthText, 720, 120);
     RenderText(speedText, 720, 170);
     RenderText(scoreText, 720, 220);
-
-    int foodBarWidth, foodBarHeight;
-    SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
+   
     if (foodCount >= 0 && foodCount <= 5 && g_statsBars != nullptr) {
         ApplyTexture2(g_statsBars, 800, 250,foodBarWidth * 2,foodBarHeight*2);
     }
@@ -496,6 +886,10 @@ void RenderSettingsScreen() {
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
     ApplyTexture1(g_soundOnButton, SOUND_ON_BUTTON_X, SOUND_ON_BUTTON_Y);
     ApplyTexture1(g_soundOffButton, SOUND_OFF_BUTTON_X, SOUND_OFF_BUTTON_Y);
+
+    ApplyTexture1(g_skinButton, SKIN_BUTTON_X, SKIN_BUTTON_Y);
+    ApplyTexture1(g_leaderboardButton, LEADER_BUTTON_X, LEADER_BUTTON_Y);
+
     SDL_RenderPresent(g_renderer);
 }
 
@@ -560,6 +954,7 @@ void setupAndQuery() {
 	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
 	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
     SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
+    SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
 
 	foodWidth = 16, foodHeight = 16;
 	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
@@ -614,3 +1009,231 @@ void RenderPlaying() {
     SDL_RenderPresent(g_renderer);
 }
 
+void HandleGameOver() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+
+            int buttonWidth = 50, buttonHeight = 50;
+            // Define the regions for the buttons based on the menu background image
+            SDL_Rect yesButtonRect = { 362, 466, buttonWidth, buttonHeight };
+            SDL_Rect noButtonRect = { 562, 464, buttonWidth, buttonHeight };
+
+            if (IsPointInRect(mouseX, mouseY, yesButtonRect)) {
+                g_gameState = GameState::SAVE;
+            }
+            else if (IsPointInRect(mouseX, mouseY, noButtonRect)) {
+                g_gameState = GameState::MENU;
+            }
+        }
+    }
+}
+
+void RenderGameOver() {
+    ApplyTexture1(g_gameOver, 250, 30);
+    SDL_RenderPresent(g_renderer);
+}
+
+void HandleTimer() {
+    StopBackgroundMusic();
+    PlayCountMusic();
+    UpdateTimer();
+    RenderCount();
+    SDL_Delay(1000);
+}
+
+/*
+Player player; // Declare an instance of the Player struct
+
+void RenderSave() {
+    ApplyTexture1(g_snakeEnter, 250, 30); // Assuming ApplyTexture1 is your function to render the PNG texture
+
+    // Render the player's name onto the PNG texture
+   // Check if the player's name is valid
+    SDL_Color textColor = { 0, 0, 255 };
+
+    // Render the player's name onto the PNG texture
+    // Define maximum width for text wrapping
+    int maxWidth = 200; // Adjust as needed
+
+    // Render the player's name onto the text surface with wrapping
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(g_font, player.name.c_str(), textColor, maxWidth);
+    if (!textSurface) {
+        std::cerr << "Failed to render text surface: " << TTF_GetError() << std::endl;
+        // Handle the error appropriately (return or other actions)
+    }
+
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
+    if (!textTexture) {
+        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(textSurface); // Free the surface before returning
+        // Handle the error appropriately (return or other actions)
+    }
+
+    SDL_Rect textNameRect = { 336, 375, 320, 30 };
+    SDL_RenderCopy(g_renderer, textTexture, nullptr, &textNameRect);
+
+    // Free the surface and texture
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+
+    // Present the renderer
+    SDL_RenderPresent(g_renderer);
+}
+
+
+
+// Function to save the player's name, score, and current date/time to a text file
+void SavePlayerInfo(const std::string& playerName, int score) {
+    // Get the current date and time
+    auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::string dateTimeString = std::ctime(&currentTime);
+
+    // Create a new player object with the given name, score, and current date/time
+    Player newPlayer;
+    newPlayer.name = playerName;
+    newPlayer.score = score;
+    newPlayer.dateAndTime = dateTimeString;
+
+    // Add the new player to the array of players
+    players.push_back(newPlayer);
+
+    // Write player information to a text file
+    std::ofstream outputFile("player_info.txt", std::ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        outputFile <<  playerName << " " << score << " " << dateTimeString;
+        outputFile.close();
+        std::cout << "Player information saved to file." << std::endl;
+    }
+    else {
+        std::cerr << "Error: Unable to open file for writing." << std::endl;
+    }
+
+    // Print confirmation message
+    std::cout << "Player name saved: " << playerName << ", Score: " << score << ", Date and Time: " << dateTimeString;
+}
+
+// Function to handle input events and save player information
+void HandleSaveInput() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_TEXTINPUT) {
+            // Append the input character to the player's name string
+            player.name += g_event.text.text;
+            std::cout << "Player name: " << player.name << std::endl; // Just for demonstration
+        }
+        else if (g_event.type == SDL_KEYDOWN) {
+            if (g_event.key.keysym.sym == SDLK_RETURN || g_event.key.keysym.sym == SDLK_RETURN2 || g_event.key.keysym.sym == SDLK_KP_ENTER) {
+                SavePlayerInfo(player.name, score);
+                g_gameState = GameState::QUIT;
+            }
+        }
+    }
+}
+*/
+
+/*
+Player player; // Declare an instance of the Player struct
+
+void RenderSave() {
+    ApplyTexture1(g_snakeEnter, 250, 30); // Assuming ApplyTexture1 is your function to render the PNG texture
+
+    // Render the player's name onto the PNG texture
+   // Check if the player's name is valid
+    SDL_Color textColor = { 0, 0, 255 };
+
+    // Render the player's name onto the PNG texture
+    // Define maximum width for text wrapping
+    int maxWidth = 200; // Adjust as needed
+
+    // Render the player's name onto the text surface with wrapping
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(g_font, player.name.c_str(), textColor, maxWidth);
+    if (!textSurface) {
+        std::cerr << "Failed to render text surface: " << TTF_GetError() << std::endl;
+        // Handle the error appropriately (return or other actions)
+    }
+
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
+    if (!textTexture) {
+        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(textSurface); // Free the surface before returning
+        // Handle the error appropriately (return or other actions)
+    }
+
+    SDL_Rect textNameRect = { 336, 375, 320, 30 };
+    SDL_RenderCopy(g_renderer, textTexture, nullptr, &textNameRect);
+
+    // Free the surface and texture
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+
+    // Present the renderer
+    SDL_RenderPresent(g_renderer);
+}
+
+
+
+// Function to save the player's name, score, and current date/time to a text file
+void SavePlayerInfo(const std::string& playerName, int score) {
+    // Get the current date and time
+    auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::string dateTimeString = std::ctime(&currentTime);
+
+    // Create a new player object with the given name, score, and current date/time
+    Player newPlayer;
+    newPlayer.name = playerName;
+    newPlayer.score = score;
+    newPlayer.dateAndTime = dateTimeString;
+
+    // Add the new player to the array of players
+    players.push_back(newPlayer);
+
+    // Write player information to a text file
+    std::ofstream outputFile("player_info.txt", std::ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        outputFile <<  playerName << " " << score << " " << dateTimeString;
+        outputFile.close();
+        std::cout << "Player information saved to file." << std::endl;
+    }
+    else {
+        std::cerr << "Error: Unable to open file for writing." << std::endl;
+    }
+
+    // Print confirmation message
+    std::cout << "Player name saved: " << playerName << ", Score: " << score << ", Date and Time: " << dateTimeString;
+}
+
+// Function to handle input events and save player information
+void HandleSaveInput() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_TEXTINPUT) {
+            // Append the input character to the player's name string
+            player.name += g_event.text.text;
+            std::cout << "Player name: " << player.name << std::endl; // Just for demonstration
+        }
+        else if (g_event.type == SDL_KEYDOWN) {
+            if (g_event.key.keysym.sym == SDLK_RETURN || g_event.key.keysym.sym == SDLK_RETURN2 || g_event.key.keysym.sym == SDLK_KP_ENTER) {
+                SavePlayerInfo(player.name, score);
+                g_gameState = GameState::QUIT;
+            }
+        }
+    }
+}
+
+*/

@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 5; // Current level of the game
+int currentLevel = 1; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -991,7 +991,7 @@ void subPortalLevel5() {
 
     for (int i = 0; i <= 2; i++) {
         subPortals.push_back({
-            {PLAY_AREA_RIGHT - 16 * (15 + i), PLAY_AREA_TOP + 16 * 13, 16, 16},
+            {PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13, 16, 16},
             {PLAY_AREA_LEFT + 16 * (6 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
             10, // Color: Light green
             0 // Parallel

@@ -55,8 +55,7 @@ void spawnFood() {
             y_index = rand() % y_16pixel_range;
             foodX = PLAY_AREA_LEFT + 16 * x_index;
             foodY = PLAY_AREA_TOP + 16 * y_index;
-        } while ((CheckCollision_food_obstacle() || CheckCollision_food_snake())
-            && !(foodX >= PLAY_AREA_RIGHT - 16* 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
+        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || (foodX >= PLAY_AREA_RIGHT - 16* 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
     }
     else {
         do {

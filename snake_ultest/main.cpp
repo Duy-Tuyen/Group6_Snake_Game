@@ -9,28 +9,54 @@ int main(int argc, char** argv) {
 
     setupAndQuery();
 
+    // Play background music when rendering the menu
+    PlayBackgroundMusic();
+
     while (g_gameState != GameState::QUIT && running) {
         if (!pause) loopCounter++;
         if (loopCounter > 1000) {
 			loopCounter = 0;
 		}
         switch (g_gameState) {
+        case GameState::INTRO:
+            UpdateIntroFrame();
+            RenderIntro();
+            if (introFinished) {
+                g_gameState = GameState::MENU;
+            }
+            break;
+
         case GameState::MENU:
             HandleMenuInput();
             RenderMenu();
             break;
+
         case GameState::LOAD:
             HandleLoadInput();
             RenderLoadScreen();
             break;
+
         case GameState::SETTINGS:
             HandleSettingsInput();
             RenderSettingsScreen();
             break;
+
+        case GameState::LEADERBOARD:
+            //HandleLeadInput();
+            //loadFileScore();
+            //RenderLeadScreen();
+            break;
+
+        case GameState::SKIN:
+            HandleSkinInput();
+            RenderSkinScreen();
+            break;
+
         case GameState::ABOUT:
             HandleAboutInput();
             RenderAboutScreen();
             break;
+
         case GameState::PLAYING:
             StopBackgroundMusic();
             HandlePauseMenuInput();
@@ -38,17 +64,17 @@ int main(int argc, char** argv) {
             MoveSnake(running);
             foodSpawnedThisFrame = false;
 
+            // Draw the tail on every frame
             AddTailSegment();
 
             movingObstalceLevel4();
 
             SDL_RenderClear(g_renderer);
-            // Draw the tail on every frame
+
             RenderPlaying();
             
             
             SDL_RenderPresent(g_renderer);
-
 
             if (CheckEat() && !hasEaten) {
                 EatFood();
@@ -57,7 +83,7 @@ int main(int argc, char** argv) {
             }
 
             if (!goInGate_progress)
-            if (CheckCollision() == true || toggleObstacleCollision()) {
+            if (CheckCollision() || toggleObstacleCollision()) {
                 //running = false;
             }
 
@@ -74,6 +100,22 @@ int main(int argc, char** argv) {
 
             SDL_Delay(100); // Adjust delay for smoother movement
             break;
+
+        case GameState::ASK:
+            HandleGameOver();
+            RenderGameOver();
+            break;
+
+        case GameState::SAVE:
+            //HandleSaveInput();
+            //RenderSave();
+            break;
+
+        case GameState::OUTRO:
+            RenderOutro();
+            g_gameState = GameState::QUIT;
+            break;
+
         default:
             break;
         }
