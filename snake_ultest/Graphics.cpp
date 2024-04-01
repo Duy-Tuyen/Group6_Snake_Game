@@ -425,8 +425,14 @@ void HandlePlayingInput() {
 }
 
 void UpdateStats() {
-    snakeLength++; // Or update according to your game logic
-    score += 10; // Or update according to your game logic
+    if (SpawnChance()) {
+        snakeLength += 2;
+        score += 20;
+    }
+    else {
+        snakeLength++; // Or update according to your game logic
+        score += 10; // Or update according to your game logic
+    }
 }
 
 void UpdateStatsBar() {
@@ -436,13 +442,35 @@ void UpdateStatsBar() {
     }
     // Increment foodCount to move to the next stats bar texture
     foodCount = (foodCount + 1) % 6; // Ensure foodCount stays within range [0, 5]
-    std::string filePath = "Foodbar." + std::to_string(foodCount) + ".png";
-    g_statsBars = LoadTexture(filePath);
-    if (g_statsBars == nullptr) {
-        // Handle the case when the texture failed to load
-        // For example, you might want to load a default texture
-        g_statsBars = LoadTexture("Foodbar.0.png");
+    int SpecialFoodCount = 0;
+    SpecialFoodCount = foodCount++;
+    if (SpawnChance()) {
+        if (SpecialFoodCount == 6) {
+            std::string filePath = "Foodbar.5.png";
+            g_statsBars = LoadTexture(filePath);
+        }
+        else {
+            std::string filePath = "Foodbar." + std::to_string(SpecialFoodCount) + ".png";
+            g_statsBars = LoadTexture(filePath);
+        }
+        if (g_statsBars == nullptr) {
+            // Handle the case when the texture failed to load
+            // For example, you might want to load a default texture
+            g_statsBars = LoadTexture("Foodbar.0.png");
+        }
     }
+    else {
+        std::string filePath = "Foodbar." + std::to_string(foodCount) + ".png";
+        g_statsBars = LoadTexture(filePath);
+        if (g_statsBars == nullptr) {
+            // Handle the case when the texture failed to load
+            // For example, you might want to load a default texture
+            g_statsBars = LoadTexture("Foodbar.0.png");
+        }
+    }
+
+
+
 }
 
 

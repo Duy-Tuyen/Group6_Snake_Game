@@ -6,7 +6,7 @@ Direction lastDirection = STOP;
 int snakeX = PLAY_AREA_LEFT + 16 * 1;
 int snakeY = PLAY_AREA_TOP + 16 * 13;
 bool eaten;
-int chance = 100;
+int chance = 50;
 std::vector<int> tailX;  // Snake tail segment X positions
 std::vector<int> tailY;  // Snake tail segment Y positions
 std::vector<bool> tailShow;  // Snake tail segment visibility
@@ -49,7 +49,9 @@ bool SpawnChance() {
     
     int randomNumber = rand() % 100;
 
-    
+    if (foodEaten == 0) {
+        chance = 0;
+    }
     return (!(randomNumber < chance));
 }
 void reset() {
@@ -79,12 +81,7 @@ void reset() {
     g_statsBars = nullptr;
 
     g_food = LoadTexture("Food.png");
-    if (SpawnChance()) {
-        ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-    }
-    else {
-        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
-    }
+    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
     goOutGate_progress = true;
 }
 
@@ -159,6 +156,7 @@ void EatFood() {
                 foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
                 foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
                 ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+                foodEaten++;
 
             } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
         }
@@ -169,6 +167,7 @@ void EatFood() {
                 foodX = rand() % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 - 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
                 foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 - 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
                 ApplyTexture2(g_specialFood, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+                foodEaten+=2;
             } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
             }
 
