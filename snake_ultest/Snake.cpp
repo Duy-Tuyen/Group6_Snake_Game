@@ -3,8 +3,8 @@
 Direction snakeDirection = RIGHT;
 Direction lastDirection = STOP;
 
-int snakeX = PLAY_AREA_LEFT + 16 * 1;
-int snakeY = PLAY_AREA_TOP + 16 * 13;
+int snakeX = 0;
+int snakeY = 0;
 bool eaten;
 
 std::vector<int> tailX;  // Snake tail segment X positions
@@ -21,6 +21,7 @@ int pause = 0;
 void MoveSnake(bool& running);
 bool running = true;
 bool foodSpawnedThisFrame = false;
+bool lockMovement = false;
 
 int tailDelayCounter = 0;
 const int TAIL_DELAY = 5;
@@ -31,8 +32,8 @@ int foodEaten = 0; // Number of food items eaten by the snake
 bool hasEaten = false;
 
 
-int foodX = rand () % (PLAY_AREA_RIGHT - PLAY_AREA_LEFT + 1 + 2 * foodWidth) + PLAY_AREA_LEFT + foodWidth;
-int foodY = rand() % (PLAY_AREA_BOTTOM - PLAY_AREA_TOP + 1 + 2 * foodHeight) + PLAY_AREA_TOP + foodHeight;
+int foodX;
+int foodY;
 int foodWidth_png, foodHeight_png;
 int bkWidth, bkHeight;
 int snakeWidth_png, snakeHeight_png;
@@ -68,6 +69,8 @@ void spawnFood() {
 }
 
 void reset() {
+    snakeX = 0;
+    snakeY = 0;
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
 
@@ -84,7 +87,6 @@ void reset() {
 
     Level(currentLevel);
 
-    spawnFood();
     show_food = true;
 
     foodEaten = 0;
@@ -94,6 +96,7 @@ void reset() {
     g_food = LoadTexture("Food.png");
     ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
     goOutGate_progress = true;
+    gate_open_step[0] = true;
 }
 
 bool CheckEat() {
@@ -304,80 +307,83 @@ void MoveSnake(bool& running) {
     }
 
     
+    if (!lockMovement) {
+        // Update the position of the snake's head based on the direction
+        switch (snakeDirection) {
+        case UP:
+            if (lastDirection != DOWN) {
+                if (snakeY > PLAY_AREA_TOP) {
+                    pause = 0;
+                    snakeY -= SNAKE_SPEED;
+                    lastDirection = UP;
+                }
+            }
+            else {
+                if (snakeY < PLAY_AREA_BOTTOM) {
+                    if (pause) break;
+                    snakeY += SNAKE_SPEED;
+                    lastDirection = DOWN;
+                }
+            }
+            break;
+        case DOWN:
+            if (lastDirection != UP) {
+                if (snakeY < PLAY_AREA_BOTTOM) {
+                    pause = 0;
+                    snakeY += SNAKE_SPEED;
+                    lastDirection = DOWN;
+                }
+            }
+            else {
+                if (snakeY > PLAY_AREA_TOP) {
+                    if (pause) break;
+                    snakeY -= SNAKE_SPEED;
+                    lastDirection = UP;
+                }
+            }
+            break;
+        case LEFT:
+            if (lastDirection != RIGHT) {
+                if (snakeX > PLAY_AREA_LEFT) {
+                    pause = 0;
+                    snakeX -= SNAKE_SPEED;
+                    lastDirection = LEFT;
+                }
+            }
+            else {
+                if (snakeX < PLAY_AREA_RIGHT) {
+                    if (pause) break;
+                    snakeX += SNAKE_SPEED;
+                    lastDirection = RIGHT;
+                }
+            }
+            break;
+        case RIGHT:
+            if (lastDirection != LEFT) {
+                if (snakeX < PLAY_AREA_RIGHT) {
+                    pause = 0;
+                    snakeX += SNAKE_SPEED;
+                    lastDirection = RIGHT;
+                }
+            }
+            else {
+                if (snakeX > PLAY_AREA_LEFT) {
+                    if (pause) break;
+                    snakeX -= SNAKE_SPEED;
+                    lastDirection = LEFT;
+                }
+            }
+            break;
 
-    // Update the position of the snake's head based on the direction
-    switch (snakeDirection) {
-    case UP:
-        if (lastDirection != DOWN) {
-            if (snakeY > PLAY_AREA_TOP) {
-                pause = 0;
-                snakeY -= SNAKE_SPEED;
-                lastDirection = UP;
+        case PAUSE:
+            if (pause == 0) {
+                pause = 1;
             }
+            break;
         }
-        else {
-            if (snakeY < PLAY_AREA_BOTTOM) {
-                if (pause) break;
-                snakeY += SNAKE_SPEED;
-                lastDirection = DOWN;
-            }
-        }
-        break;
-    case DOWN:
-        if (lastDirection != UP) {
-            if (snakeY < PLAY_AREA_BOTTOM) {
-                pause = 0;
-                snakeY += SNAKE_SPEED;
-                lastDirection = DOWN;
-            }
-        }
-        else {
-            if (snakeY > PLAY_AREA_TOP) {
-                if (pause) break;
-                snakeY -= SNAKE_SPEED;
-                lastDirection = UP;
-            }
-        }
-        break;
-    case LEFT:
-        if (lastDirection != RIGHT) {
-            if (snakeX > PLAY_AREA_LEFT) {
-                pause = 0;
-                snakeX -= SNAKE_SPEED;
-                lastDirection = LEFT;
-            }
-        }
-        else {
-            if (snakeX < PLAY_AREA_RIGHT) {
-                if (pause) break;
-                snakeX += SNAKE_SPEED;
-                lastDirection = RIGHT;
-            }
-        }
-        break;
-    case RIGHT:
-        if (lastDirection != LEFT) {
-            if (snakeX < PLAY_AREA_RIGHT) {
-                pause = 0;
-                snakeX += SNAKE_SPEED;
-                lastDirection = RIGHT;
-            }
-        }
-        else {
-            if (snakeX > PLAY_AREA_LEFT) {
-                if (pause) break;
-                snakeX -= SNAKE_SPEED;
-                lastDirection = LEFT;
-            }
-        }
-        break;
-
-    case PAUSE:
-        if (pause == 0) {
-            pause = 1;
-        }
-        break;
     }
+    
+
     if (positions.size() > tailX.size()) {
         positions.pop_back();
     }

@@ -602,7 +602,6 @@ void HandleMenuInput() {
         else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
-            std::cout << "Mouse click at (" << mouseX << ", " << mouseY << ")" << std::endl;
             int buttonWidth = 200, buttonHeight = 50;
             // Define the regions for the buttons based on the menu background image
             SDL_Rect startButtonRect = { 400, 150, buttonWidth, buttonHeight };
@@ -707,7 +706,7 @@ void HandlePlayingInput() {
             exit(0);
         }
 
-        else if (g_event.type == SDL_KEYDOWN) {
+        else if (g_event.type == SDL_KEYDOWN && !lockMovement) {
             switch (g_event.key.keysym.sym) {
             case SDLK_p:
                 snakeDirection = PAUSE;
@@ -998,8 +997,6 @@ void RenderPlaying() {
     RenderPortals(g_renderer);
 
     RenderSubPortal(g_renderer);
-
-    gate_out();
 
     if (snakeDirection == PAUSE) {
 

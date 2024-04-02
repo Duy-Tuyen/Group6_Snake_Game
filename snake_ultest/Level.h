@@ -29,6 +29,8 @@ struct subPortal {
     bool parallel;
 };
 
+extern std::vector<bool> gate_open_step;
+
 extern std::vector<Obstacle> obstacles; // Vector to store obstacles
 extern std::vector<Obstacle> portals; // Vector to store portals
 extern std::vector<Obstacle> moving_obstacles; // Vector to store moving obstacles
@@ -94,3 +96,13 @@ void subPortalLevel5();
 
 void snakeTeleport_in_to_out();
 void snakeTeleport_out_to_in();
+
+void gate_out1();
+
+void gate_out2();
+
+void gate_out3();
+
+void gate_out4();
+
+void gate_open();

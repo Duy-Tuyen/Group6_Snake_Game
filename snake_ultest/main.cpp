@@ -69,12 +69,38 @@ int main(int argc, char** argv) {
 
             movingObstalceLevel4();
 
-            SDL_RenderClear(g_renderer);
+
+
 
             RenderPlaying();
-            
-            
             SDL_RenderPresent(g_renderer);
+
+            if (gate_open_step[0]) {
+                SDL_DestroyTexture(g_snake);
+                snakeX = 0;
+                snakeY = 0;
+                for (int i = 0; i < tailX.size(); i++) {
+                    tailX[i] = 0;
+                    tailY[i] = 0;
+                    tailShow[i] = false;
+                }
+                
+                lockMovement = true;
+                goOutGate_progress = true;
+            }
+            if (gate_open_step[0] || gate_open_step[1] || gate_open_step[2]) {
+                gate_open();
+                SDL_Delay(100);
+                continue;
+            }
+            if (gate_open_step[3]) {
+                gate_open();
+                SDL_Delay(100);
+                gate_open_step[3] = false;
+                
+            }
+            
+            SDL_RenderClear(g_renderer);
 
             if (CheckEat() && !hasEaten) {
                 EatFood();
@@ -98,7 +124,7 @@ int main(int argc, char** argv) {
             goInGate_check();
             goOutGate_check();
 
-            SDL_Delay(100); // Adjust delay for smoother movement
+            SDL_Delay(80); // Adjust delay for smoother movement
             break;
 
         case GameState::ASK:

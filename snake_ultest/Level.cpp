@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 1; // Current level of the game
+int currentLevel = 5; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -352,39 +352,129 @@ void gate_in() {
     int obstacle_size = 16;
     int portal_size = 16;
 
-    x = PLAY_AREA_RIGHT - 12;
+    x = PLAY_AREA_RIGHT - 16 * 1 - 8;
     y = PLAY_AREA_TOP + 16 * 12;
-    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+    AddObstacle(x, y, obstacle_size * 2, obstacle_size);
 
-    x = PLAY_AREA_RIGHT - 12;
+    x = PLAY_AREA_RIGHT - 16 * 1 - 8;
     y = PLAY_AREA_BOTTOM - 16 * 12;
-    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+    AddObstacle(x, y, obstacle_size * 2, obstacle_size);
 
     x = PLAY_AREA_RIGHT - 4;
     y = PLAY_AREA_TOP + 16 * 13;
     AddPortal(x, y, portal_size * 3 / 2, portal_size);
 }
 
-void gate_out() {
+std::vector<bool> gate_open_step = { 1, 0, 0, 0 };
+
+void gate_out1() {
+    int x, y;
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 13;
+    AddObstacle(x, y, 16, 16 * 3);
+}
+
+void gate_out2() {
+    int x, y;
+    x = PLAY_AREA_LEFT + 16 * 2;
+    y = PLAY_AREA_TOP + 16 * 13;
+    AddObstacle(x, y, 16, 16 * 3);
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(x, y + 16 * (2 * i), 16, 16);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 13;
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0);
+    SDL_Rect obstacleRect = { x, y, 16, 16 };
+    SDL_RenderFillRect(g_renderer, &obstacleRect);
+}
+
+void gate_out3() {
+    int x, y;
+    x = PLAY_AREA_LEFT + 16 * 2;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(x, y + 16 * (2 * i), 16, 16);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(x, y + 16 * (2 * i), 16, 16);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 13;
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0);
+    SDL_Rect obstacleRect = { x, y, 16, 16 };
+    SDL_RenderFillRect(g_renderer, &obstacleRect);
+}
+
+void gate_out4() {
     int x, y;
     int obstacle_size = 16;
     int portal_size = 16;
 
-    x = PLAY_AREA_LEFT + 12;
+    x = PLAY_AREA_LEFT + 16 * 1;
     y = PLAY_AREA_TOP + 16 * 12;
-    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+    AddObstacle(x, y, obstacle_size, obstacle_size);
 
-    x = PLAY_AREA_LEFT + 12;
+    x = PLAY_AREA_LEFT + 16 * 1;
     y = PLAY_AREA_BOTTOM - 16 * 12;
-    AddObstacle(x, y, obstacle_size * 5 / 2, obstacle_size);
+    AddObstacle(x, y, obstacle_size, obstacle_size);
 
     x = PLAY_AREA_LEFT + 16 * 1;
     y = PLAY_AREA_TOP + 16 * 13;
 
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0); // Set obstacle color (red)
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0);
     SDL_Rect obstacleRect = { x - obstacle_size / 2, y - obstacle_size / 2, obstacle_size, obstacle_size };
-    SDL_RenderFillRect(g_renderer, &obstacleRect); // Render obstacle
+    SDL_RenderFillRect(g_renderer, &obstacleRect);
 }
+
+void gate_open() {
+    if (gate_open_step[0]) {
+        gate_out1();
+        gate_open_step[0] = false;
+        gate_open_step[1] = true;
+        return;
+    }
+    if (gate_open_step[1]) {
+        obstacles.clear();
+        monsters.clear();
+        subPortals.clear();
+        Level(currentLevel);
+		gate_out2();
+		gate_open_step[1] = false;
+		gate_open_step[2] = true;
+        return;
+	}
+    if (gate_open_step[2]) {
+        obstacles.clear();
+        monsters.clear();
+        subPortals.clear();
+        Level(currentLevel);
+		gate_out3();
+		gate_open_step[2] = false;
+		gate_open_step[3] = true;
+        lockMovement = false;
+        return;
+	}
+    if (gate_open_step[3]) {
+        obstacles.clear();
+        monsters.clear();
+        subPortals.clear();
+        Level(currentLevel);
+		gate_out4();
+        spawnFood();
+	}
+}
+
+
 
 void wall() {
     int top = PLAY_AREA_TOP;
@@ -413,17 +503,13 @@ void Level(int levelNumber) {
         // Set obstacle position and dimensions for level 1
         wall();
 
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
-
         break;
     case 2:
         // Level 2 settings
         // Set obstacle position and dimensions for level 2
         wall();
         Obstacle_level_2();
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
+
 
         break;
         // Add more cases for additional levels
@@ -433,8 +519,7 @@ void Level(int levelNumber) {
         wall();
         toggleObstacleLevel3();
         toggleObstacleLevel3_start = true;
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
+
 
         break;
     case 4:
@@ -443,8 +528,7 @@ void Level(int levelNumber) {
         wall();
         Obstacle_level_4();
         movingObstacleLevel4_start = true;
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
+
 
         break;
     case 5:
@@ -482,22 +566,23 @@ void RenderHitbox(int x, int y, int w, int h) {
 
 void goInGate_check() {
     if (CheckCollisionWithPortals(snakeX, snakeY, 16 * 3 / 2, 16)) {
-        SDL_DestroyTexture(g_snake);
-        snakeX = 0; snakeY = 0;
-        //lockMovement = true;
-        snakeDirection = Direction::STOP;
+        lockMovement = true;
         goInGate_progress = true;
+        SDL_DestroyTexture(g_snake);
+        MoveSnake(running);
+        snakeX = 0; snakeY = 0;
     }
 
     if (tailLength > 0 && goInGate_progress) {
+
         for (int i = 0; i < tailLength - 1; i++) {
             if (tailX[i] < PLAY_AREA_LEFT - 8 || tailX[i] > PLAY_AREA_RIGHT + 8 || tailY[i] < PLAY_AREA_TOP - 8 || tailY[i] > PLAY_AREA_BOTTOM + 8) {
                 tailShow[i] = false;
             }
         }
 
-        if (tailX[tailLength - 1] < PLAY_AREA_LEFT - 8 || tailX[tailLength - 1] > PLAY_AREA_RIGHT + 8 || tailY[tailLength - 1] < PLAY_AREA_TOP - 8 || tailY[tailLength - 1] > PLAY_AREA_BOTTOM + 8) {
-            tailShow[tailLength - 1] = false;
+        if (tailX[tailX.size() - 1] < PLAY_AREA_LEFT - 8 || tailX[tailX.size() - 1] > PLAY_AREA_RIGHT + 8 || tailY[tailX.size() - 1] < PLAY_AREA_TOP - 8 || tailY[tailX.size() - 1] > PLAY_AREA_BOTTOM + 8) {
+            tailShow[tailX.size() - 1] = false;
             goInGate_progress = false;
             nextLevel();
         }
@@ -506,10 +591,20 @@ void goInGate_check() {
 
 void goOutGate_check() {
     if (goOutGate_progress) {
-        snakeX = PLAY_AREA_LEFT + 16 * 1;
+        if (gate_open_step[0]) {
+            SDL_DestroyTexture(g_snake);
+            snakeX = 0;
+            snakeY = 0;
+
+            return;
+        }
+        snakeX = PLAY_AREA_LEFT + 16 * 2;
         snakeY = PLAY_AREA_TOP + 16 * 13;
         g_snake = LoadTexture("2.png");
         ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
+
+        lockMovement = false;
+		
 
         if (tailLength > 0 && goOutGate_progress) {
             for (int i = 0; i < tailLength - 1; i++) {
@@ -519,8 +614,8 @@ void goOutGate_check() {
                 }
             }
 
-            if (tailX[tailLength - 1] >= PLAY_AREA_LEFT - 8 || tailX[tailLength - 1] <= PLAY_AREA_RIGHT + 8 || tailY[tailLength - 1] >= PLAY_AREA_TOP - 8 || tailY[tailLength - 1] <= PLAY_AREA_BOTTOM + 8) {
-                tailShow[tailLength - 1] = true;
+            if (tailX[tailX.size() - 1] >= PLAY_AREA_LEFT - 8 || tailX[tailX.size() - 1] <= PLAY_AREA_RIGHT + 8 || tailY[tailX.size() - 1] >= PLAY_AREA_TOP - 8 || tailY[tailX.size() - 1] <= PLAY_AREA_BOTTOM + 8) {
+                tailShow[tailX.size() - 1] = true;
                 SDL_Delay(1);
                 goOutGate_progress = false;
             }
