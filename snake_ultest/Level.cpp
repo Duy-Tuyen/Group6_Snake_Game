@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 4; // Current level of the game
+int currentLevel = 5; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -986,16 +986,12 @@ void snakeTeleport_out_to_in() {
 
 void subPortalLevel5() {
     // Obstacle setup
+    
     // Top Left field
     for (int i = 0; i <= 9; i++) {
         AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 1, 16, 16);
         AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 17, 16, 16);
         AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 18, 16, 16);
-    }
-
-    for (int i = 0; i <= 15; i++) {
-        AddObstacle(PLAY_AREA_LEFT + 16 * 1, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
-        AddObstacle(PLAY_AREA_LEFT + 16 * 10, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
     }
 
     // Top middle field
@@ -1099,9 +1095,9 @@ void subPortalLevel5() {
     for (int i = 0; i <= 2; i++) {
         subPortals.push_back({
             {PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13, 16, 16},
-            {PLAY_AREA_LEFT + 16 * (6 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
+            {PLAY_AREA_LEFT + 16 * (5 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
             10, // Color: Light green
-            0 // Parallel
+            0 // non Parallel
             });
     }
 
