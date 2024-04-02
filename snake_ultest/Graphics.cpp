@@ -997,6 +997,8 @@ void RenderPlaying() {
     RenderPortals(g_renderer);
 
     RenderSubPortal(g_renderer);
+    
+    if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
 
     if (snakeDirection == PAUSE) {
 

@@ -106,3 +106,7 @@ void gate_out3();
 void gate_out4();
 
 void gate_open();
+
+void fake_portal_gate();
+
+extern bool gate_open_done;

@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 5; // Current level of the game
+int currentLevel = 4; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -445,7 +445,6 @@ void gate_open() {
     }
     if (gate_open_step[1]) {
         obstacles.clear();
-        monsters.clear();
         subPortals.clear();
         Level(currentLevel);
 		gate_out2();
@@ -455,7 +454,6 @@ void gate_open() {
 	}
     if (gate_open_step[2]) {
         obstacles.clear();
-        monsters.clear();
         subPortals.clear();
         Level(currentLevel);
 		gate_out3();
@@ -466,13 +464,22 @@ void gate_open() {
 	}
     if (gate_open_step[3]) {
         obstacles.clear();
-        monsters.clear();
         subPortals.clear();
         Level(currentLevel);
 		gate_out4();
         spawnFood();
+        gate_open_step[3] = false;
 	}
 }
+
+void fake_portal_gate() {
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 0, 0);
+    SDL_Rect obstacleRect = { PLAY_AREA_LEFT + 16 * 1 - 16 / 2, PLAY_AREA_TOP + 16 * 13 - 16 / 2, 16, 16 };
+    SDL_RenderFillRect(g_renderer, &obstacleRect);
+}
+
+bool gate_open_done = false;
+bool isMovingMonster = false;
 
 
 
@@ -535,18 +542,12 @@ void Level(int levelNumber) {
         wall();
         subPortalLevel5();
 
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
-
         break;
 
     default:
         // Default level settings
         // Set default obstacle position and dimensions
         wall();
-
-        // Avoid food - obstacle collision when first going to the current level
-        spawnFood();
 
         break;
     }
@@ -590,6 +591,13 @@ void goInGate_check() {
 }
 
 void goOutGate_check() {
+    if (gate_open_done) {
+        obstacles.clear();
+        subPortals.clear();
+        if (currentLevel == 4) isMovingMonster = true;
+        Level(currentLevel);
+        gate_open_done = false;
+    }
     if (goOutGate_progress) {
         if (gate_open_step[0]) {
             SDL_DestroyTexture(g_snake);
@@ -617,6 +625,7 @@ void goOutGate_check() {
             if (tailX[tailX.size() - 1] >= PLAY_AREA_LEFT - 8 || tailX[tailX.size() - 1] <= PLAY_AREA_RIGHT + 8 || tailY[tailX.size() - 1] >= PLAY_AREA_TOP - 8 || tailY[tailX.size() - 1] <= PLAY_AREA_BOTTOM + 8) {
                 tailShow[tailX.size() - 1] = true;
                 SDL_Delay(1);
+                gate_open_done = true;
                 goOutGate_progress = false;
             }
         }
@@ -778,29 +787,32 @@ bool toggleObstacleCollision() {
 }
 
 void movingObstalceLevel4() {
-    if (movingObstacleLevel4_start) {
-        monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::LEFT);
-        monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::RIGHT);
-        /*
-        monsters.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::LEFT);
-        monsters.push_back({ PLAY_AREA_RIGHT - 16 * 19, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::RIGHT);
-        */
-        monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::DOWN);
-        monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::UP);
-        /*
-        monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 13, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::DOWN);
-        monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 13, 16 * 3, 16 * 3 });
-        moving_obstacles_direction.push_back(Direction::UP);
-        */
+    if (isMovingMonster) {
+        if (movingObstacleLevel4_start) {
+            monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::LEFT);
+            monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::RIGHT);
+            /*
+            monsters.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::LEFT);
+            monsters.push_back({ PLAY_AREA_RIGHT - 16 * 19, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::RIGHT);
+            */
+            monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::DOWN);
+            monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::UP);
+            /*
+            monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 13, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::DOWN);
+            monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 13, 16 * 3, 16 * 3 });
+            moving_obstacles_direction.push_back(Direction::UP);
+            */
+        }
+        movingObstacleLevel4_start = false;
     }
-    movingObstacleLevel4_start = false;
+    
     int moving_obstacle_speed = 16;
     if (loopCounter % 2 == 0 && !pause) {
         for (int i = 0; i < monsters.size(); i++) {

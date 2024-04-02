@@ -69,9 +69,6 @@ int main(int argc, char** argv) {
 
             movingObstalceLevel4();
 
-
-
-
             RenderPlaying();
             SDL_RenderPresent(g_renderer);
 
@@ -88,16 +85,10 @@ int main(int argc, char** argv) {
                 lockMovement = true;
                 goOutGate_progress = true;
             }
-            if (gate_open_step[0] || gate_open_step[1] || gate_open_step[2]) {
+            if (gate_open_step[0] || gate_open_step[1] || gate_open_step[2] || gate_open_step[3]) {
                 gate_open();
                 SDL_Delay(100);
                 continue;
-            }
-            if (gate_open_step[3]) {
-                gate_open();
-                SDL_Delay(100);
-                gate_open_step[3] = false;
-                
             }
             
             SDL_RenderClear(g_renderer);
@@ -108,8 +99,7 @@ int main(int argc, char** argv) {
 
             }
 
-            if (!goInGate_progress)
-            if (CheckCollision() || toggleObstacleCollision()) {
+            if (toggleObstacleCollision()) {
                 //running = false;
             }
 
