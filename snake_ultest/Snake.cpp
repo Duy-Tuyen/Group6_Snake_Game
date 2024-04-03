@@ -170,15 +170,15 @@ void EatFood() {
 
     }
 
-        foodEaten++;
-        if (foodEaten == FOOD_TO_EAT) {
-            gate_in();
-            SDL_DestroyTexture(g_food);
-            foodX = 960;
-            foodY = 540;
-            show_food = false;
+    foodEaten++;
+    if (foodEaten == FOOD_TO_EAT) {
+        gate_in();
+        SDL_DestroyTexture(g_food);
+        foodX = 960;
+        foodY = 540;
+        show_food = false;
 
-        }
+    }
 
         // Reset hasEaten to false after the new food is spawned
         hasEaten = false;

@@ -5,7 +5,7 @@ const int SCREEN_HEIGHT = 540;
 
 int loopCounter = 0;
 
-float zoom_scale = 1.5;
+float zoom_scale = 1;
 
 SDL_Window* g_window = nullptr;
 
@@ -867,7 +867,8 @@ void RenderLevelStats() {
     RenderText(scoreText, 720, 220);
    
     if (foodCount >= 0 && foodCount <= 5 && g_statsBars != nullptr) {
-        ApplyTexture2(g_statsBars, 800, 250,foodBarWidth * 2,foodBarHeight*2);
+        SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
+        ApplyTexture2(g_statsBars, 800, 250, foodBarWidth * 2,foodBarHeight * 2);
     }
 }
 
@@ -930,6 +931,7 @@ void HandlePauseMenuInput() {
             else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
+                std::cout << "Mouse: " << mouseX << ", " << mouseY << std::endl;
                 SDL_Rect ContinueButtonRect = { 736 * zoom_scale, 344 * zoom_scale, 131 * zoom_scale, 18 * zoom_scale };
                 SDL_Rect QuitGameButtonRect = { 501 * zoom_scale, 445 * zoom_scale, 200 * zoom_scale, 300 * zoom_scale };
 
@@ -957,7 +959,6 @@ void setupAndQuery() {
 	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
 	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
     SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
-    SDL_QueryTexture(g_statsBars, NULL, NULL, &foodBarWidth, &foodBarHeight);
 
 	foodWidth = 16, foodHeight = 16;
 	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
@@ -968,6 +969,8 @@ void setupAndQuery() {
 
 	// Initialize level
 	Level(currentLevel);
+
+    g_statsBars = LoadTexture("Foodbar.0.png");
 
     g_monster1 = LoadTexture("monster1.gif");
     g_monster2 = LoadTexture("monster2.gif");
