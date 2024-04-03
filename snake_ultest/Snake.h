@@ -76,3 +76,5 @@ void UpdateTailPosition();
 void DrawTail();
 
 void MoveSnake(bool& running);
+
+void RenderPlayingSkin();

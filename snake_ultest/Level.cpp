@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 4; // Current level of the game
+int currentLevel = 1; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;

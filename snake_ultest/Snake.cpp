@@ -421,3 +421,34 @@ void MoveSnake(bool& running) {
     snakeTeleport_in_to_out();
     snakeTeleport_out_to_in();
 }
+
+void RenderPlayingSkin() {
+    switch (currentColorIndex) {
+    case 0: // green
+        SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);
+        break;
+    case 1: // red
+        SDL_SetRenderDrawColor(g_renderer, 255, 90, 90, 0);
+		break;
+    case 2: // blue
+		SDL_SetRenderDrawColor(g_renderer, 0, 204, 255, 0);
+		break;
+    case 3: // orange
+        SDL_SetRenderDrawColor(g_renderer, 255, 165, 0, 0);
+        break;
+    case 4: // pink
+        SDL_SetRenderDrawColor(g_renderer, 255, 105, 180, 0);
+		break;
+    }
+
+    SDL_Rect snakeRect = { snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight };
+	SDL_RenderFillRect(g_renderer, &snakeRect);
+
+    for (int i = 0; i < tailX.size(); i++) {
+        if (tailShow[i]) {
+            SDL_Rect tailRect = { tailX[i] - snakeWidth / 2, tailY[i] - snakeHeight / 2, snakeWidth, snakeHeight };
+            SDL_RenderFillRect(g_renderer, &tailRect);
+        }
+    }
+
+}
