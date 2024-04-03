@@ -5,6 +5,8 @@ const int SCREEN_HEIGHT = 540;
 
 int loopCounter = 0;
 
+float zoom_scale = 1.5;
+
 SDL_Window* g_window = nullptr;
 
 SDL_Renderer* g_renderer = nullptr;
@@ -155,6 +157,8 @@ bool Init() {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
         return false;
     }
+
+    SDL_SetWindowSize(g_window, SCREEN_WIDTH * zoom_scale, SCREEN_HEIGHT * zoom_scale);
 
     g_renderer = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
     if (g_renderer == nullptr) {
@@ -382,7 +386,7 @@ void PlayHurtMusic() {
 void HandleReturnButtonInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect returnButtonRect = { RETURN_BUTTON_X, RETURN_BUTTON_Y, 20, 20 };
+    SDL_Rect returnButtonRect = { RETURN_BUTTON_X * zoom_scale, RETURN_BUTTON_Y * zoom_scale, 20 * zoom_scale, 20 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, returnButtonRect)) {
         g_gameState = GameState::MENU;
     }
@@ -587,7 +591,7 @@ void HandleSkinButtonInput() {
     // Open the skin selection screen when the skin button is clicked
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect skinButtonRect = { SKIN_BUTTON_X, SKIN_BUTTON_Y, 100, 100 };
+    SDL_Rect skinButtonRect = { SKIN_BUTTON_X * zoom_scale, SKIN_BUTTON_Y * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, skinButtonRect)) {
         g_gameState = GameState::SKIN;
     }
@@ -602,13 +606,13 @@ void HandleMenuInput() {
         else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
-            int buttonWidth = 200, buttonHeight = 50;
+            int buttonWidth = 200 * zoom_scale, buttonHeight = 50 * zoom_scale;
             // Define the regions for the buttons based on the menu background image
-            SDL_Rect startButtonRect = { 400, 150, buttonWidth, buttonHeight };
-            SDL_Rect loadButtonRect = { 400, 230, buttonWidth, buttonHeight };
-            SDL_Rect settingsButtonRect = { 400, 315, buttonWidth, buttonHeight };
-            SDL_Rect aboutButtonRect = { 400, 390, buttonWidth, buttonHeight };
-            SDL_Rect quitButtonRect = { 400, 460, buttonWidth, buttonHeight };
+            SDL_Rect startButtonRect = { 400 * zoom_scale, 150 * zoom_scale, buttonWidth, buttonHeight };
+            SDL_Rect loadButtonRect = { 400 * zoom_scale, 230 * zoom_scale, buttonWidth, buttonHeight };
+            SDL_Rect settingsButtonRect = { 400 * zoom_scale, 315 * zoom_scale, buttonWidth, buttonHeight };
+            SDL_Rect aboutButtonRect = { 400 * zoom_scale, 390 * zoom_scale, buttonWidth, buttonHeight };
+            SDL_Rect quitButtonRect = { 400 * zoom_scale, 460 * zoom_scale, buttonWidth, buttonHeight };
 
             // Define the coordinates and dimensions of other buttons here
 
@@ -648,7 +652,7 @@ void HandleLeadButtonInput() {
     // Open the skin selection screen when the skin button is clicked
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect skinButtonRect = { LEADER_BUTTON_X, LEADER_BUTTON_Y, 100, 100 };
+    SDL_Rect skinButtonRect = { LEADER_BUTTON_X * zoom_scale, LEADER_BUTTON_Y * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, skinButtonRect)) {
         g_gameState = GameState::LEADERBOARD;
     }
@@ -926,8 +930,8 @@ void HandlePauseMenuInput() {
             else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
-                SDL_Rect ContinueButtonRect = { 736, 344, 131, 18};
-                SDL_Rect QuitGameButtonRect = { 501,445, 200, 300 };
+                SDL_Rect ContinueButtonRect = { 736 * zoom_scale, 344 * zoom_scale, 131 * zoom_scale, 18 * zoom_scale };
+                SDL_Rect QuitGameButtonRect = { 501 * zoom_scale, 445 * zoom_scale, 200 * zoom_scale, 300 * zoom_scale };
 
                 if (IsPointInRect(mouseX, mouseY, ContinueButtonRect)) {
                     HandleContinueButtonInput();
@@ -1018,10 +1022,10 @@ void HandleGameOver() {
             int mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
 
-            int buttonWidth = 50, buttonHeight = 50;
+            int buttonWidth = 50 * zoom_scale, buttonHeight = 50 * zoom_scale;
             // Define the regions for the buttons based on the menu background image
-            SDL_Rect yesButtonRect = { 362, 466, buttonWidth, buttonHeight };
-            SDL_Rect noButtonRect = { 562, 464, buttonWidth, buttonHeight };
+            SDL_Rect yesButtonRect = { 362 * zoom_scale, 466 * zoom_scale, buttonWidth, buttonHeight };
+            SDL_Rect noButtonRect = { 562 * zoom_scale, 464 * zoom_scale, buttonWidth, buttonHeight };
 
             if (IsPointInRect(mouseX, mouseY, yesButtonRect)) {
                 g_gameState = GameState::SAVE;
@@ -1236,3 +1240,7 @@ void HandleSaveInput() {
 }
 
 */
+
+void setZoom(float zoom) {
+    SDL_RenderSetScale(g_renderer, zoom, zoom);
+}

@@ -238,3 +238,7 @@ void RenderGameOver();
 //void HandleLeadInput();
 
 //void RenderLeadScreen();
+
+void setZoom(float zoom);
+
+extern float zoom_scale;

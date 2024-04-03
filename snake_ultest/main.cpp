@@ -12,6 +12,7 @@ int main(int argc, char** argv) {
     PlayBackgroundMusic();
 
     while (g_gameState != GameState::QUIT && running) {
+        setZoom(zoom_scale);
         if (!pause && !goOutGate_progress) loopCounter++;
         if (loopCounter > 1000) {
 			loopCounter = 0;
