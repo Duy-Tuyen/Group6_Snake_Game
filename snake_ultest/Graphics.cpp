@@ -395,7 +395,7 @@ void HandleReturnButtonInput() {
 void HandleReturnButtonSkinInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect returnButtonRect = { 880, 480, 20, 20 };
+    SDL_Rect returnButtonRect = { 880 * zoom_scale, 480 * zoom_scale, 20 * zoom_scale, 20 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, returnButtonRect)) {
         g_gameState = GameState::SETTINGS;
     }
@@ -405,7 +405,7 @@ void HandleReturnButtonSkinInput() {
 void HandleSoundOnButtonInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect soundOnButtonRect = { SOUND_ON_BUTTON_X, SOUND_ON_BUTTON_Y, 100, 100 };
+    SDL_Rect soundOnButtonRect = { SOUND_ON_BUTTON_X * zoom_scale, SOUND_ON_BUTTON_Y * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, soundOnButtonRect)) {
         PlayBackgroundMusic();
     }
@@ -414,7 +414,7 @@ void HandleSoundOnButtonInput() {
 void HandleSoundOffButtonInput() {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
-    SDL_Rect soundOffButtonRect = { SOUND_OFF_BUTTON_X, SOUND_OFF_BUTTON_Y, 100, 300 };
+    SDL_Rect soundOffButtonRect = { SOUND_OFF_BUTTON_X * zoom_scale, SOUND_OFF_BUTTON_Y * zoom_scale, 100 * zoom_scale, 300 * zoom_scale };
     if (IsPointInRect(mouseX, mouseY, soundOffButtonRect)) {
         StopBackgroundMusic();
     }
