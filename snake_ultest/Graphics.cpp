@@ -975,7 +975,7 @@ void RenderPlaying() {
 
     RenderLevelStats();
     
-    RenderToggleObstacles_Draw_Level3();
+    RenderToggleObstacles_Draw_Level2();
 
     if (show_food) {
         RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
@@ -989,7 +989,7 @@ void RenderPlaying() {
 
     renderMonster();
 
-    RenderToggleObstacles_Fill_Level3();
+    RenderToggleObstacles_Fill_Level2();
 
     RenderMovingObstacles(g_renderer);
 

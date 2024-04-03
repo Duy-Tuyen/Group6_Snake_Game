@@ -60,7 +60,7 @@ void wall();
 
 void Obstacle_level_1();
 
-void Obstacle_level_2();
+void obstacle_level_1();
 
 void Obstacle_level_3();
 
@@ -78,21 +78,21 @@ void nextLevel();
 
 void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);
 
-void movingObstalceLevel4();
+void movingObstalceLevel3();
 
 void renderMonster();
 
-void toggleObstacleLevel3();
+void toggleObstacleLevel2();
 
-void RenderToggleObstacles_Draw_Level3();
+void RenderToggleObstacles_Draw_Level2();
 
-void RenderToggleObstacles_Fill_Level3();
+void RenderToggleObstacles_Fill_Level2();
 
 bool toggleObstacleCollision();
 
 void RenderSubPortal(SDL_Renderer* renderer);
 
-void subPortalLevel5();
+void subPortalLevel4();
 
 void snakeTeleport_in_to_out();
 void snakeTeleport_out_to_in();

@@ -6,14 +6,13 @@ int main(int argc, char** argv) {
     if (!Init()) {
         return 1;
     }
-
     setupAndQuery();
 
     // Play background music when rendering the menu
     PlayBackgroundMusic();
 
     while (g_gameState != GameState::QUIT && running) {
-        if (!pause) loopCounter++;
+        if (!pause && !goOutGate_progress) loopCounter++;
         if (loopCounter > 1000) {
 			loopCounter = 0;
 		}
@@ -67,7 +66,7 @@ int main(int argc, char** argv) {
             // Draw the tail on every frame
             AddTailSegment();
 
-            movingObstalceLevel4();
+            movingObstalceLevel3();
 
             RenderPlaying();
             SDL_RenderPresent(g_renderer);

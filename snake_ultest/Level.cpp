@@ -6,13 +6,13 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 5; // Current level of the game
+int currentLevel = 1; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
 
-bool toggleObstacleLevel3_start = false;
-bool movingObstacleLevel4_start = false;
+bool toggleObstacleLevel2_start = false;
+bool movingObstacleLevel3_start = false;
 
 std::vector<Obstacle> obstacles; // Vector to store obstacles
 std::vector<Obstacle> portals; // Vector to store portals
@@ -190,7 +190,7 @@ void RemoveObstacle(int x, int y) {
     }
 }
 
-void Obstacle_level_2() {
+void obstacle_level_1() {
     int x, y;
     int obstacle_size = 16;
     
@@ -227,7 +227,7 @@ void Obstacle_level_2() {
     
 }
 
-void Obstacle_level_3() {
+void Obstacle_level_2() {
     int x, y;
     int obstacle_size = 16;
     
@@ -256,7 +256,7 @@ void Obstacle_level_3() {
 	}
 }
 
-void Obstacle_level_4() {
+void Obstacle_level_3() {
     int x, y;
     int n = 9, m = 11;
     int obstacle_size = 16;
@@ -509,13 +509,15 @@ void Level(int levelNumber) {
         // Level 1 settings
         // Set obstacle position and dimensions for level 1
         wall();
+        obstacle_level_1();
 
         break;
     case 2:
         // Level 2 settings
         // Set obstacle position and dimensions for level 2
         wall();
-        Obstacle_level_2();
+        toggleObstacleLevel2();
+        toggleObstacleLevel2_start = true;
 
 
         break;
@@ -524,8 +526,8 @@ void Level(int levelNumber) {
         // Level 3 settings
         // Set obstacle position and dimensions for level 3
         wall();
-        toggleObstacleLevel3();
-        toggleObstacleLevel3_start = true;
+        Obstacle_level_3();
+        movingObstacleLevel3_start = true;
 
 
         break;
@@ -533,14 +535,12 @@ void Level(int levelNumber) {
         // Level 4 settings
         // Set obstacle position and dimensions for level 4
         wall();
-        Obstacle_level_4();
-        movingObstacleLevel4_start = true;
+        subPortalLevel4();
 
 
         break;
     case 5:
         wall();
-        subPortalLevel5();
 
         break;
 
@@ -594,7 +594,7 @@ void goOutGate_check() {
     if (gate_open_done) {
         obstacles.clear();
         subPortals.clear();
-        if (currentLevel == 4) isMovingMonster = true;
+        if (currentLevel == 3) isMovingMonster = true;
         Level(currentLevel);
         gate_open_done = false;
     }
@@ -633,7 +633,7 @@ void goOutGate_check() {
 }
 
 
-void toggleObstacleLevel3() {
+void toggleObstacleLevel2() {
     int x, y;
     int obstacle_size = 16;
 
@@ -673,12 +673,12 @@ void RenderToggleText(const std::string& text, int x, int y) {
     SDL_DestroyTexture(texture);
 }
 
-void RenderToggleObstacles_Draw_Level3() {
-    if (toggleObstacleLevel3_start) {
+void RenderToggleObstacles_Draw_Level2() {
+    if (toggleObstacleLevel2_start) {
         loopCounter = 0;
-        toggleObstacleLevel3_start = false;
+        toggleObstacleLevel2_start = false;
     }
-    if (currentLevel == 3) {
+    if (currentLevel == 2) {
         if (loopCounter % 100 >= 0 && loopCounter % 100 <= 49) {
             for (int i = 0; i < toggle_obstacles.size(); i++) {
                 if (i % 2 == 0) {
@@ -716,12 +716,12 @@ void RenderToggleObstacles_Draw_Level3() {
     }
 }
 
-void RenderToggleObstacles_Fill_Level3() {
-    if (toggleObstacleLevel3_start) {
+void RenderToggleObstacles_Fill_Level2() {
+    if (toggleObstacleLevel2_start) {
         loopCounter = 0;
-        toggleObstacleLevel3_start = false;
+        toggleObstacleLevel2_start = false;
     }
-    if (currentLevel == 3) {
+    if (currentLevel == 2) {
         if (loopCounter % 100 >= 0 && loopCounter % 100 <= 49) {
             for (int i = 0; i < toggle_obstacles.size(); i++) {
                 if (i % 2 == 1) {
@@ -745,7 +745,7 @@ void RenderToggleObstacles_Fill_Level3() {
 }
 
 bool toggleObstacleCollision() {
-    if (currentLevel == 3) {
+    if (currentLevel == 2) {
         if (loopCounter % 100 >= 0 && loopCounter % 100 <= 49) {
             for (int i = 0; i < toggle_obstacles.size(); i++) {
                 if (i % 2 == 1) {
@@ -786,9 +786,9 @@ bool toggleObstacleCollision() {
     return false;
 }
 
-void movingObstalceLevel4() {
+void movingObstalceLevel3() {
     if (isMovingMonster) {
-        if (movingObstacleLevel4_start) {
+        if (movingObstacleLevel3_start) {
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::LEFT);
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
@@ -810,13 +810,13 @@ void movingObstalceLevel4() {
             moving_obstacles_direction.push_back(Direction::UP);
             */
         }
-        movingObstacleLevel4_start = false;
+        movingObstacleLevel3_start = false;
     }
     
     int moving_obstacle_speed = 16;
     if (loopCounter % 2 == 0 && !pause) {
         for (int i = 0; i < monsters.size(); i++) {
-            if (currentLevel == 4) {
+            if (currentLevel == 3) {
                 switch (moving_obstacles_direction[i]) {
                 case RIGHT:
                     if (monsters[i].x <= PLAY_AREA_RIGHT - 16 * 5) {
@@ -858,7 +858,7 @@ void movingObstalceLevel4() {
             }
         }
     }
-    if (currentLevel == 5) {
+    if (currentLevel == 4) {
         monsters.clear();
         moving_obstacles_direction.clear();
     }
@@ -984,7 +984,7 @@ void snakeTeleport_out_to_in() {
     }
 }
 
-void subPortalLevel5() {
+void subPortalLevel4() {
     // Obstacle setup
     
     // Top Left field
