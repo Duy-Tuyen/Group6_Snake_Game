@@ -64,6 +64,7 @@ extern SDL_Texture* g_colorSkin;
 extern SDL_Texture* g_colorSnake;
 extern SDL_Texture* g_intro;
 extern SDL_Texture* g_outro;
+extern SDL_Texture* g_subPortal;
 
 
 extern SDL_Texture* g_pauseMenu;

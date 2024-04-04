@@ -90,7 +90,7 @@ void RenderToggleObstacles_Fill_Level2();
 
 bool toggleObstacleCollision();
 
-void RenderSubPortal(SDL_Renderer* renderer);
+void RenderSubPortal_Level4(SDL_Renderer* renderer);
 
 void subPortalLevel4();
 

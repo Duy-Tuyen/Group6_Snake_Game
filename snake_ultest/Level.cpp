@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 1; // Current level of the game
+int currentLevel = 4; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -96,15 +96,179 @@ void setColor_code(int color_num) {
     }
 }
 
-void RenderSubPortal(SDL_Renderer* renderer) {
+// Portal as block. render pos is automatically set when real pos change
+/*
+void RenderSubPortal_Level4(SDL_Renderer* renderer) {
     for (const auto& subportal : subPortals) {
-        setColor_code(subportal.color_code);
-        SDL_Rect inRect = { subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h };
-        SDL_RenderFillRect(renderer, &inRect); // Render subPortal in
-        SDL_Rect outRect = { subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h };
-        SDL_RenderFillRect(renderer, &outRect); // Render subPortal out
-    }
+        if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
+            switch (subportal.color_code) {
+            case 1:
+                g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+                ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+                g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+                ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+                break;
+            case 2:
+                g_subPortal = LoadTexture("Portal_Green_1_Left.png");
+				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+				g_subPortal = LoadTexture("Portal_Green_2_Right.png");
+				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+				break;
+            case 3:
+                g_subPortal = LoadTexture("Portal_Purple_1.png");
+                ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+                g_subPortal = LoadTexture("Portal_Purple_2.png");
+                ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+                break;
+            case 4:
+                g_subPortal = LoadTexture("Portal_Yellow_1_Left.png");
+				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+				g_subPortal = LoadTexture("Portal_Yellow_2_Right.png");
+				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+				break;
+            }
+        }
+        else {
+            switch (subportal.color_code) {
+            case 1:
+                g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+				g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+				break;
+            case 2:
+                g_subPortal = LoadTexture("Portal_Green_2_Left.png");
+                ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+                g_subPortal = LoadTexture("Portal_Green_1_Right.png");
+                ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+                break;
+            case 3:
+                g_subPortal = LoadTexture("Portal_Purple_2.png");
+				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+				g_subPortal = LoadTexture("Portal_Purple_1.png");
+				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+				break;
+            case 4:
+                g_subPortal = LoadTexture("Portal_Yellow_2_Left.png");
+				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+				g_subPortal = LoadTexture("Portal_Yellow_1_Right.png");
+				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+				break;
+            }
+        }
 
+        if (subportal.color_code == 5) {
+            g_subPortal = LoadTexture("Blue centre.png");
+            ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
+            ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
+        }
+    }
+}
+*/
+
+// Portal not as block, have to manually set render pos when real pos change
+void RenderSubPortal_Level4(SDL_Renderer* renderer) {
+    int x, y;
+    if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
+
+        g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+        x = PLAY_AREA_LEFT + 16 * 5 + 8;
+        y = PLAY_AREA_TOP + 16 * 1;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+        x = PLAY_AREA_LEFT + 16 * 15 + 8;
+        y = PLAY_AREA_TOP + 16 * 1;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Green_1_Left.png");
+        x = PLAY_AREA_LEFT + 16 * 20;
+        y = PLAY_AREA_TOP + 16 * 4;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+
+        g_subPortal = LoadTexture("Portal_Green_2_Right.png");
+        x = PLAY_AREA_LEFT + 16 * 21;
+        y = PLAY_AREA_TOP + 16 * 9;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+
+        g_subPortal = LoadTexture("Portal_Purple_1.png");
+        x = PLAY_AREA_LEFT + 16 * 24 + 8;
+        y = PLAY_AREA_TOP + 16 * 13;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Purple_2.png");
+        x = PLAY_AREA_LEFT + 16 * 5 + 8;
+        y = PLAY_AREA_TOP + 16 * 18;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Yellow_1_Left.png");
+        x = PLAY_AREA_RIGHT - 16 * 11;
+        y = PLAY_AREA_BOTTOM - 16 * 2;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+        g_subPortal = LoadTexture("Portal_Yellow_2_Right.png");
+        x = PLAY_AREA_RIGHT - 16 * 8;
+        y = PLAY_AREA_BOTTOM - 16 * 2;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+        g_subPortal = LoadTexture("Blue centre.png");
+        x = PLAY_AREA_RIGHT - 16 * 7;
+        y = PLAY_AREA_TOP + 16 * 7;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+        x = PLAY_AREA_LEFT + 16 * 20;
+        y = PLAY_AREA_BOTTOM - 16 * 7;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+    }
+    else {
+        g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+        x = PLAY_AREA_LEFT + 16 * 5 + 8;
+        y = PLAY_AREA_TOP + 16 * 1;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+        x = PLAY_AREA_LEFT + 16 * 15 + 8;
+        y = PLAY_AREA_TOP + 16 * 1;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Green_2_Left.png");
+        x = PLAY_AREA_LEFT + 16 * 20;
+        y = PLAY_AREA_TOP + 16 * 4;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+
+        g_subPortal = LoadTexture("Portal_Green_1_Right.png");
+        x = PLAY_AREA_LEFT + 16 * 21;
+        y = PLAY_AREA_TOP + 16 * 9;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+
+        g_subPortal = LoadTexture("Portal_Purple_2.png");
+        x = PLAY_AREA_LEFT + 16 * 24 + 8;
+        y = PLAY_AREA_TOP + 16 * 13;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Purple_1.png");
+        x = PLAY_AREA_LEFT + 16 * 5 + 8;
+        y = PLAY_AREA_TOP + 16 * 18;
+        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+
+        g_subPortal = LoadTexture("Portal_Yellow_2_Left.png");
+        x = PLAY_AREA_RIGHT - 16 * 11;
+        y = PLAY_AREA_BOTTOM - 16 * 2;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+        g_subPortal = LoadTexture("Portal_Yellow_1_Right.png");
+        x = PLAY_AREA_RIGHT - 16 * 8;
+        y = PLAY_AREA_BOTTOM - 16 * 2;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+        g_subPortal = LoadTexture("Blue centre.png");
+        x = PLAY_AREA_RIGHT - 16 * 7;
+        y = PLAY_AREA_TOP + 16 * 7;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+        x = PLAY_AREA_LEFT + 16 * 20;
+        y = PLAY_AREA_BOTTOM - 16 * 7;
+        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+    }
 }
 
 bool fixed1WhenPause = false;
@@ -1003,6 +1167,7 @@ void subPortalLevel4() {
     for (int i = 0; i <= 9; i++) {
         AddObstacle(PLAY_AREA_LEFT + 16 * 11, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
         AddObstacle(PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
     }
 
     // Top right field
@@ -1068,19 +1233,19 @@ void subPortalLevel4() {
         subPortals.push_back({
             {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_TOP + 16, 16, 16},
             {PLAY_AREA_LEFT + 16 * (14 + i), PLAY_AREA_TOP + 16 * 1, 16, 16},
-            3, // Color: Blue
+            1, // 
             0 // No Parallel
             });
     }
 
     for (int i = 0; i <= 2; i++) {
         RemoveObstacle(PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (3 + i));
-        RemoveObstacle(PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (8+ i));
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * (8+ i));
 
         subPortals.push_back({
             {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (3 + i), 16, 16},
-            {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (8 + i), 16, 16},
-            2, // Color: Green
+            {PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * (8 + i), 16, 16},
+            2, // 
             1 // Parallel
             });
     }
@@ -1088,15 +1253,18 @@ void subPortalLevel4() {
     subPortals.push_back({
         {PLAY_AREA_RIGHT - 16 * 7, PLAY_AREA_TOP + 16 * 7, 16, 16},
         {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * 19, 16, 16},
-        6, // Color: Cyan
+        5, // 
         1 // Parallel
         });
 
-    for (int i = 0; i <= 2; i++) {
+    for (int i = 0; i <= 3; i++) {
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13);
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8);
+
         subPortals.push_back({
             {PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13, 16, 16},
-            {PLAY_AREA_LEFT + 16 * (5 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
-            10, // Color: Light green
+            {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
+            3, //
             0 // non Parallel
             });
     }
@@ -1104,7 +1272,7 @@ void subPortalLevel4() {
     subPortals.push_back({
         {PLAY_AREA_RIGHT - 16 * 11, PLAY_AREA_BOTTOM - 16 * 2, 16, 16},
         {PLAY_AREA_RIGHT - 16 * 8, PLAY_AREA_BOTTOM - 16 * 2, 16, 16},
-        9, // Color: Orange
+        4, // 
         1
         });
     //...

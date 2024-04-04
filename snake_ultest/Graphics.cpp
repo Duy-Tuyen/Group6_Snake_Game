@@ -40,6 +40,7 @@ SDL_Texture* g_intro = nullptr;
 SDL_Texture* g_outro = nullptr;
 SDL_Texture* g_gameOver = nullptr;
 SDL_Texture* g_snakeEnter = nullptr;
+SDL_Texture* g_subPortal = nullptr;
 
 SDL_Texture* g_pauseMenu = nullptr;
 
@@ -1003,7 +1004,7 @@ void RenderPlaying() {
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);
 
-    RenderSubPortal(g_renderer);
+    RenderSubPortal_Level4(g_renderer);
     
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
 
