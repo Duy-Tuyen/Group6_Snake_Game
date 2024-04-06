@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
 
         case GameState::PLAYING:
             StopBackgroundMusic();
-            
+            PlayLevelMusic();
+
             setupAndQuery_Level();
 
             HandlePauseMenuInput();
@@ -126,6 +127,7 @@ int main(int argc, char** argv) {
 
         case GameState::SPECIAL:
             StopBackgroundMusic();
+            PlayLevelMusic();
 
             setupAndQuery_Special();
 

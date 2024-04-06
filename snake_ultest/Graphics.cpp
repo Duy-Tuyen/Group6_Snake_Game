@@ -55,9 +55,13 @@ SDL_Texture* g_monster2 = nullptr;
 SDL_Texture* g_iceTile = nullptr;
 
 Mix_Music* g_backgroundMusic = nullptr;
-Mix_Music* g_scoreMusic = nullptr;
-Mix_Music* g_hurtMusic = nullptr;
+Mix_Music* g_levelMusic = nullptr;
+Mix_Chunk* g_scoreMusic = nullptr;
+Mix_Chunk* g_hurtMusic = nullptr;
 Mix_Music* g_countMusic = nullptr;
+
+bool currStop = false;
+bool isPlaying = false;
 
 SDL_Event g_event;
 GameState g_gameState = GameState::INTRO;
@@ -140,15 +144,22 @@ bool Init() {
         return false;
     }
 
+    // Load Level music
+    g_levelMusic = Mix_LoadMUS("playing_music.mp3");
+    if (g_levelMusic == nullptr) {
+		std::cerr << "Failed to load level music: " << Mix_GetError() << std::endl;
+		return false;
+	}
+
     // Load score music
-    g_scoreMusic = Mix_LoadMUS("score.wav");
-    if (g_backgroundMusic == nullptr) {
+    g_scoreMusic = Mix_LoadWAV("score.wav");
+    if (g_scoreMusic == nullptr) {
         std::cerr << "Failed to load score music: " << Mix_GetError() << std::endl;
         return false;
 
     }// Load hurt music
-    g_hurtMusic = Mix_LoadMUS("hurt.wav");
-    if (g_backgroundMusic == nullptr) {
+    g_hurtMusic = Mix_LoadWAV("hurt.wav");
+    if (g_hurtMusic == nullptr) {
         std::cerr << "Failed to load hurt music: " << Mix_GetError() << std::endl;
         return false;
     }
@@ -334,8 +345,9 @@ void ApplyTexture2(SDL_Texture* texture, int x, int y, int width, int height) {
 void CleanUp() {
     // Free background music
     Mix_FreeMusic(g_backgroundMusic);
-    Mix_FreeMusic(g_scoreMusic);
-    Mix_FreeMusic(g_hurtMusic);
+    Mix_FreeMusic(g_levelMusic);
+    Mix_FreeChunk(g_scoreMusic);
+    Mix_FreeChunk(g_hurtMusic);
     // Quit SDL_mixer
     Mix_CloseAudio();
 
@@ -374,7 +386,10 @@ void PlayBackgroundMusic() {
 
 // Stop background music
 void StopBackgroundMusic() {
-    Mix_HaltMusic();
+    if (!currStop) {
+        Mix_HaltMusic();
+        currStop = true;
+    }
 }
 
 void PlayMenuBackgroundMusic() {
@@ -384,23 +399,24 @@ void PlayMenuBackgroundMusic() {
     }
 }
 
+void PlayLevelMusic() {
+    if (!isPlaying) {
+        Mix_PlayMusic(g_levelMusic, -1);
+        isPlaying = true;
+    }
+}
+
 void PlayCountMusic() {
     Mix_PlayMusic(g_countMusic, 1);
 }
 
 
 void PlayScoreMusic() {
-    if (Mix_PlayingMusic() == 0) {
-        // If no music is playing, start playing the background music
-        Mix_PlayMusic(g_scoreMusic, 1);
-    }
+    Mix_PlayChannel(-1, g_scoreMusic, 0);
 }
 
 void PlayHurtMusic() {
-    if (Mix_PlayingMusic() == 0) {
-        // If no music is playing, start playing the background music
-        Mix_PlayMusic(g_hurtMusic, 1);
-    }
+    Mix_PlayChannel(-1, g_hurtMusic, 0);
 }
 
 void HandleReturnButtonInput() {

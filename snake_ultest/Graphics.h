@@ -81,8 +81,9 @@ extern SDL_Texture* g_monster2;
 extern SDL_Texture* g_iceTile;
 
 extern Mix_Music* g_backgroundMusic;
-extern Mix_Music* g_scoreMusic;
-extern Mix_Music* g_hurtMusic;
+extern Mix_Music* g_levelMusic;
+extern Mix_Chunk* g_scoreMusic;
+extern Mix_Chunk* g_hurtMusic;
 extern Mix_Music* g_countMusic;
 
 extern SDL_Event g_event;
@@ -161,11 +162,16 @@ void StopBackgroundMusic();
 
 void PlayMenuBackgroundMusic();
 
+void PlayLevelMusic();
+
 void PlayScoreMusic();
 
 void PlayHurtMusic();
 
 void PlayCountMusic();
+
+extern bool currStop;
+extern bool isPlaying;
 
 void HandleReturnButtonInput();
 void HandleSoundOnButtonInput();
