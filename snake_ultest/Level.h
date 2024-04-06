@@ -39,6 +39,7 @@ extern std::vector<Obstacle> monsters; // Vector to store monsters
 
 extern std::vector<subPortal> subPortals; // Vector to store subPortals
 
+extern std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
 
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer);
@@ -94,6 +95,8 @@ bool toggleObstacleCollision();
 
 void RenderSubPortal_Level4(SDL_Renderer* renderer);
 
+void RenderIceTile(SDL_Renderer* renderer);
+
 void subPortalLevel3();
 
 void subPortalLevel4();
@@ -117,3 +120,7 @@ void fake_portal_gate();
 void mapTile(int tile_color);
 
 extern bool gate_open_done;
+
+void iceTileLogic();
+
+void iceTile_Level1_sp();

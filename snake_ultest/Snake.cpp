@@ -22,6 +22,7 @@ void MoveSnake(bool& running);
 bool running = true;
 bool foodSpawnedThisFrame = false;
 bool lockMovement = false;
+bool lockDir = false;
 
 int tailDelayCounter = 0;
 const int TAIL_DELAY = 5;

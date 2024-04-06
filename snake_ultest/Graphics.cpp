@@ -49,6 +49,9 @@ SDL_Texture* g_pauseMenu = nullptr;
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
+// Texture for special mode
+SDL_Texture* g_iceTile = nullptr;
+
 Mix_Music* g_backgroundMusic = nullptr;
 Mix_Music* g_scoreMusic = nullptr;
 Mix_Music* g_hurtMusic = nullptr;
@@ -725,7 +728,7 @@ void HandlePlayingInput() {
             exit(0);
         }
 
-        else if (g_event.type == SDL_KEYDOWN && !lockMovement) {
+        else if (g_event.type == SDL_KEYDOWN && !lockMovement && !lockDir) {
             switch (g_event.key.keysym.sym) {
             case SDLK_p:
                 snakeDirection = PAUSE;
@@ -1040,6 +1043,8 @@ void setupAndQuery_Special() {
         SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
         SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
 
+        g_iceTile = LoadTexture("iceTile.png");
+
         foodWidth = 16, foodHeight = 16;
         snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
 
@@ -1099,7 +1104,10 @@ void RenderPlaying_Special() {
 
     RenderLevelStats();
 
-    mapTile(1);
+    mapTile(2);
+
+    RenderIceTile(g_renderer);
+    iceTileLogic();
 
     if (show_food) {
         //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);

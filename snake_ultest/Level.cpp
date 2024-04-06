@@ -24,6 +24,8 @@ std::vector<Obstacle> toggle_obstacles; // Vector to store toggle obstacles
 
 std::vector<subPortal> subPortals; // Vector to store subPortals
 
+std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
+
 
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer) {
@@ -762,9 +764,11 @@ void Level_Special(int levelNumber) {
     switch (levelNumber) {
 	case 1:
         wall();
+        iceTile_Level1_sp();
 		break;
 
 	default:
+        wall();
 		break;
 	}
 
@@ -961,6 +965,12 @@ void RenderToggleObstacles_Fill_Level2() {
                 }
             }
         }
+    }
+}
+
+void RenderIceTile(SDL_Renderer* renderer) {
+    for (const auto& icetile : ice_tiles) {
+        ApplyTexture2(g_iceTile, icetile.x - 16 / 2, icetile.y - 16 / 2, 16, 16);
     }
 }
 
@@ -1418,7 +1428,7 @@ void mapTile(int tile_color) {
         }
         break;
     case 2:
-        SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // Set tile_1 color (white)
+        SDL_SetRenderDrawColor(g_renderer, 0, 204, 204, 0); // Set tile_1 color (white)
         for (int j = 1; j <= 25; j++) {
             for (int i = (j % 2) == 0 ? 1 : 2; i <= 37; i += 2) {
                 SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
@@ -1436,3 +1446,27 @@ void mapTile(int tile_color) {
     }
 }
 
+void iceTileLogic() {
+    for (const auto& icetile : ice_tiles) {
+        if (snakeX == icetile.x && snakeY == icetile.y) {
+            lockDir = true;
+            return;
+        }
+        else {
+            lockDir = false;
+        }
+    }
+}
+
+void iceTile_Level1_sp() {
+    int x, y;
+    
+    for (y = PLAY_AREA_TOP + 16 * 5; y <= PLAY_AREA_BOTTOM - 16 * 5; y += 16) {
+
+        for (x = PLAY_AREA_LEFT + 16 * 11; x <= PLAY_AREA_RIGHT - 16 * 11; x += 16) {
+
+            ice_tiles.push_back({ x, y, 16, 16 });
+
+        }
+    }
+}

@@ -33,6 +33,7 @@ extern int pause;
 void MoveSnake(bool& running);
 extern bool running;
 extern bool lockMovement;
+extern bool lockDir;
 extern bool foodSpawnedThisFrame;
 
 extern int tailDelayCounter;
