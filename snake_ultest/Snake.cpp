@@ -217,6 +217,11 @@ void EatFood_Special() {
 
 bool CheckCollision_tail() {
     if (goInGate_progress) return false;
+    if (specialMode) {
+        if (isInDream(snakeX, snakeY)) {
+            return false;
+        }
+    }
 	for (int i = 0; i < tailX.size(); i++) {
 		int distanceX = abs(snakeX - tailX[i]);
         int distanceY = abs(snakeY - tailY[i]);

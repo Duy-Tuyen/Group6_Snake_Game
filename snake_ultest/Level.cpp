@@ -739,6 +739,18 @@ void wall() {
 				obstacles.push_back({ right, y, 16, 16, 2 });
 			}
 			break;
+
+        default:
+            for (x = left; x <= right; x++) {
+                obstacles.push_back({ x, top, 16, 16, 1 });
+                obstacles.push_back({ x, bottom, 16, 16, 1 });
+            }
+
+            for (y = top; y <= bottom; y++) {
+                obstacles.push_back({ left, y, 16, 16, 1 });
+                obstacles.push_back({ right, y, 16, 16, 1 });
+            }
+            break;
         }
     }
     else {
@@ -1932,6 +1944,10 @@ void dreamBlock_LevelSP2() {
     }
 
     x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 1;
+    obstacles.push_back({ x, y, 16, 16, 2 });
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
     y = PLAY_AREA_BOTTOM - 16 * 4;
     for (int i = 0; i <= 10; i++) {
         obstacles.push_back({ x - 16 * i, y, 16, 16, 2 });
@@ -2061,9 +2077,9 @@ void dreamBlock_LevelSP2() {
     y = PLAY_AREA_TOP + 16 * 7 + 8;
     dreamBlocks.push_back({ x, y, 16 * 14, 16 * 8 });
 
-    x = PLAY_AREA_RIGHT - 16 * 6 - 8;
+    x = PLAY_AREA_RIGHT - 16 * 5 - 8;
     y = PLAY_AREA_BOTTOM - 16 * 2;
-    dreamBlocks.push_back({ x, y, 16 * 4, 16 * 3 });
+    dreamBlocks.push_back({ x, y, 16 * 10, 16 * 3 });
 
     x = PLAY_AREA_LEFT + 16 * 3;
     y = PLAY_AREA_TOP + 16 * 6;
@@ -2081,7 +2097,7 @@ void dreamBlock_LevelSP2() {
     x = PLAY_AREA_RIGHT - 16 * 2;
     y = PLAY_AREA_BOTTOM - 16 * 8;
     for (int j = 0; j <= 3; j++) {
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i <= 9; i++) {
 			ice_tiles.push_back({ x - 16 * i, y + 16 * j, 16, 16 });
 		}
 	}
@@ -2095,6 +2111,13 @@ void dreamBlock_LevelSP2() {
 			1
 			});
     }
+
+    icePortals.push_back({
+		{PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_BOTTOM - 16 * 2, 16, 16},
+		{PLAY_AREA_RIGHT - 16 * 2, PLAY_AREA_BOTTOM - 16 * 1, 16, 16},
+		2,
+		1
+		});
 
     icePortals.push_back({
 		{PLAY_AREA_LEFT + 16 * 4, PLAY_AREA_TOP + 16 * 2, 16, 16},
@@ -2131,7 +2154,7 @@ void dreamBlock_LevelSP2() {
 
 void DrawDreamBlock(int x, int y, int w, int h) {
     SDL_Rect dreamRect = { x - w / 2, y - h / 2, w, h };
-    SDL_SetTextureAlphaMod(g_dreamBlock1, 70);
+    SDL_SetTextureAlphaMod(g_dreamBlock1, 60);
     SDL_RenderCopy(g_renderer, g_dreamBlock1, NULL, &dreamRect);
 }
 
