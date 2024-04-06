@@ -92,6 +92,8 @@ bool toggleObstacleCollision();
 
 void RenderSubPortal_Level4(SDL_Renderer* renderer);
 
+void subPortalLevel3();
+
 void subPortalLevel4();
 
 void snakeTeleport_in_to_out();
@@ -108,5 +110,7 @@ void gate_out4();
 void gate_open();
 
 void fake_portal_gate();
+
+void mapTile(int tile_color);
 
 extern bool gate_open_done;

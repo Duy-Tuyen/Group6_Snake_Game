@@ -982,6 +982,8 @@ void RenderPlaying() {
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
 
     RenderLevelStats();
+
+    mapTile(1);
     
     RenderToggleObstacles_Draw_Level2();
 

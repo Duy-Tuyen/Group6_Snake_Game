@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
             goInGate_check();
             goOutGate_check();
 
-            SDL_Delay(80); // Adjust delay for smoother movement
+            SDL_Delay(120); // Adjust delay for smoother movement
             break;
 
         case GameState::ASK:

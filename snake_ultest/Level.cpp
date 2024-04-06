@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 4; // Current level of the game
+int currentLevel = 1; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -168,106 +168,110 @@ void RenderSubPortal_Level4(SDL_Renderer* renderer) {
 
 // Portal not as block, have to manually set render pos when real pos change
 void RenderSubPortal_Level4(SDL_Renderer* renderer) {
-    int x, y;
-    if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
+    if (currentLevel == 4) {
+        int x, y;
+        if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
 
-        g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
-        x = PLAY_AREA_LEFT + 16 * 5 + 8;
-        y = PLAY_AREA_TOP + 16 * 1;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+            x = PLAY_AREA_LEFT + 16 * 5 + 8;
+            y = PLAY_AREA_TOP + 16 * 1;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
-        x = PLAY_AREA_LEFT + 16 * 15 + 8;
-        y = PLAY_AREA_TOP + 16 * 1;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+            x = PLAY_AREA_LEFT + 16 * 15 + 8;
+            y = PLAY_AREA_TOP + 16 * 1;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Green_1_Left.png");
-        x = PLAY_AREA_LEFT + 16 * 20;
-        y = PLAY_AREA_TOP + 16 * 4;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+            g_subPortal = LoadTexture("Portal_Green_1_Left.png");
+            x = PLAY_AREA_LEFT + 16 * 20;
+            y = PLAY_AREA_TOP + 16 * 4;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
 
-        g_subPortal = LoadTexture("Portal_Green_2_Right.png");
-        x = PLAY_AREA_LEFT + 16 * 21;
-        y = PLAY_AREA_TOP + 16 * 9;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+            g_subPortal = LoadTexture("Portal_Green_2_Right.png");
+            x = PLAY_AREA_LEFT + 16 * 21;
+            y = PLAY_AREA_TOP + 16 * 9;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
 
-        g_subPortal = LoadTexture("Portal_Purple_1.png");
-        x = PLAY_AREA_LEFT + 16 * 24 + 8;
-        y = PLAY_AREA_TOP + 16 * 13;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Purple_1.png");
+            x = PLAY_AREA_LEFT + 16 * 24 + 8;
+            y = PLAY_AREA_TOP + 16 * 13;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Purple_2.png");
-        x = PLAY_AREA_LEFT + 16 * 5 + 8;
-        y = PLAY_AREA_TOP + 16 * 18;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Purple_2.png");
+            x = PLAY_AREA_LEFT + 16 * 5 + 8;
+            y = PLAY_AREA_TOP + 16 * 18;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Yellow_1_Left.png");
-        x = PLAY_AREA_RIGHT - 16 * 11;
-        y = PLAY_AREA_BOTTOM - 16 * 2;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Portal_Yellow_1_Left.png");
+            x = PLAY_AREA_RIGHT - 16 * 11;
+            y = PLAY_AREA_BOTTOM - 16 * 2;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
 
-        g_subPortal = LoadTexture("Portal_Yellow_2_Right.png");
-        x = PLAY_AREA_RIGHT - 16 * 8;
-        y = PLAY_AREA_BOTTOM - 16 * 2;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Portal_Yellow_2_Right.png");
+            x = PLAY_AREA_RIGHT - 16 * 8;
+            y = PLAY_AREA_BOTTOM - 16 * 2;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
 
-        g_subPortal = LoadTexture("Blue centre.png");
-        x = PLAY_AREA_RIGHT - 16 * 7;
-        y = PLAY_AREA_TOP + 16 * 7;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
-        x = PLAY_AREA_LEFT + 16 * 20;
-        y = PLAY_AREA_BOTTOM - 16 * 7;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Blue centre.png");
+            x = PLAY_AREA_RIGHT - 16 * 7;
+            y = PLAY_AREA_TOP + 16 * 7;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            x = PLAY_AREA_LEFT + 16 * 20;
+            y = PLAY_AREA_BOTTOM - 16 * 7;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
 
-    }
-    else {
-        g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
-        x = PLAY_AREA_LEFT + 16 * 5 + 8;
-        y = PLAY_AREA_TOP + 16 * 1;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+        }
+        else {
 
-        g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
-        x = PLAY_AREA_LEFT + 16 * 15 + 8;
-        y = PLAY_AREA_TOP + 16 * 1;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+            x = PLAY_AREA_LEFT + 16 * 5 + 8;
+            y = PLAY_AREA_TOP + 16 * 1;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Green_2_Left.png");
-        x = PLAY_AREA_LEFT + 16 * 20;
-        y = PLAY_AREA_TOP + 16 * 4;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+            g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+            x = PLAY_AREA_LEFT + 16 * 15 + 8;
+            y = PLAY_AREA_TOP + 16 * 1;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Green_1_Right.png");
-        x = PLAY_AREA_LEFT + 16 * 21;
-        y = PLAY_AREA_TOP + 16 * 9;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
+            g_subPortal = LoadTexture("Portal_Green_2_Left.png");
+            x = PLAY_AREA_LEFT + 16 * 20;
+            y = PLAY_AREA_TOP + 16 * 4;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
 
-        g_subPortal = LoadTexture("Portal_Purple_2.png");
-        x = PLAY_AREA_LEFT + 16 * 24 + 8;
-        y = PLAY_AREA_TOP + 16 * 13;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Green_1_Right.png");
+            x = PLAY_AREA_LEFT + 16 * 21;
+            y = PLAY_AREA_TOP + 16 * 9;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 * 3 / 2, 16, 16 * 3);
 
-        g_subPortal = LoadTexture("Portal_Purple_1.png");
-        x = PLAY_AREA_LEFT + 16 * 5 + 8;
-        y = PLAY_AREA_TOP + 16 * 18;
-        ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
+            g_subPortal = LoadTexture("Portal_Purple_2.png");
+            x = PLAY_AREA_LEFT + 16 * 24 + 8;
+            y = PLAY_AREA_TOP + 16 * 13;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Yellow_2_Left.png");
-        x = PLAY_AREA_RIGHT - 16 * 11;
-        y = PLAY_AREA_BOTTOM - 16 * 2;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Portal_Purple_1.png");
+            x = PLAY_AREA_LEFT + 16 * 5 + 8;
+            y = PLAY_AREA_TOP + 16 * 18;
+            ApplyTexture2(g_subPortal, x - 16 * 4 / 2, y - 16 / 2, 16 * 4, 16);
 
-        g_subPortal = LoadTexture("Portal_Yellow_1_Right.png");
-        x = PLAY_AREA_RIGHT - 16 * 8;
-        y = PLAY_AREA_BOTTOM - 16 * 2;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Portal_Yellow_2_Left.png");
+            x = PLAY_AREA_RIGHT - 16 * 11;
+            y = PLAY_AREA_BOTTOM - 16 * 2;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
 
-        g_subPortal = LoadTexture("Blue centre.png");
-        x = PLAY_AREA_RIGHT - 16 * 7;
-        y = PLAY_AREA_TOP + 16 * 7;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
-        x = PLAY_AREA_LEFT + 16 * 20;
-        y = PLAY_AREA_BOTTOM - 16 * 7;
-        ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            g_subPortal = LoadTexture("Portal_Yellow_1_Right.png");
+            x = PLAY_AREA_RIGHT - 16 * 8;
+            y = PLAY_AREA_BOTTOM - 16 * 2;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+            g_subPortal = LoadTexture("Blue centre.png");
+            x = PLAY_AREA_RIGHT - 16 * 7;
+            y = PLAY_AREA_TOP + 16 * 7;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+            x = PLAY_AREA_LEFT + 16 * 20;
+            y = PLAY_AREA_BOTTOM - 16 * 7;
+            ApplyTexture2(g_subPortal, x - 16 / 2, y - 16 / 2, 16, 16);
+
+        }
     }
 }
 
@@ -425,12 +429,12 @@ void Obstacle_level_3() {
     int n = 9, m = 11;
     int obstacle_size = 16;
 
-    y = PLAY_AREA_TOP + 16 * 3;
-    for (x = PLAY_AREA_LEFT + 16 * 9; x <= PLAY_AREA_LEFT + 16 * 10; x += obstacle_size) {
+    y = PLAY_AREA_TOP + 16 * 6;
+    for (x = PLAY_AREA_LEFT + 16 * 12; x <= PLAY_AREA_LEFT + 16 * 13; x += obstacle_size) {
 		AddObstacle(x, y, obstacle_size, obstacle_size);
 	}
-    n = 9, m = 11;
-    for (int i = 4; i <= 13; i++) {
+    n = 12, m = 14;
+    for (int i = 7; i <= 13; i++) {
         for (int j = n; j <= m; j++) {
             AddObstacle(PLAY_AREA_LEFT + 16 * j, PLAY_AREA_TOP + 16 * i, obstacle_size, obstacle_size);
         }
@@ -438,12 +442,12 @@ void Obstacle_level_3() {
         m++;
     }
 
-    y = PLAY_AREA_TOP + 16 * 3;
-    for (x = PLAY_AREA_RIGHT - 16 * 9; x >= PLAY_AREA_RIGHT - 16 * 10; x -= obstacle_size) {
+    y = PLAY_AREA_TOP + 16 * 6;
+    for (x = PLAY_AREA_RIGHT - 16 * 12; x >= PLAY_AREA_RIGHT - 16 * 13; x -= obstacle_size) {
         AddObstacle(x, y, obstacle_size, obstacle_size);
     }
-    n = 9, m = 11;
-    for (int i = 4; i <= 13; i++) {
+    n = 12, m = 14;
+    for (int i = 7; i <= 13; i++) {
         for (int j = n; j <= m; j++) {
             AddObstacle(PLAY_AREA_RIGHT - 16 * j, PLAY_AREA_TOP + 16 * i, obstacle_size, obstacle_size);
         }
@@ -451,12 +455,12 @@ void Obstacle_level_3() {
         m++;
     }
 
-    y = PLAY_AREA_BOTTOM - 16 * 3;
-    for (x = PLAY_AREA_LEFT + 16 * 9; x <= PLAY_AREA_LEFT + 16 * 10; x += obstacle_size) {
+    y = PLAY_AREA_BOTTOM - 16 * 6;
+    for (x = PLAY_AREA_LEFT + 16 * 12; x <= PLAY_AREA_LEFT + 16 * 13; x += obstacle_size) {
 		AddObstacle(x, y, obstacle_size, obstacle_size);
 	}
-    n = 9, m = 11;
-    for (int i = 4; i <= 13; i++) {
+    n = 12, m = 14;
+    for (int i = 7; i <= 13; i++) {
         for (int j = n; j <= m; j++) {
 			AddObstacle(PLAY_AREA_LEFT + 16 * j, PLAY_AREA_BOTTOM - 16 * i, obstacle_size, obstacle_size);
 		}
@@ -464,12 +468,12 @@ void Obstacle_level_3() {
 		m++;
 	}
 
-    y = PLAY_AREA_BOTTOM - 16 * 3;
-    for (x = PLAY_AREA_RIGHT - 16 * 9; x >= PLAY_AREA_RIGHT - 16 * 10; x -= obstacle_size) {
+    y = PLAY_AREA_BOTTOM - 16 * 6;
+    for (x = PLAY_AREA_RIGHT - 16 * 12; x >= PLAY_AREA_RIGHT - 16 * 13; x -= obstacle_size) {
         AddObstacle(x, y, obstacle_size, obstacle_size);
     }
-    n = 9, m = 11;
-    for (int i = 4; i <= 13; i++) {
+    n = 12, m = 14;
+    for (int i = 7; i <= 13; i++) {
         for (int j = n; j <= m; j++) {
 			AddObstacle(PLAY_AREA_RIGHT - 16 * j, PLAY_AREA_BOTTOM - 16 * i, obstacle_size, obstacle_size);
 		}
@@ -492,7 +496,6 @@ void Obstacle_level_3() {
             AddObstacle(x - j * 16, y - i * 16, obstacle_size, obstacle_size);
         }
     }
-    */
     x = PLAY_AREA_LEFT + 16 * 9;
     y = PLAY_AREA_TOP + 16 * 12;
     for (int i = 0; i < 3; i++) {
@@ -508,6 +511,7 @@ void Obstacle_level_3() {
 			AddObstacle(x - j * 16, y - i * 16, obstacle_size, obstacle_size);
 		}
 	}
+    */
     
 }
 
@@ -691,6 +695,7 @@ void Level(int levelNumber) {
         // Set obstacle position and dimensions for level 3
         wall();
         Obstacle_level_3();
+        subPortalLevel3();
         movingObstacleLevel3_start = true;
 
 
@@ -957,22 +962,22 @@ void movingObstalceLevel3() {
             moving_obstacles_direction.push_back(Direction::LEFT);
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::RIGHT);
-            /*
+            
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::LEFT);
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 19, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::RIGHT);
-            */
+            
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::DOWN);
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::UP);
-            /*
+            
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 13, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::DOWN);
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 13, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::UP);
-            */
+            
         }
         movingObstacleLevel3_start = false;
     }
@@ -983,7 +988,7 @@ void movingObstalceLevel3() {
             if (currentLevel == 3) {
                 switch (moving_obstacles_direction[i]) {
                 case RIGHT:
-                    if (monsters[i].x <= PLAY_AREA_RIGHT - 16 * 5) {
+                    if (monsters[i].x != PLAY_AREA_RIGHT - 16 * 5) {
                         monsters[i].x += moving_obstacle_speed;
                     }
                     else {
@@ -992,7 +997,7 @@ void movingObstalceLevel3() {
                     }
                     break;
                 case LEFT:
-                    if (monsters[i].x >= PLAY_AREA_LEFT + 16 * 5) {
+                    if (monsters[i].x != PLAY_AREA_LEFT + 16 * 5) {
                         monsters[i].x -= moving_obstacle_speed;
                     }
                     else {
@@ -1001,7 +1006,7 @@ void movingObstalceLevel3() {
                     }
                     break;
                 case UP:
-                    if (monsters[i].y >= PLAY_AREA_TOP + 16 * 4) {
+                    if (monsters[i].y != PLAY_AREA_TOP + 16 * 4) {
                         monsters[i].y -= moving_obstacle_speed;
                     }
                     else {
@@ -1010,7 +1015,7 @@ void movingObstalceLevel3() {
                     }
                     break;
                 case DOWN:
-                    if (monsters[i].y <= PLAY_AREA_BOTTOM - 16 * 4) {
+                    if (monsters[i].y != PLAY_AREA_BOTTOM - 16 * 4) {
                         monsters[i].y += moving_obstacle_speed;
                     }
                     else {
@@ -1148,6 +1153,15 @@ void snakeTeleport_out_to_in() {
     }
 }
 
+void subPortalLevel3() {
+    subPortals.push_back({
+        {PLAY_AREA_LEFT + 16 * 17, PLAY_AREA_TOP + 16 * 13, 16, 16},
+        {PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * 13, 16, 16},
+        2,
+        1
+        });
+}
+
 void subPortalLevel4() {
     // Obstacle setup
     
@@ -1220,7 +1234,6 @@ void subPortalLevel4() {
         AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 6, 16, 16);
         AddObstacle(PLAY_AREA_RIGHT - 16 * (3 + i), PLAY_AREA_BOTTOM - 16 * 9, 16, 16);
         AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 12, 16, 16);
-
     }
 
     //...
@@ -1250,13 +1263,6 @@ void subPortalLevel4() {
             });
     }
 
-    subPortals.push_back({
-        {PLAY_AREA_RIGHT - 16 * 7, PLAY_AREA_TOP + 16 * 7, 16, 16},
-        {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * 19, 16, 16},
-        5, // 
-        1 // Parallel
-        });
-
     for (int i = 0; i <= 3; i++) {
         RemoveObstacle(PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13);
         RemoveObstacle(PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8);
@@ -1276,4 +1282,49 @@ void subPortalLevel4() {
         1
         });
     //...
+
+    subPortals.push_back({
+        {PLAY_AREA_RIGHT - 16 * 7, PLAY_AREA_TOP + 16 * 7, 16, 16},
+        {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * 19, 16, 16},
+        5, // 
+        1 // Parallel
+        });
+}
+
+void mapTile(int tile_color) {
+    switch (tile_color) {
+    case 1:
+        SDL_SetRenderDrawColor(g_renderer, 255, 153, 153, 0); // Set tile_1 color (somewhat light red)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) == 0 ? 1 : 2; i <= 37; i += 2) {
+                SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+                SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_1
+            }
+        }
+
+        SDL_SetRenderDrawColor(g_renderer, 255, 204, 204, 0); // Set tile_2 color (light red)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) != 0 ? 1 : 2; i <= 37; i += 2) {
+                SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+                SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_2
+            }
+        }
+        break;
+    case 2:
+        SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // Set tile_1 color (white)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) == 0 ? 1 : 2; i <= 37; i += 2) {
+                SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+                SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_1
+            }
+        }
+
+        SDL_SetRenderDrawColor(g_renderer, 153, 255, 255, 0); // Set tile_2 color (light blue)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) != 0 ? 1 : 2; i <= 37; i += 2) {
+                SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+                SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_2
+            }
+        }
+    }
 }
