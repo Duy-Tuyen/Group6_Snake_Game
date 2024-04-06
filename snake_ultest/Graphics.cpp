@@ -1152,7 +1152,7 @@ void RenderLevelStats() {
     std::string levelText = "Level: " + std::to_string(currentLevel);
     std::string foodText = "Food: " + std::to_string(foodCount);
     std::string lengthText = "Length: " + std::to_string(snakeLength);
-    std::string speedText = "Speed: " + std::to_string(SNAKE_SPEED);
+    std::string speedText = "Speed: " + std::to_string(PIXEL_PER_LOOP);
     std::string scoreText = "Score: " + std::to_string(score);
 
     RenderText(levelText, 740, 10);
@@ -1463,7 +1463,9 @@ void RenderPlaying_Special() {
     mapTile(2);
 
     RenderIceTile(g_renderer);
+
     iceTileLogic();
+    DreamLogic();
 
     RenderFixedFood();
 

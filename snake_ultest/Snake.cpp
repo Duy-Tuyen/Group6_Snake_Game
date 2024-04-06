@@ -26,7 +26,8 @@ bool lockDir = false;
 
 int tailDelayCounter = 0;
 const int TAIL_DELAY = 5;
-int SNAKE_SPEED = 16; // Adjust the speed as needed
+int PIXEL_PER_LOOP = 16; // Adjust the speed as needed
+int loopDelay = 120; // Adjust the delay for smoother movement
 int FOOD_TO_EAT = 5; // Number of food items to eat to pass the level
 const int MAX_LEVEL = 3; // Maximum number of levels in the game
 int foodEaten = 0; // Number of food items eaten by the snake
@@ -303,10 +304,15 @@ void UpdateTailPosition() {
 void DrawTail() {
     for (int i = 0; i < tailX.size(); i++) {
         if (tailShow[i]) {
-        std::string filePath = std::to_string(a[i]) + ".png";
+            std::string filePath = std::to_string(a[i]) + ".png";
 
 
-        SDL_Texture* numberTexture = LoadTexture(filePath);
+            SDL_Texture* numberTexture = LoadTexture(filePath);
+
+            if (specialMode)
+                if (isInDream(tailX[i], tailY[i])) {
+                    numberTexture = LoadTexture("0.png");
+                }
 
             if (numberTexture != nullptr) {
                 ApplyTexture2(numberTexture, tailX[i] - snakeWidth / 2, tailY[i] - snakeHeight / 2, snakeWidth, snakeHeight);
@@ -315,7 +321,6 @@ void DrawTail() {
             else {
                 std::cout << "Failed";
             }
-        
         }
     }
 }
@@ -338,14 +343,14 @@ void MoveSnake(bool& running) {
             if (lastDirection != DOWN) {
                 if (snakeY > PLAY_AREA_TOP) {
                     pause = 0;
-                    snakeY -= SNAKE_SPEED;
+                    snakeY -= PIXEL_PER_LOOP;
                     lastDirection = UP;
                 }
             }
             else {
                 if (snakeY < PLAY_AREA_BOTTOM) {
                     if (pause) break;
-                    snakeY += SNAKE_SPEED;
+                    snakeY += PIXEL_PER_LOOP;
                     lastDirection = DOWN;
                 }
             }
@@ -354,14 +359,14 @@ void MoveSnake(bool& running) {
             if (lastDirection != UP) {
                 if (snakeY < PLAY_AREA_BOTTOM) {
                     pause = 0;
-                    snakeY += SNAKE_SPEED;
+                    snakeY += PIXEL_PER_LOOP;
                     lastDirection = DOWN;
                 }
             }
             else {
                 if (snakeY > PLAY_AREA_TOP) {
                     if (pause) break;
-                    snakeY -= SNAKE_SPEED;
+                    snakeY -= PIXEL_PER_LOOP;
                     lastDirection = UP;
                 }
             }
@@ -370,14 +375,14 @@ void MoveSnake(bool& running) {
             if (lastDirection != RIGHT) {
                 if (snakeX > PLAY_AREA_LEFT) {
                     pause = 0;
-                    snakeX -= SNAKE_SPEED;
+                    snakeX -= PIXEL_PER_LOOP;
                     lastDirection = LEFT;
                 }
             }
             else {
                 if (snakeX < PLAY_AREA_RIGHT) {
                     if (pause) break;
-                    snakeX += SNAKE_SPEED;
+                    snakeX += PIXEL_PER_LOOP;
                     lastDirection = RIGHT;
                 }
             }
@@ -386,14 +391,14 @@ void MoveSnake(bool& running) {
             if (lastDirection != LEFT) {
                 if (snakeX < PLAY_AREA_RIGHT) {
                     pause = 0;
-                    snakeX += SNAKE_SPEED;
+                    snakeX += PIXEL_PER_LOOP;
                     lastDirection = RIGHT;
                 }
             }
             else {
                 if (snakeX > PLAY_AREA_LEFT) {
                     if (pause) break;
-                    snakeX -= SNAKE_SPEED;
+                    snakeX -= PIXEL_PER_LOOP;
                     lastDirection = LEFT;
                 }
             }

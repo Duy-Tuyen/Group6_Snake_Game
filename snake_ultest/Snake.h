@@ -38,7 +38,8 @@ extern bool foodSpawnedThisFrame;
 
 extern int tailDelayCounter;
 extern const int TAIL_DELAY;
-extern int SNAKE_SPEED; // Adjust the speed as needed
+extern int PIXEL_PER_LOOP; // Adjust the speed as needed
+extern int loopDelay; // Adjust the delay for smoother movement
 extern int FOOD_TO_EAT; // Number of food items to eat to pass the level
 extern const int MAX_LEVEL; // Maximum number of levels in the game
 extern int foodEaten; // Number of food items eaten by the snake

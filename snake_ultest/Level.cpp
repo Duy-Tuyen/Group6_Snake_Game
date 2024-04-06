@@ -1705,15 +1705,116 @@ void RenderIcePortal() {
     }
 }
 
+bool isInDream(int x, int y) {
+    for (const auto& dreamblock : dreamBlocks) {
+		int distanceX = abs(x - dreamblock.x);
+		int distanceY = abs(y - dreamblock.y);
+		int edgeDistanceX = (16 + dreamblock.w) / 2;
+		int edgeDistanceY = (16 + dreamblock.h) / 2;
+
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+            return true;
+		}
+	}
+    return false;
+}
+
+bool isInObstacle(int x, int y) {
+    for (const auto& obstacle : obstacles) {
+		int distanceX = abs(x - obstacle.x);
+		int distanceY = abs(y - obstacle.y);
+		int edgeDistanceX = (snakeWidth + obstacle.w) / 2;
+		int edgeDistanceY = (snakeHeight + obstacle.h) / 2;
+
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+			return true;
+		}
+
+	}
+    return false;
+
+}
+
+void DreamLogic() {
+    if (isInDream(snakeX, snakeY)) {
+        lockDir = true;
+        loopDelay = 10;
+        for (const auto& obstacle : obstacles) {
+            switch (snakeDirection) {
+            case UP:
+                if (isInObstacle(snakeX, snakeY - 16)) {
+                    if (isInObstacle(snakeX + 16, snakeY)) {
+                        snakeDirection = LEFT;
+                        lastDirection = LEFT;
+                    }
+                    else {
+                        snakeDirection = RIGHT;
+                        lastDirection = RIGHT;
+                    }
+				}
+				break;
+
+            case DOWN:
+                if (isInObstacle(snakeX, snakeY + 16)) {
+                    if (isInObstacle(snakeX - 16, snakeY)) {
+						snakeDirection = RIGHT;
+						lastDirection = RIGHT;
+					}
+                    else {
+						snakeDirection = LEFT;
+						lastDirection = LEFT;
+					}
+                }
+                break;
+
+            case LEFT:
+                if (isInObstacle(snakeX - 16, snakeY)) {
+                    if (isInObstacle(snakeX, snakeY - 16)) {
+                        snakeDirection = DOWN;
+                        lastDirection = DOWN;
+                    }
+                    else {
+						snakeDirection = UP;
+						lastDirection = UP;
+					}
+                }
+                break;
+
+            case RIGHT:
+                if (isInObstacle(snakeX + 16, snakeY)) {
+                    if (isInObstacle(snakeX, snakeY + 16)) {
+                        snakeDirection = UP;
+                        lastDirection = UP;
+                    }
+                    else {
+                        snakeDirection = DOWN;
+                        lastDirection = DOWN;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    else {
+        lockDir = false;
+        loopDelay = 120;
+	}
+}
+
 void dreamBlock_LevelSP2() {
     dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 13, 16 * 5, 16  * 5});
+
+    obstacles.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 13, 16 * 1, 16, 1 });
+}
+
+void DrawDreamBlock(int x, int y, int w, int h) {
+    SDL_Rect dreamRect = { x - w / 2, y - h / 2, w, h };
+    SDL_SetTextureAlphaMod(g_dreamBlock, 70);
+    SDL_RenderCopy(g_renderer, g_dreamBlock, NULL, &dreamRect);
 }
 
 void RenderDreamBlock() {
     for (const auto& dreamblock : dreamBlocks) {
-        SDL_Rect dreamRect = { dreamblock.x - dreamblock.w / 2, dreamblock.y - dreamblock.h / 2, dreamblock.w, dreamblock.h };
-        SDL_SetTextureAlphaMod(g_dreamBlock, 70);
-        SDL_RenderCopy(g_renderer, g_dreamBlock, NULL, &dreamRect);
-
+		DrawDreamBlock(dreamblock.x, dreamblock.y, dreamblock.w, dreamblock.h);
 	}
 }

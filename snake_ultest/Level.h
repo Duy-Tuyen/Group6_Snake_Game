@@ -140,3 +140,9 @@ void RenderFixedFood();
 void dreamBlock_LevelSP2();
 
 void RenderDreamBlock();
+
+void DreamLogic();
+
+bool isInDream(int x, int y);
+
+bool isInObstacle(int x, int y);
