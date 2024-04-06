@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 1; // Current level of the game
+int currentLevel = 2; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -30,6 +30,7 @@ std::vector<subPortal> icePortals; // Vector to store ice portals
 
 std::vector<Obstacle> fixedFood; // Vector to store fixed food
 
+std::vector<Obstacle> dreamBlocks; // Vector to store dream blocks
 
 void setRenderColor(int colorCode) {
     switch (colorCode) {
@@ -702,8 +703,6 @@ void fake_portal_gate() {
 bool gate_open_done = false;
 bool isMovingMonster = false;
 
-
-
 void wall() {
     int top = PLAY_AREA_TOP;
     int bottom = PLAY_AREA_BOTTOM;
@@ -796,6 +795,10 @@ void Level_Special(int levelNumber) {
         iceTile_LevelSP1();
 		break;
 
+    case 2:
+        wall();
+        dreamBlock_LevelSP2();
+        break;
 	default:
         wall();
 		break;
@@ -1700,4 +1703,17 @@ void RenderIcePortal() {
 			}
         }
     }
+}
+
+void dreamBlock_LevelSP2() {
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 13, 16 * 5, 16  * 5});
+}
+
+void RenderDreamBlock() {
+    for (const auto& dreamblock : dreamBlocks) {
+        SDL_Rect dreamRect = { dreamblock.x - dreamblock.w / 2, dreamblock.y - dreamblock.h / 2, dreamblock.w, dreamblock.h };
+        SDL_SetTextureAlphaMod(g_dreamBlock, 70);
+        SDL_RenderCopy(g_renderer, g_dreamBlock, NULL, &dreamRect);
+
+	}
 }

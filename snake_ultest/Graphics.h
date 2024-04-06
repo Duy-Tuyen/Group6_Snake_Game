@@ -79,6 +79,9 @@ extern SDL_Texture* g_pauseMenu;
 extern SDL_Texture* g_monster1;
 extern SDL_Texture* g_monster2;
 
+extern SDL_Texture* g_dreamBlock;
+extern SDL_Texture* g_dreamBlock1;
+
 // Texture for special mode
 extern SDL_Texture* g_iceTile;
 

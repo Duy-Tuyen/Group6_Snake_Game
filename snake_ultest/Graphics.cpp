@@ -1244,8 +1244,6 @@ void HandleLoadInput() {
     }
 }
 
-
-
 void RenderSettingsScreen() {
 
     std::string soundOn = "SOUND ON";
@@ -1318,8 +1316,6 @@ void RenderModeScreen() {
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
     SDL_RenderPresent(g_renderer);
 }
-
-
 
 void RenderPauseMenu() {
 
@@ -1485,6 +1481,8 @@ void RenderPlaying_Special() {
     RenderPortals(g_renderer);
 
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
+
+    RenderDreamBlock();
 
     if (snakeDirection == PAUSE) {
 
