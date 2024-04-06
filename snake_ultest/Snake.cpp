@@ -414,8 +414,11 @@ void MoveSnake(bool& running) {
         }
     }
 
-    snakeTeleport_in_to_out();
-    snakeTeleport_out_to_in();
+    snakeTeleport_in_to_out(subPortals);
+    snakeTeleport_out_to_in(subPortals);
+
+    snakeTeleport_in_to_out(icePortals);
+    snakeTeleport_out_to_in(icePortals);
 }
 
 void RenderPlaying_LevelSkin() {

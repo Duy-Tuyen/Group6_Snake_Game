@@ -19,7 +19,7 @@ extern bool goOutGate_progress;
 
 // Structure to represent an obstacle
 struct Obstacle {
-    int x, y, w, h;
+    int x, y, w, h, c;
 };
 
 struct subPortal {
@@ -38,6 +38,8 @@ extern std::vector<Obstacle> moving_obstacles; // Vector to store moving obstacl
 extern std::vector<Obstacle> monsters; // Vector to store monsters
 
 extern std::vector<subPortal> subPortals; // Vector to store subPortals
+
+extern std::vector<subPortal> icePortals; // Vector to store ice portals
 
 extern std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
 
@@ -103,8 +105,8 @@ void subPortalLevel3();
 
 void subPortalLevel4();
 
-void snakeTeleport_in_to_out();
-void snakeTeleport_out_to_in();
+void snakeTeleport_in_to_out(std::vector<subPortal> typePortals);
+void snakeTeleport_out_to_in(std::vector<subPortal> typePortals);
 
 void gate_out1();
 
@@ -125,4 +127,6 @@ extern bool gate_open_done;
 
 void iceTileLogic();
 
-void iceTile_Level1_sp();
+void iceTile_LevelSP1();
+
+void RenderIcePortal();

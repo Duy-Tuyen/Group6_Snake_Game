@@ -26,11 +26,24 @@ std::vector<subPortal> subPortals; // Vector to store subPortals
 
 std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
 
+std::vector<subPortal> icePortals; // Vector to store ice portals
+
+
+void setRenderColor(int colorCode) {
+    switch (colorCode) {
+    case 1:
+        SDL_SetRenderDrawColor(g_renderer, 204, 229, 255, 0); // Set obstacle color (while)
+		break;
+    default:
+        SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 0); // Set obstacle color (red)
+		break;
+    }
+}
 
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0); // Set obstacle color (red)
     for (const auto& obstacle : obstacles) {
+        setRenderColor(obstacle.c);
         SDL_Rect obstacleRect = { obstacle.x - obstacle.w / 2, obstacle.y - obstacle.h / 2, obstacle.w, obstacle.h };
         SDL_RenderFillRect(renderer, &obstacleRect); // Render obstacle
     }
@@ -50,6 +63,7 @@ void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h) {
 	SDL_Rect hitboxRect = { x, y, w, h };
 	SDL_RenderDrawRect(renderer, &hitboxRect); // Render hitbox
 }
+
 
 void RenderMovingObstacles(SDL_Renderer* renderer) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 0); // Set moving obstacles color (blue)
@@ -764,7 +778,7 @@ void Level_Special(int levelNumber) {
     switch (levelNumber) {
 	case 1:
         wall();
-        iceTile_Level1_sp();
+        iceTile_LevelSP1();
 		break;
 
 	default:
@@ -1106,88 +1120,88 @@ void movingObstalceLevel3() {
     }
 }
 
-void snakeTeleport_in_to_out() {
-    for (const auto& subportal : subPortals) {
-        int distanceX = abs(snakeX - subportal.in.x);
-        int distanceY = abs(snakeY - subportal.in.y);
-        int edgeDistanceX = (snakeWidth + subportal.in.w) / 2;
-        int edgeDistanceY = (snakeHeight + subportal.in.h) / 2;
+void snakeTeleport_in_to_out(std::vector<subPortal> typePortals) {
+    for (const auto& typeportal : typePortals) {
+        int distanceX = abs(snakeX - typeportal.in.x);
+        int distanceY = abs(snakeY - typeportal.in.y);
+        int edgeDistanceX = (snakeWidth + typeportal.in.w) / 2;
+        int edgeDistanceY = (snakeHeight + typeportal.in.h) / 2;
         if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-            if (subportal.tele == 1) { // parallel
+            if (typeportal.tele == 1) { // parallel
                 switch (snakeDirection) {
                 case UP:
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y - 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y - 16;
                     break;
                 case DOWN:
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y + 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y + 16;
                     break;
                 case LEFT:
-                    snakeX = subportal.out.x - 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x - 16;
+                    snakeY = typeportal.out.y;
                     break;
                 case RIGHT:
-                    snakeX = subportal.out.x + 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x + 16;
+                    snakeY = typeportal.out.y;
                     break;
                 }
             }
-            else if (subportal.tele == 0) { // anti parallel
+            else if (typeportal.tele == 0) { // anti parallel
 
                 switch (snakeDirection) {
                 case UP:
                     lastDirection = DOWN;
                     snakeDirection = DOWN;
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y + 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y + 16;
                     break;
                 case DOWN:
                     lastDirection = UP;
                     snakeDirection = UP;
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y - 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y - 16;
                     break;
                 case LEFT:
                     lastDirection = RIGHT;
                     snakeDirection = RIGHT;
-                    snakeX = subportal.out.x + 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x + 16;
+                    snakeY = typeportal.out.y;
                     break;
                 case RIGHT:
                     lastDirection = LEFT;
                     snakeDirection = LEFT;
-                    snakeX = subportal.out.x - 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x - 16;
+                    snakeY = typeportal.out.y;
                     break;
                 }
 
             }
-            else if (subportal.tele == 2) { // right to up / down to left
+            else if (typeportal.tele == 2) { // right to up / down to left
                 switch (snakeDirection) {
                 case UP:
                     lastDirection = RIGHT;
                     snakeDirection = RIGHT;
-                    snakeX = subportal.out.x + 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x + 16;
+                    snakeY = typeportal.out.y;
                     break;
                 case DOWN:
                     lastDirection = LEFT;
                     snakeDirection = LEFT;
-                    snakeX = subportal.out.x - 16;
-                    snakeY = subportal.out.y;
+                    snakeX = typeportal.out.x - 16;
+                    snakeY = typeportal.out.y;
                     break;
                 case LEFT:
                     lastDirection = DOWN;
                     snakeDirection = DOWN;
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y + 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y + 16;
                     break;
                 case RIGHT:
                     lastDirection = UP;
                     snakeDirection = UP;
-                    snakeX = subportal.out.x;
-                    snakeY = subportal.out.y - 16;
+                    snakeX = typeportal.out.x;
+                    snakeY = typeportal.out.y - 16;
                     break;
                 }
             }
@@ -1195,92 +1209,93 @@ void snakeTeleport_in_to_out() {
     }
 }
 
-void snakeTeleport_out_to_in() {
-    for (const auto& subportal : subPortals) {
-        int distanceX = abs(snakeX - subportal.out.x);
-        int distanceY = abs(snakeY - subportal.out.y);
-        int edgeDistanceX = (snakeWidth + subportal.out.w) / 2;
-        int edgeDistanceY = (snakeHeight + subportal.out.h) / 2;
+void snakeTeleport_out_to_in(std::vector<subPortal> typePortals) {
+    for (const auto& typeportal : typePortals) {
+        int distanceX = abs(snakeX - typeportal.out.x);
+        int distanceY = abs(snakeY - typeportal.out.y);
+        int edgeDistanceX = (snakeWidth + typeportal.out.w) / 2;
+        int edgeDistanceY = (snakeHeight + typeportal.out.h) / 2;
         if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-            if (subportal.tele == 1) {
+            if (typeportal.tele == 1) {
                 switch (snakeDirection) {
                 case UP:
-                    snakeX = subportal.in.x;
-                    snakeY = subportal.in.y - 16;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y - 16;
                     break;
                 case DOWN:
-                    snakeX = subportal.in.x;
-                    snakeY = subportal.in.y + 16;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y + 16;
                     break;
                 case LEFT:
-                    snakeX = subportal.in.x - 16;
-                    snakeY = subportal.in.y;
+                    snakeX = typeportal.in.x - 16;
+                    snakeY = typeportal.in.y;
                     break;
                 case RIGHT:
-                    snakeX = subportal.in.x + 16;
-                    snakeY = subportal.in.y;
+                    snakeX = typeportal.in.x + 16;
+                    snakeY = typeportal.in.y;
                     break;
                 }
             }
-            else if (subportal.tele == 0) {
+            else if (typeportal.tele == 0) {
                 switch (snakeDirection) {
-				case UP:
+                case UP:
                     lastDirection = DOWN;
-					snakeDirection = DOWN;
-					snakeX = subportal.in.x;
-					snakeY = subportal.in.y + 16;
-					break;
-				case DOWN:
+                    snakeDirection = DOWN;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y + 16;
+                    break;
+                case DOWN:
                     lastDirection = UP;
-					snakeDirection = UP;
-					snakeX = subportal.in.x;
-					snakeY = subportal.in.y - 16;
-					break;
-				case LEFT:
+                    snakeDirection = UP;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y - 16;
+                    break;
+                case LEFT:
                     lastDirection = RIGHT;
-					snakeDirection = RIGHT;
-					snakeX = subportal.in.x + 16;
-					snakeY = subportal.in.y;
-					break;
-				case RIGHT:
+                    snakeDirection = RIGHT;
+                    snakeX = typeportal.in.x + 16;
+                    snakeY = typeportal.in.y;
+                    break;
+                case RIGHT:
                     lastDirection = LEFT;
-					snakeDirection = LEFT;
-					snakeX = subportal.in.x - 16;
-					snakeY = subportal.in.y;
-					break;
-				}
+                    snakeDirection = LEFT;
+                    snakeX = typeportal.in.x - 16;
+                    snakeY = typeportal.in.y;
+                    break;
+                }
             }
-            else if (subportal.tele == 2) {
+            else if (typeportal.tele == 2) {
                 switch (snakeDirection) {
-				case UP:
-					lastDirection = LEFT;
-					snakeDirection = LEFT;
-					snakeX = subportal.in.x - 16;
-					snakeY = subportal.in.y;
-					break;
-				case DOWN:
-					lastDirection = RIGHT;
-					snakeDirection = RIGHT;
-					snakeX = subportal.in.x + 16;
-					snakeY = subportal.in.y;
-					break;
-				case LEFT:
-					lastDirection = UP;
-					snakeDirection = UP;
-					snakeX = subportal.in.x;
-					snakeY = subportal.in.y - 16;
-					break;
-				case RIGHT:
-					lastDirection = DOWN;
-					snakeDirection = DOWN;
-					snakeX = subportal.in.x;
-					snakeY = subportal.in.y + 16;
-					break;
-				}
-			}
+                case UP:
+                    lastDirection = RIGHT;
+                    snakeDirection = RIGHT;
+                    snakeX = typeportal.in.x + 16;
+                    snakeY = typeportal.in.y;
+                    break;
+                case DOWN:
+                    lastDirection = LEFT;
+                    snakeDirection = LEFT;
+                    snakeX = typeportal.in.x - 16;
+                    snakeY = typeportal.in.y;
+                    break;
+                case LEFT:
+                    lastDirection = DOWN;
+                    snakeDirection = DOWN;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y + 16;
+                    break;
+                case RIGHT:
+                    lastDirection = UP;
+                    snakeDirection = UP;
+                    snakeX = typeportal.in.x;
+                    snakeY = typeportal.in.y - 16;
+                    break;
+                }
+            }
         }
     }
 }
+
 
 void subPortalLevel3() {
     subPortals.push_back({
@@ -1470,15 +1485,144 @@ void iceTileLogic() {
     }
 }
 
-void iceTile_Level1_sp() {
+void RemoveIceTile(int x, int y) {
+    for (auto it = ice_tiles.begin(); it != ice_tiles.end(); ++it) {
+        if (it->x == x && it->y == y) {
+            ice_tiles.erase(it);
+            break;
+        }
+    }
+}
+
+void iceTile_LevelSP1() {
+
     int x, y;
-    
+
+    // Ice Tile
     for (y = PLAY_AREA_TOP + 16 * 5; y <= PLAY_AREA_BOTTOM - 16 * 5; y += 16) {
 
         for (x = PLAY_AREA_LEFT + 16 * 11; x <= PLAY_AREA_RIGHT - 16 * 11; x += 16) {
 
             ice_tiles.push_back({ x, y, 16, 16 });
 
+        }
+    }
+
+    // Obstacle
+    x = PLAY_AREA_LEFT + 16 * 11;
+    y = PLAY_AREA_TOP + 16 * 5;
+    
+    obstacles.push_back({ x, y , 16 * 3, 16, 1 });
+
+    x = PLAY_AREA_RIGHT - 16 * 11;
+    y = PLAY_AREA_TOP + 16 * 6;
+    obstacles.push_back({ x, y, 16 * 3, 16, 1 });
+
+    x = PLAY_AREA_LEFT + 16 * 10;
+    y = PLAY_AREA_TOP + 16 * 13;
+    obstacles.push_back({ x, y, 16 * 3, 16, 1 });
+
+    x = PLAY_AREA_RIGHT - 16 * 10;
+    y = PLAY_AREA_BOTTOM - 16 * 8;
+    obstacles.push_back({ x, y, 16 * 3, 16, 1 });
+
+    int n = 7;
+    for (int j = 0; j <= 7; j++) {
+        for (int i = 0; i <= n; i++) {
+            x = PLAY_AREA_LEFT + 16 * (16 + i);
+			y = PLAY_AREA_TOP + 16 * (11 + j);
+			obstacles.push_back({ x, y, 16, 16, 1 });
+        }
+
+        n--;
+    }
+    
+    x = PLAY_AREA_RIGHT - 16 * 2 - 8;
+    y = PLAY_AREA_TOP + 16 * 11;
+    obstacles.push_back({ x, y, 16 * 4, 16, 1 });
+
+    x = PLAY_AREA_RIGHT - 16 * 2 - 8;
+	y = PLAY_AREA_BOTTOM - 16 * 11;
+    obstacles.push_back({ x, y, 16 * 4, 16, 1 });
+
+    x = PLAY_AREA_RIGHT - 16 * 4;
+    y = PLAY_AREA_BOTTOM - 16 * 13;
+    obstacles.push_back({ x, y, 16, 16 * 3, 1 });
+
+    // subPortal
+    for (int i = 0, j = 0; j <= 2; i++, j++) {
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * 16, PLAY_AREA_BOTTOM - 16 * (12 + j));
+        RemoveObstacle(PLAY_AREA_RIGHT - 16 * (18 + i), PLAY_AREA_TOP + 16 * 11);
+
+        icePortals.push_back({
+            {PLAY_AREA_LEFT + 16 * 16, PLAY_AREA_BOTTOM - 16 * (12 + j), 16, 16},
+            {PLAY_AREA_RIGHT - 16 * (18 + i), PLAY_AREA_TOP + 16 * 11, 16, 16},
+            1,
+            2
+            });
+    }
+
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 18, PLAY_AREA_BOTTOM - 16 * 12);
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 16, PLAY_AREA_TOP + 16 * 7);
+
+    icePortals.push_back({
+		{PLAY_AREA_RIGHT - 16 * 18, PLAY_AREA_BOTTOM - 16 * 12, 16, 16},
+		{PLAY_AREA_RIGHT - 16 * 16, PLAY_AREA_TOP + 16 * 7, 16, 16},
+		2,
+		1
+		});
+
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 6);
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_BOTTOM - 16 * 13);
+
+    icePortals.push_back({
+        {PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 6, 16, 16},
+        {PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_BOTTOM - 16 * 13, 16, 16},
+        3,
+        2
+        });
+
+}
+
+void RenderIcePortal() {
+    for (const auto& iceportal : icePortals) {
+        if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
+            switch (iceportal.color_code) {
+            case 1:
+                g_icePortal = LoadTexture("icePortal_Blue_1.png");
+                ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+                ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+                break;
+            case 2:
+                g_icePortal = LoadTexture("icePortal_Green_1.png");
+				ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+				ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+				break;
+            case 3:
+                g_icePortal = LoadTexture("icePortal_Yellow_1.png");
+                ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+                ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+                break;
+            }
+        }
+        else {
+            switch (iceportal.color_code) {
+			case 1:
+				g_icePortal = LoadTexture("icePortal_Blue_2.png");
+				ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+				ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+				break;
+            case 2:
+                g_icePortal = LoadTexture("icePortal_Green_2.png");
+				ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+				ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+				break;
+            case 3:
+                g_icePortal = LoadTexture("icePortal_Yellow_2.png");
+                ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+                ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+                break;
+			}
         }
     }
 }

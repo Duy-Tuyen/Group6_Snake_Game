@@ -42,7 +42,9 @@ SDL_Texture* g_intro = nullptr;
 SDL_Texture* g_outro = nullptr;
 SDL_Texture* g_gameOver = nullptr;
 SDL_Texture* g_snakeEnter = nullptr;
+
 SDL_Texture* g_subPortal = nullptr;
+SDL_Texture* g_icePortal = nullptr;
 
 SDL_Texture* g_pauseMenu = nullptr;
 
@@ -1108,6 +1110,8 @@ void RenderPlaying_Special() {
 
     RenderIceTile(g_renderer);
     iceTileLogic();
+
+    RenderIcePortal();
 
     if (show_food) {
         //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
