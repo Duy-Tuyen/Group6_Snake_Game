@@ -74,6 +74,8 @@ void goOutGate_check();
 
 void Level(int levelNumber);
 
+void Level_Special(int levelNumber);
+
 void nextLevel();
 
 void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);
@@ -107,7 +109,8 @@ void gate_out3();
 
 void gate_out4();
 
-void gate_open();
+void gate_open_level();
+void gate_open_special();
 
 void fake_portal_gate();
 

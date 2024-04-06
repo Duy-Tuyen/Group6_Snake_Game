@@ -54,7 +54,6 @@ extern int snakeWidth, snakeHeight;
 extern int bkWidth, bkHeight;
 extern bool show_food;
 
-
 extern const int TAIL_SPACE;
 
 void spawnFood();
@@ -77,4 +76,4 @@ void DrawTail();
 
 void MoveSnake(bool& running);
 
-void RenderPlayingSkin();
+void RenderPlaying_LevelSkin();

@@ -80,6 +80,12 @@ int score = 0;
 int foodBarWidth, foodBarHeight;
 int pauseMenuWidth, pauseMenuHeight;
 
+bool setupForLevel = true;
+bool setupForSpecial = true;
+
+bool specialMode = false;
+
+
 // Font for rendering text
 TTF_Font* g_font = nullptr;
 
@@ -1000,30 +1006,54 @@ void HandleContinueButtonInput() {
 }
 
 
-void setupAndQuery() {
+void setupAndQuery_Level() {
+    if (setupForLevel) {
+        SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
+        SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
+        SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+        SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
 
-    SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
-	SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
-	SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
-    SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
-
-	foodWidth = 16, foodHeight = 16;
-	snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+        foodWidth = 16, foodHeight = 16;
+        snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
 
 
-    // Play background music when rendering the menu
-    //PlayBackgroundMusic();
+        // Play background music when rendering the menu
+        //PlayBackgroundMusic();
 
-	// Initialize level
-	Level(currentLevel);
+        // Initialize level
+        Level(currentLevel);
 
-    g_statsBars = LoadTexture("Foodbar.0.png");
+        g_statsBars = LoadTexture("Foodbar.0.png");
 
-    g_monster1 = LoadTexture("monster1.gif");
-    g_monster2 = LoadTexture("monster2.gif");
+        g_monster1 = LoadTexture("monster1.gif");
+        g_monster2 = LoadTexture("monster2.gif");
+
+        setupForLevel = false;
+    }
 }
 
-void RenderPlaying() {
+void setupAndQuery_Special() {
+    if (setupForSpecial) {
+        specialMode = true;
+        SDL_QueryTexture(g_bkground, NULL, NULL, &bkWidth, &bkHeight);
+        SDL_QueryTexture(g_food, NULL, NULL, &foodWidth_png, &foodHeight_png);
+        SDL_QueryTexture(g_snake, NULL, NULL, &snakeWidth_png, &snakeHeight_png);
+        SDL_QueryTexture(g_pauseMenu, NULL, NULL, &pauseMenuWidth, &pauseMenuHeight);
+
+        foodWidth = 16, foodHeight = 16;
+        snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
+
+
+        // Initialize level
+        Level_Special(currentLevel);
+
+        g_statsBars = LoadTexture("Foodbar.0.png");
+
+        setupForSpecial = false;
+    }
+}
+
+void RenderPlaying_Level() {
 
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
 
@@ -1037,7 +1067,7 @@ void RenderPlaying() {
         //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
     }
-    RenderPlayingSkin();
+    RenderPlaying_LevelSkin();
     //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
@@ -1054,6 +1084,37 @@ void RenderPlaying() {
 
     RenderSubPortal_Level4(g_renderer);
     
+    if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
+
+    if (snakeDirection == PAUSE) {
+
+        RenderPauseMenu();
+    }
+
+    SDL_RenderPresent(g_renderer);
+}
+
+void RenderPlaying_Special() {
+    ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
+
+    RenderLevelStats();
+
+    mapTile(1);
+
+    if (show_food) {
+        //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+    }
+
+    RenderPlaying_LevelSkin();
+    //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
+    ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
+
+    DrawTail();
+
+    RenderObstacles(g_renderer);
+    RenderPortals(g_renderer);
+
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
 
     if (snakeDirection == PAUSE) {

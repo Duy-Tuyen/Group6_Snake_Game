@@ -85,7 +85,8 @@ void reset() {
     // Reset any other game state variables as needed
     //
 
-    Level(currentLevel);
+    if (specialMode) Level_Special(currentLevel);
+    else Level(currentLevel);
 
     show_food = true;
 
@@ -422,7 +423,7 @@ void MoveSnake(bool& running) {
     snakeTeleport_out_to_in();
 }
 
-void RenderPlayingSkin() {
+void RenderPlaying_LevelSkin() {
     switch (currentColorIndex) {
     case 0: // green
         SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);

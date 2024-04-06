@@ -6,7 +6,6 @@ int main(int argc, char** argv) {
     if (!Init()) {
         return 1;
     }
-    setupAndQuery();
 
     // Play background music when rendering the menu
     PlayBackgroundMusic();
@@ -64,6 +63,9 @@ int main(int argc, char** argv) {
 
         case GameState::PLAYING:
             StopBackgroundMusic();
+            
+            setupAndQuery_Level();
+
             HandlePauseMenuInput();
             HandlePlayingInput();
             MoveSnake(running);
@@ -74,7 +76,7 @@ int main(int argc, char** argv) {
 
             movingObstalceLevel3();
 
-            RenderPlaying();
+            RenderPlaying_Level();
             SDL_RenderPresent(g_renderer);
 
             if (gate_open_step[0]) {
@@ -91,11 +93,72 @@ int main(int argc, char** argv) {
                 goOutGate_progress = true;
             }
             if (gate_open_step[0] || gate_open_step[1] || gate_open_step[2] || gate_open_step[3]) {
-                gate_open();
+                gate_open_level();
                 SDL_Delay(100);
                 continue;
             }
             
+            SDL_RenderClear(g_renderer);
+
+            if (CheckEat() && !hasEaten) {
+                EatFood();
+                AddTailSegment();
+
+            }
+
+            if (toggleObstacleCollision()) {
+                //running = false;
+            }
+
+            if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
+                PlayHurtMusic();
+                //running = false;
+            }
+            if (CheckCollision_tail()) {
+                //running = false;
+            }
+
+            goInGate_check();
+            goOutGate_check();
+
+            SDL_Delay(120); // Adjust delay for smoother movement
+            break;
+
+        case GameState::SPECIAL:
+            StopBackgroundMusic();
+
+            setupAndQuery_Special();
+
+            HandlePauseMenuInput();
+            HandlePlayingInput();
+            MoveSnake(running);
+            foodSpawnedThisFrame = false;
+
+            // Draw the tail on every frame
+            AddTailSegment();
+
+            RenderPlaying_Special();
+            SDL_RenderPresent(g_renderer);
+
+            if (gate_open_step[0]) {
+                SDL_DestroyTexture(g_snake);
+                snakeX = 0;
+                snakeY = 0;
+                for (int i = 0; i < tailX.size(); i++) {
+                    tailX[i] = 0;
+                    tailY[i] = 0;
+                    tailShow[i] = false;
+                }
+
+                lockMovement = true;
+                goOutGate_progress = true;
+            }
+            if (gate_open_step[0] || gate_open_step[1] || gate_open_step[2] || gate_open_step[3]) {
+                gate_open_special();
+                SDL_Delay(100);
+                continue;
+            }
+
             SDL_RenderClear(g_renderer);
 
             if (CheckEat() && !hasEaten) {

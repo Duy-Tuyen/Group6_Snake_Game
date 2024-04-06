@@ -604,7 +604,7 @@ void gate_out4() {
     SDL_RenderFillRect(g_renderer, &obstacleRect);
 }
 
-void gate_open() {
+void gate_open_level() {
     if (gate_open_step[0]) {
         gate_out1();
         gate_open_step[0] = false;
@@ -638,6 +638,42 @@ void gate_open() {
         spawnFood();
         gate_open_step[3] = false;
 	}
+}
+
+void gate_open_special() {
+    if (gate_open_step[0]) {
+        gate_out1();
+        gate_open_step[0] = false;
+        gate_open_step[1] = true;
+        return;
+    }
+    if (gate_open_step[1]) {
+        obstacles.clear();
+        subPortals.clear();
+        Level_Special(currentLevel);
+        gate_out2();
+        gate_open_step[1] = false;
+        gate_open_step[2] = true;
+        return;
+    }
+    if (gate_open_step[2]) {
+        obstacles.clear();
+        subPortals.clear();
+        Level_Special(currentLevel);
+        gate_out3();
+        gate_open_step[2] = false;
+        gate_open_step[3] = true;
+        lockMovement = false;
+        return;
+    }
+    if (gate_open_step[3]) {
+        obstacles.clear();
+        subPortals.clear();
+        Level_Special(currentLevel);
+        gate_out4();
+        spawnFood();
+        gate_open_step[3] = false;
+    }
 }
 
 void fake_portal_gate() {
@@ -722,6 +758,18 @@ void Level(int levelNumber) {
     }
 }
 
+void Level_Special(int levelNumber) {
+    switch (levelNumber) {
+	case 1:
+        wall();
+		break;
+
+	default:
+		break;
+	}
+
+}
+
 void nextLevel() {
     currentLevel++;
     reset();
@@ -764,7 +812,10 @@ void goOutGate_check() {
         obstacles.clear();
         subPortals.clear();
         if (currentLevel == 3) isMovingMonster = true;
-        Level(currentLevel);
+
+        if (specialMode) Level_Special(currentLevel);
+		else Level(currentLevel);
+
         gate_open_done = false;
     }
     if (goOutGate_progress) {
@@ -1384,3 +1435,4 @@ void mapTile(int tile_color) {
         }
     }
 }
+

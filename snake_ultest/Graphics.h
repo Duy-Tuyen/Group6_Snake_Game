@@ -105,6 +105,11 @@ extern int score;
 extern int foodBarWidth, foodBarHeight;
 extern int pauseMenuWidth, pauseMenuHeight;
 
+extern bool setupForLevel;
+extern bool setupForSpecial;
+
+extern bool specialMode;
+
 // Font for rendering text
 extern TTF_Font* g_font;
 
@@ -227,9 +232,11 @@ void RenderAboutScreen();
 
 void RenderQuitScreen();
 
-void RenderPlaying();
+void RenderPlaying_Level();
+void RenderPlaying_Special();
 
-void setupAndQuery();
+void setupAndQuery_Level();
+void setupAndQuery_Special();
 
 void RenderPauseMenu();
 void HandlePauseMenuInput();
