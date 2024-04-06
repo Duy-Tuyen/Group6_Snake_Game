@@ -17,6 +17,8 @@ SDL_Texture* g_loadGame = nullptr;
 SDL_Texture* g_aboutUs = nullptr;
 SDL_Texture* g_settings = nullptr;
 
+SDL_Texture* g_mode = nullptr;
+
 SDL_Texture* g_timer;
 SDL_Texture* g_quit = nullptr;
 
@@ -177,6 +179,12 @@ bool Init() {
     // Load the GIF animation
     g_outro = LoadTexture("menuBackground.png");
     if (g_outro == nullptr) {
+        return false;
+    }
+
+    // Load game mode menu
+    g_mode = LoadTexture("gameMode.png");
+    if (g_mode == nullptr) {
         return false;
     }
 
@@ -619,7 +627,7 @@ void HandleMenuInput() {
 
             // Check if the mouse click is within any of the button regions
             if (IsPointInRect(mouseX, mouseY, startButtonRect)) {
-                g_gameState = GameState::PLAYING;
+                g_gameState = GameState::MODE;
             }
             else if (IsPointInRect(mouseX, mouseY, loadButtonRect)) {
                 g_gameState = GameState::LOAD;
@@ -909,6 +917,44 @@ void RenderQuitScreen() {
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
     SDL_RenderPresent(g_renderer);
 }
+
+void HandleModeInput() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            int buttonWidth = 200 * zoom_scale, buttonHeight = 50 * zoom_scale;
+            // Define the regions for the buttons based on the menu background image
+            SDL_Rect levelButtonRect = { 194, 313, buttonWidth, buttonHeight };
+            SDL_Rect specialButtonRect = { 561, 312, buttonWidth, buttonHeight };
+
+            // Define the coordinates and dimensions of other buttons here
+
+            // Check if the mouse click is within any of the button regions
+            if (IsPointInRect(mouseX, mouseY, levelButtonRect)) {
+                g_gameState = GameState::PLAYING;
+            }
+            else if (IsPointInRect(mouseX, mouseY, specialButtonRect)) {
+                g_gameState = GameState::SPECIAL;
+            }
+            else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+                HandleReturnButtonInput();
+            }
+        }
+    }
+}
+
+void RenderModeScreen() {
+
+    ApplyTexture2(g_mode, 0, 0, 2880, 540);
+    ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
+    SDL_RenderPresent(g_renderer);
+}
+
 
 
 void RenderPauseMenu() {

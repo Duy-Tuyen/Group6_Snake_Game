@@ -31,7 +31,9 @@ enum class GameState {
     ASK,
     SAVE,
     QUIT,
-    OUTRO
+    OUTRO,
+    SPECIAL,
+    MODE
 };
 
 extern int loopCounter;
@@ -45,6 +47,8 @@ extern SDL_Texture* g_menuBackground;
 extern SDL_Texture* g_aboutUs;
 extern SDL_Texture* g_loadGame;
 extern SDL_Texture* g_settings;
+
+extern SDL_Texture* g_mode;
 
 extern SDL_Texture* g_snake;
 extern SDL_Texture* g_food;
@@ -198,6 +202,11 @@ void HandleSettingsInput();
 void HandleAboutInput();
 void HandleQuitInput();
 void HandlePlayingInput();
+
+void HandleModeInput();
+
+void RenderModeScreen();
+
 
 void UpdateStats();
 void UpdateStatsBar();

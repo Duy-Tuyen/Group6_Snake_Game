@@ -57,6 +57,11 @@ int main(int argc, char** argv) {
             RenderAboutScreen();
             break;
 
+        case GameState::MODE:
+            HandleModeInput();
+            RenderModeScreen();
+            break;
+
         case GameState::PLAYING:
             StopBackgroundMusic();
             HandlePauseMenuInput();

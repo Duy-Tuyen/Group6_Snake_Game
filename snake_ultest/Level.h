@@ -26,7 +26,7 @@ struct subPortal {
     struct Obstacle in;
     struct Obstacle out;
     int color_code;
-    bool parallel;
+    int tele;
 };
 
 extern std::vector<bool> gate_open_step;

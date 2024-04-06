@@ -1040,7 +1040,7 @@ void snakeTeleport_in_to_out() {
         int edgeDistanceX = (snakeWidth + subportal.in.w) / 2;
         int edgeDistanceY = (snakeHeight + subportal.in.h) / 2;
         if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-            if (subportal.parallel) {
+            if (subportal.tele == 1) { // parallel
                 switch (snakeDirection) {
                 case UP:
                     snakeX = subportal.out.x;
@@ -1060,7 +1060,7 @@ void snakeTeleport_in_to_out() {
                     break;
                 }
             }
-            else {
+            else if (subportal.tele == 0) { // anti parallel
 
                 switch (snakeDirection) {
                 case UP:
@@ -1090,6 +1090,34 @@ void snakeTeleport_in_to_out() {
                 }
 
             }
+            else if (subportal.tele == 2) { // right to up / down to left
+                switch (snakeDirection) {
+                case UP:
+                    lastDirection = RIGHT;
+                    snakeDirection = RIGHT;
+                    snakeX = subportal.out.x + 16;
+                    snakeY = subportal.out.y;
+                    break;
+                case DOWN:
+                    lastDirection = LEFT;
+                    snakeDirection = LEFT;
+                    snakeX = subportal.out.x - 16;
+                    snakeY = subportal.out.y;
+                    break;
+                case LEFT:
+                    lastDirection = DOWN;
+                    snakeDirection = DOWN;
+                    snakeX = subportal.out.x;
+                    snakeY = subportal.out.y + 16;
+                    break;
+                case RIGHT:
+                    lastDirection = UP;
+                    snakeDirection = UP;
+                    snakeX = subportal.out.x;
+                    snakeY = subportal.out.y - 16;
+                    break;
+                }
+            }
         }
     }
 }
@@ -1101,7 +1129,7 @@ void snakeTeleport_out_to_in() {
         int edgeDistanceX = (snakeWidth + subportal.out.w) / 2;
         int edgeDistanceY = (snakeHeight + subportal.out.h) / 2;
         if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-            if (subportal.parallel) {
+            if (subportal.tele == 1) {
                 switch (snakeDirection) {
                 case UP:
                     snakeX = subportal.in.x;
@@ -1121,7 +1149,7 @@ void snakeTeleport_out_to_in() {
                     break;
                 }
             }
-            else {
+            else if (subportal.tele == 0) {
                 switch (snakeDirection) {
 				case UP:
                     lastDirection = DOWN;
@@ -1149,6 +1177,34 @@ void snakeTeleport_out_to_in() {
 					break;
 				}
             }
+            else if (subportal.tele == 2) {
+                switch (snakeDirection) {
+				case UP:
+					lastDirection = LEFT;
+					snakeDirection = LEFT;
+					snakeX = subportal.in.x - 16;
+					snakeY = subportal.in.y;
+					break;
+				case DOWN:
+					lastDirection = RIGHT;
+					snakeDirection = RIGHT;
+					snakeX = subportal.in.x + 16;
+					snakeY = subportal.in.y;
+					break;
+				case LEFT:
+					lastDirection = UP;
+					snakeDirection = UP;
+					snakeX = subportal.in.x;
+					snakeY = subportal.in.y - 16;
+					break;
+				case RIGHT:
+					lastDirection = DOWN;
+					snakeDirection = DOWN;
+					snakeX = subportal.in.x;
+					snakeY = subportal.in.y + 16;
+					break;
+				}
+			}
         }
     }
 }
@@ -1247,7 +1303,7 @@ void subPortalLevel4() {
             {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_TOP + 16, 16, 16},
             {PLAY_AREA_LEFT + 16 * (14 + i), PLAY_AREA_TOP + 16 * 1, 16, 16},
             1, // 
-            0 // No Parallel
+            0 // No tele
             });
     }
 
@@ -1259,7 +1315,7 @@ void subPortalLevel4() {
             {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (3 + i), 16, 16},
             {PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * (8 + i), 16, 16},
             2, // 
-            1 // Parallel
+            1 // tele
             });
     }
 
@@ -1271,7 +1327,7 @@ void subPortalLevel4() {
             {PLAY_AREA_LEFT + 16 * (23 + i), PLAY_AREA_TOP + 16 * 13, 16, 16},
             {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
             3, //
-            0 // non Parallel
+            0 // non tele
             });
     }
 
@@ -1287,7 +1343,7 @@ void subPortalLevel4() {
         {PLAY_AREA_RIGHT - 16 * 7, PLAY_AREA_TOP + 16 * 7, 16, 16},
         {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * 19, 16, 16},
         5, // 
-        1 // Parallel
+        1 // tele
         });
 }
 
