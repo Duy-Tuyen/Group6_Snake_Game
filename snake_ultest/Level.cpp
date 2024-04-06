@@ -35,8 +35,11 @@ std::vector<Obstacle> dreamBlocks; // Vector to store dream blocks
 void setRenderColor(int colorCode) {
     switch (colorCode) {
     case 1:
-        SDL_SetRenderDrawColor(g_renderer, 204, 229, 255, 0); // Set obstacle color (while)
+        SDL_SetRenderDrawColor(g_renderer, 204, 229, 255, 0); // Set obstacle color (white purple)
 		break;
+    case 2:
+        SDL_SetRenderDrawColor(g_renderer, 153, 0, 0, 0); // Set obstacle color (RED)
+        break;
     default:
         SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 0); // Set obstacle color (red)
 		break;
@@ -712,15 +715,31 @@ void wall() {
     int x, y;
 
     if (specialMode) {
-        for (x = left; x <= right; x++) {
-			obstacles.push_back({ x, top, 16, 16, 1 });
-            obstacles.push_back({ x, bottom, 16, 16, 1 });
-		}
+        switch (currentLevel) {
+        case 1:
+            for (x = left; x <= right; x++) {
+                obstacles.push_back({ x, top, 16, 16, 1 });
+                obstacles.push_back({ x, bottom, 16, 16, 1 });
+            }
 
-		for (y = top; y <= bottom; y++) {
-            obstacles.push_back({ left, y, 16, 16, 1 });
-			obstacles.push_back({ right, y, 16, 16, 1 });
-		}
+            for (y = top; y <= bottom; y++) {
+                obstacles.push_back({ left, y, 16, 16, 1 });
+                obstacles.push_back({ right, y, 16, 16, 1 });
+            }
+            break;
+            
+        case 2:
+            for (x = left; x <= right; x++) {
+				obstacles.push_back({ x, top, 16, 16, 2 });
+				obstacles.push_back({ x, bottom, 16, 16, 2 });
+			}
+
+            for (y = top; y <= bottom; y++) {
+				obstacles.push_back({ left, y, 16, 16, 2 });
+				obstacles.push_back({ right, y, 16, 16, 2 });
+			}
+			break;
+        }
     }
     else {
 
@@ -817,6 +836,8 @@ void levelClear() {
     toggle_obstacles.clear();
     moving_obstacles_direction.clear();
     fixedFood.clear();
+
+    if (specialMode && currentLevel == 3) dreamBlocks.clear();
 
 }
 
@@ -1488,7 +1509,27 @@ void mapTile(int tile_color) {
                 SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_2
             }
         }
+        break;
+    case 3:
+        SDL_SetRenderDrawColor(g_renderer, 0, 51, 102, 128); // Set tile_1 color (blue)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) == 0 ? 1 : 2; i <= 37; i += 2) {
+				SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+				SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_1
+			}
+		}
+
+		SDL_SetRenderDrawColor(g_renderer, 51, 0, 102, 128); // Set tile_2 color (purple)
+        for (int j = 1; j <= 25; j++) {
+            for (int i = (j % 2) != 0 ? 1 : 2; i <= 37; i += 2) {
+				SDL_Rect tileRect = { PLAY_AREA_LEFT + 16 * i - 16 / 2, PLAY_AREA_TOP + 16 * j - 16 / 2, 16, 16 };
+				SDL_RenderFillRect(g_renderer, &tileRect); // Render tile_2
+			}
+		}
+		break;
+	
     }
+
 }
 
 void iceTileLogic() {
@@ -1802,15 +1843,295 @@ void DreamLogic() {
 }
 
 void dreamBlock_LevelSP2() {
-    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 13, 16 * 5, 16  * 5});
+    int x, y;
 
-    obstacles.push_back({ PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 13, 16 * 1, 16, 1 });
+    // Obstacle setup
+
+    // Top left field
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 1;
+    for (int j = 0; j <= 2; j++) {
+        for (int i = 0; i <= 21; i++) {
+            obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 4;
+    for (int j = 0; j <= 4; j++) {
+        for (int i = 0; i <= 6; i++) {
+            obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 4;
+    y = PLAY_AREA_TOP + 16 * 2;
+    for (int i = 0; i <= 5; i++) {
+        RemoveObstacle(x, y + 16 * i);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 2;
+    y = PLAY_AREA_TOP + 16 * 5;
+    for (int i = 0; i <= 5; i++) {
+        RemoveObstacle(x + 16 * i, y);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 2;
+    y = PLAY_AREA_TOP + 16 * 6;
+    for (int i = 0; i <= 1; i++) {
+        RemoveObstacle(x + 16 * i * 2, y);
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 2;
+    y = PLAY_AREA_TOP + 16 * 7;
+    for (int i = 0; i <= 2; i++) {
+		RemoveObstacle(x + 16 * i, y);
+	}
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 9;
+    for (int j = 0; j <= 2; j++) {
+        for (int i = 0; i <= 2; i++) {
+            obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+    }
+
+    // Top right field
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 1;
+    for (int j = 0; j <= 3; j++) {
+        for (int i = 0; i <= 3; i++) {
+			obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    // Bottom field
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 3;
+    for (int j = 0; j <= 1; j++) {
+		for (int i = 0; i <= 3; i++) {
+            obstacles.push_back({ x + 16 * i, y - 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 12;
+    y = PLAY_AREA_BOTTOM - 16 * 3;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 4; i++) {
+			obstacles.push_back({ x - 16 * i, y - 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_LEFT + 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 2;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 25; i++) {
+            obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 4;
+    for (int i = 0; i <= 10; i++) {
+        obstacles.push_back({ x - 16 * i, y, 16, 16, 2 });
+    }
+
+    // Middle field
+    x = PLAY_AREA_LEFT + 16 * 14;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int j = 0; j <= 2; j++) {
+        for (int i = 0; i <= 12; i++) {
+			obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_LEFT + 16 * 18;
+    y = PLAY_AREA_TOP + 16 * 15;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 8; i++) {
+            obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 22;
+    y = PLAY_AREA_TOP + 16 * 17;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 4; i++) {
+			obstacles.push_back({ x + 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 9;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 11; i++) {
+            obstacles.push_back({ x - 16 * i, y - 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 9;
+    for (int i = 0; i <= 3; i++) {
+		obstacles.push_back({ x - 16 * i, y, 16, 16, 2 });
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 8;
+    obstacles.push_back({ x, y, 16, 16, 2 });
+
+    x = PLAY_AREA_RIGHT - 16 * 8;
+    y = PLAY_AREA_TOP + 16 * 9;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 7; i++) {
+            obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 8;
+    y = PLAY_AREA_TOP + 16 * 7;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 4; i++) {
+			obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 8;
+    y = PLAY_AREA_TOP + 16 * 5;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 1; i++) {
+            obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_TOP + 16 * 10;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 3; i++) {
+			obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+		}
+	}
+
+    x = PLAY_AREA_RIGHT - 16 * 3;
+    y = PLAY_AREA_TOP + 16 * 12;
+    for (int j = 0; j <= 3; j++) {
+        for (int i = 0; i <= 1; i++) {
+            obstacles.push_back({ x - 16 * i, y + 16 * j, 16, 16, 2 });
+        }
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 3;
+    y = PLAY_AREA_TOP + 16 * 13;
+    RemoveObstacle(x, y);
+
+    x = PLAY_AREA_RIGHT - 16 * 1;
+    y = PLAY_AREA_BOTTOM - 16 * 11;
+    for (int i = 0; i <= 1; i++) {
+        obstacles.push_back({ x - 16 * i, y, 16, 16, 2 });
+    }
+
+    x = PLAY_AREA_RIGHT - 16 * 12;
+    y = PLAY_AREA_TOP + 16 * 11;
+    for (int i = 0; i <= 3; i++) {
+        obstacles.push_back({ x - 16 * i, y, 16, 16, 2 });
+    }
+
+
+    x = PLAY_AREA_LEFT + 16 * 14;
+    y = PLAY_AREA_BOTTOM - 16 * 7;
+    for (int i = 0; i <= 2; i++) {
+        obstacles.push_back({ x + 16 * i, y, 16, 16, 2 });
+    }
+
+    x = PLAY_AREA_LEFT + 16 * 14;
+    y = PLAY_AREA_BOTTOM - 16 * 5;
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 5; i++) {
+			obstacles.push_back({ x + 16 * i, y - 16 * j, 16, 16, 2 });
+		}
+	}
+
+
+    // Dream block setup
+    x = PLAY_AREA_LEFT + 16 * 17;
+    y = PLAY_AREA_BOTTOM - 16 * 8;
+    dreamBlocks.push_back({ x, y, 16 * 19, 16 * 11 });
+
+    x = PLAY_AREA_RIGHT - 16 * 10 - 8;
+    y = PLAY_AREA_TOP + 16 * 7 + 8;
+    dreamBlocks.push_back({ x, y, 16 * 14, 16 * 8 });
+
+    x = PLAY_AREA_RIGHT - 16 * 6 - 8;
+    y = PLAY_AREA_BOTTOM - 16 * 2;
+    dreamBlocks.push_back({ x, y, 16 * 4, 16 * 3 });
+
+    x = PLAY_AREA_LEFT + 16 * 3;
+    y = PLAY_AREA_TOP + 16 * 6;
+    dreamBlocks.push_back({ x, y, 16 * 3, 16 * 3 });
+
+    x = PLAY_AREA_LEFT + 16 * 4;
+    y = PLAY_AREA_TOP + 16 * 3 + 8;
+    dreamBlocks.push_back({ x, y, 16, 16 * 2 });
+
+    x = PLAY_AREA_LEFT + 16 * 6;
+    y = PLAY_AREA_TOP + 16 * 5;
+    dreamBlocks.push_back({ x, y, 16 * 3, 16});
+
+    // Ice tile
+    x = PLAY_AREA_RIGHT - 16 * 2;
+    y = PLAY_AREA_BOTTOM - 16 * 8;
+    for (int j = 0; j <= 3; j++) {
+        for (int i = 0; i <= 6; i++) {
+			ice_tiles.push_back({ x - 16 * i, y + 16 * j, 16, 16 });
+		}
+	}
+
+    // Ice portal
+    for (int i = 0; i <= 2; i++) {
+        icePortals.push_back({
+            {PLAY_AREA_RIGHT - 16 * 1, PLAY_AREA_BOTTOM - 16 * (5 + i), 16, 16},
+			{PLAY_AREA_RIGHT - 16 * 11, PLAY_AREA_BOTTOM - 16 * (1 + i), 16, 16},
+			1,
+			1
+			});
+    }
+
+    icePortals.push_back({
+		{PLAY_AREA_LEFT + 16 * 4, PLAY_AREA_TOP + 16 * 2, 16, 16},
+		{PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_TOP + 16 * 13, 16, 16},
+		3,
+		2
+		});
+
+    // Fixed food
+
+    x = PLAY_AREA_RIGHT - 16 * 10;
+    y = PLAY_AREA_TOP + 16 * 2;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 8;
+    y = PLAY_AREA_BOTTOM - 16 * 12;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 4;
+    y = PLAY_AREA_BOTTOM - 16 * 7;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 7;
+    y = PLAY_AREA_BOTTOM - 16 * 5;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 2;
+    y = PLAY_AREA_BOTTOM - 16 * 2;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+
+
 }
 
 void DrawDreamBlock(int x, int y, int w, int h) {
     SDL_Rect dreamRect = { x - w / 2, y - h / 2, w, h };
-    SDL_SetTextureAlphaMod(g_dreamBlock, 70);
-    SDL_RenderCopy(g_renderer, g_dreamBlock, NULL, &dreamRect);
+    SDL_SetTextureAlphaMod(g_dreamBlock1, 70);
+    SDL_RenderCopy(g_renderer, g_dreamBlock1, NULL, &dreamRect);
 }
 
 void RenderDreamBlock() {

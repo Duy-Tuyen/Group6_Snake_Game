@@ -1460,7 +1460,9 @@ void RenderPlaying_Special() {
 
     RenderLevelStats();
 
-    mapTile(2);
+    if (currentLevel != 2) mapTile(2);
+    else mapTile(3);
+
 
     RenderIceTile(g_renderer);
 
