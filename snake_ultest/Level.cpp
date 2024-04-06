@@ -1837,6 +1837,7 @@ void DreamLogic() {
         }
     }
     else {
+        if (isInDream(snakeX - 16, snakeY) || isInDream(snakeX + 16, snakeY) || isInDream(snakeX, snakeY - 16) || isInDream(snakeX, snakeY + 16))
         lockDir = false;
         loopDelay = 120;
 	}

@@ -82,18 +82,23 @@ void reset() {
 
     // Reset any other game state variables as needed
     //
-
-    if (specialMode) Level_Special(currentLevel);
-    else Level(currentLevel);
-
-    show_food = true;
-
     foodEaten = 0;
     foodCount = 0;
     g_statsBars = nullptr;
 
-    g_food = LoadTexture("Food.png");
-    ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+    if (specialMode) {
+        
+        Level_Special(currentLevel);
+    }
+    else {
+        Level(currentLevel);
+
+        show_food = true;
+
+
+        g_food = LoadTexture("Food.png");
+        ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
+    }
     goOutGate_progress = true;
     gate_open_step[0] = true;
 }
