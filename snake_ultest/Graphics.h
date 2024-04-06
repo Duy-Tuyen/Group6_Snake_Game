@@ -11,6 +11,7 @@
 #include <SDL_mixer.h>
 #include <deque>
 
+#include "SetUp.h"
 #include "Level.h"
 #include "Snake.h"
 
@@ -24,6 +25,7 @@ enum class GameState {
     LOAD,
     SETTINGS,
     LEADERBOARD,
+    GUIDE,
     SKIN,
     ABOUT,
     TIMER,
@@ -140,6 +142,12 @@ extern const int NUM_TIMER_FRAMES;
 extern const int NUM_INTRO_FRAMES;
 extern bool introFinished;
 extern int currentIntroFrame;
+
+
+extern const int NUM_OUTRO_FRAMES;
+extern bool outroFinished;
+extern int currentOutroFrame;
+
 // Define variables for timer
 extern int currentTimerFrame;
 
@@ -191,6 +199,8 @@ void HandleTimerEvent();
 void UpdateIntroFrame();
 
 void RenderIntro();
+
+void UpdateOutroFrame();
 
 void RenderOutro();
 
@@ -258,14 +268,32 @@ void HandleGameOver();
 
 void RenderGameOver();
 
-//void HandleSaveInput();
+void HandleSaveInput();
 
-//void RenderSave();
+void RenderSave();
 
-//void HandleLeadInput();
+void HandleLeadInput();
 
-//void RenderLeadScreen();
+void RenderLeadScreen();
 
 void setZoom(float zoom);
 
 extern float zoom_scale;
+
+void RenderSnakeMenu();
+
+void PlayPlayingMusic();
+
+void HandleModeInput();
+
+void RenderModeScreen();
+
+void RenderDreamPlaying();
+
+void RenderMenuAnimation();
+
+void HandleGuideInput();
+
+void RenderGuide();
+
+void RenderGuideAnimation();

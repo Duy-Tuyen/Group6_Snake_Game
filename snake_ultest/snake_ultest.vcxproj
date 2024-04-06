@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Project Folder\Group6_Snake_Game\Library Include;C:\Users\ASUS\Documents\SDL2\SDL2-2.30.1\include;C:\Users\ASUS\Documents\SDL2\SDL2_ttf-2.22.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_mixer-2.8.0\include;C:\Users\ASUS\Documents\SDL2\SDL2_image-2.8.2\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -131,7 +131,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Project Folder\Group6_Snake_Game\Library Include;C:\Project Folder\Group6_Snake_Game\Library Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="SetUp.cpp" />
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="SetUp.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

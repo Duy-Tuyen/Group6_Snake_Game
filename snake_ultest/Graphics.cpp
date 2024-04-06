@@ -11,9 +11,15 @@ SDL_Window* g_window = nullptr;
 
 SDL_Renderer* g_renderer = nullptr;
 
+SDL_Texture* g_menuSnake = nullptr;
+
 SDL_Texture* g_bkground = nullptr;
 SDL_Texture* g_menuBackground = nullptr;
+SDL_Texture* g_dreamBackground = nullptr;
+
 SDL_Texture* g_loadGame = nullptr;
+SDL_Texture* g_loadButton = nullptr;
+
 SDL_Texture* g_aboutUs = nullptr;
 SDL_Texture* g_settings = nullptr;
 
@@ -33,6 +39,10 @@ SDL_Texture* g_soundOffButton = nullptr;
 SDL_Texture* g_leaderboardButton = nullptr;
 SDL_Texture* g_leaderboard = nullptr;
 
+SDL_Texture* g_guideButton = nullptr;
+
+SDL_Texture* g_control = nullptr;
+
 SDL_Texture* g_skinButton = nullptr;
 SDL_Texture* g_skinBackground = nullptr;
 SDL_Texture* g_speedBars = nullptr;
@@ -51,6 +61,10 @@ SDL_Texture* g_pauseMenu = nullptr;
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
+
+SDL_Texture* g_dreamBlock = nullptr;
+SDL_Texture* g_dreamBlock1 = nullptr;
+
 // Texture for special mode
 SDL_Texture* g_iceTile = nullptr;
 
@@ -68,14 +82,19 @@ GameState g_gameState = GameState::INTRO;
 
 const int RETURN_BUTTON_X = 450;
 const int RETURN_BUTTON_Y = 490;
-const int SOUND_ON_BUTTON_X = 100;
-const int SOUND_ON_BUTTON_Y = 100;
-const int SOUND_OFF_BUTTON_X = 100;
+
+const int SOUND_ON_BUTTON_X = 0;
+const int SOUND_ON_BUTTON_Y = 110;
+const int SOUND_OFF_BUTTON_X = 0;
 const int SOUND_OFF_BUTTON_Y = 300;
-const int SKIN_BUTTON_X = 600;
-const int SKIN_BUTTON_Y = 100;
-const int LEADER_BUTTON_X = 600;
-const int LEADER_BUTTON_Y = 300;
+
+const int SKIN_BUTTON_X = 575;
+const int SKIN_BUTTON_Y = 151;
+const int LEADER_BUTTON_X = 575;
+const int LEADER_BUTTON_Y = 360;
+
+const int GUIDE_BUTTON_X = 10;
+const int GUIDE_BUTTON_Y = 10;
 
 int speed = 1;
 const int minSpeed = 1;
@@ -101,8 +120,13 @@ TTF_Font* g_font = nullptr;
 // Define variables for color animation
 int currentFrame = 0;
 const int NUM_COLOR_FRAMES = 3;
+
 int COLOR_FRAME_RATE = 20;
 int INTRO_FRAME_RATE = 10;
+int OUTRO_FRAME_RATE = 10;
+int GUIDE_FRAME_RATE = 10;
+int MENU_FRAME_RATE = 10;
+
 const int MAX_COLOR_FRAME_RATE = 60;
 const int MIN_COLOR_FRAME_RATE = 20;
 const int FRAME_RATE_INCREMENT = 20;
@@ -118,8 +142,17 @@ std::vector<std::string> colorFileNames = { "greenSnake.png", "redSnake.png", "b
 const int TIMER_DURATION_SECONDS = 4;
 const int NUM_TIMER_FRAMES = 4;
 const int NUM_INTRO_FRAMES = 6;
+const int NUM_OUTRO_FRAMES = 6;
+const int NUM_MENU_FRAMES = 8;
+const int NUM_GUIDE_FRAMES = 7;
+
 bool introFinished = false;
+bool outroFinished = false;
+
 int currentIntroFrame = 0;
+int currentOutroFrame = 0;
+int currentGuideFrame = 0;
+
 // Define variables for timer
 int currentTimerFrame = 0;
 
@@ -198,17 +231,12 @@ bool Init() {
         return false;
     }
 
-    // Load the GIF animation
-    g_outro = LoadTexture("menuBackground.png");
+    // Load outro texture
+    g_outro = LoadTexture("OUTRO.png");
     if (g_outro == nullptr) {
         return false;
     }
 
-    // Load game mode menu
-    g_mode = LoadTexture("gameMode.png");
-    if (g_mode == nullptr) {
-        return false;
-    }
 
     // Load textures
     g_intro = LoadTexture("intro-display.png");
@@ -221,8 +249,29 @@ bool Init() {
         return false;
     }
 
+    g_menuSnake = LoadTexture("Snake_Animation.png");
+    if (g_menuSnake == nullptr) {
+        return false;
+    }
+
+    // Load game mode menu
+    g_mode = LoadTexture("gameMode.png");
+    if (g_mode == nullptr) {
+        return false;
+    }
+
+    g_dreamBackground = LoadTexture("dreamBackground.png");
+    if (g_mode == nullptr) {
+        return false;
+    }
+
     g_loadGame = LoadTexture("loadGame.png");
     if (g_loadGame == nullptr) {
+        return false;
+    }
+
+    g_loadButton = LoadTexture("loadButton.png");
+    if (g_loadButton == nullptr) {
         return false;
     }
 
@@ -243,6 +292,11 @@ bool Init() {
 
     g_leaderboardButton = LoadTexture("leaderboardButton.png");
     if (g_leaderboardButton == nullptr) {
+        return false;
+    }
+
+    g_guideButton = LoadTexture("guideButton.png");
+    if (g_guideButton == nullptr) {
         return false;
     }
 
@@ -296,6 +350,20 @@ bool Init() {
         return false;
     }
 
+    g_dreamBlock = LoadTexture("dreamBlock.png");
+    if (g_dreamBlock == nullptr) {
+        return false;
+    }
+
+    g_dreamBlock1 = LoadTexture("dreamBlock1.png");
+    if (g_dreamBlock1 == nullptr) {
+        return false;
+    }
+
+    g_control = LoadTexture("guide.png");
+    if (g_control == nullptr) {
+        return false;
+    }
 
     g_food = LoadTexture("Food.png");
     if (g_food == nullptr) {
@@ -602,18 +670,193 @@ void RenderIntroAnimation(SDL_Renderer* renderer, SDL_Texture* spriteSheet, int 
     SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
 }
 
+void RenderMenuAnimation() {
+
+    static int currentMenuFrame = 0; // Static variable to retain its value across function calls
+
+    // Increment currentMenuFrame for next frame
+    currentMenuFrame = (currentMenuFrame + 1) % NUM_MENU_FRAMES;
+
+    // Clear the renderer
+    SDL_RenderClear(g_renderer);
+
+    // Calculate frame width and height
+    int frameWidth = 496 / NUM_MENU_FRAMES;
+    int frameHeight = 64;
+    int row = 0;
+    int col = currentMenuFrame;
+
+    SDL_Rect srcRect;
+    srcRect.x = col * frameWidth;
+    srcRect.y = row * frameHeight;
+    srcRect.w = frameWidth;
+    srcRect.h = frameHeight;
+
+    // Destination rectangle (where to render the frame on the screen)
+    SDL_Rect destRect = { 50, 250, frameWidth * 5, frameHeight * 5 }; // Adjusted to the desired size on the screen
+    SDL_Rect destRect2 = { 575, 250, frameWidth * 5, frameHeight * 5 };
+
+    // Render the menu background
+    ApplyTexture1(g_menuBackground, 0, 0);
+
+    // Render the current frame of the snake animation
+    SDL_RenderCopy(g_renderer, g_menuSnake, &srcRect, &destRect);
+    SDL_RenderCopy(g_renderer, g_menuSnake, &srcRect, &destRect2);
+
+    // Update the screen
+    SDL_RenderPresent(g_renderer);
+}
+
 void RenderIntro() {
     RenderIntroAnimation(g_renderer, g_intro, 315, 250, NUM_INTRO_FRAMES, 1, currentIntroFrame, 0, 0, 960, 540);
     SDL_RenderPresent(g_renderer);
 }
 
+void UpdateOutroFrame() {
+
+    static Uint32 lastFrameTime = SDL_GetTicks();
+
+    Uint32 currentTime = SDL_GetTicks();
+
+    Uint32 elapsedTime = currentTime - lastFrameTime;
+
+
+
+    if (elapsedTime >= (1000 / OUTRO_FRAME_RATE)) {
+
+        // Update the current frame
+
+        currentOutroFrame++;
+
+        if (currentOutroFrame >= NUM_OUTRO_FRAMES) {
+
+            outroFinished = true;
+
+        }
+
+        lastFrameTime = currentTime;
+
+    }
+
+}
+
+
+
+void RenderOutroAnimation(SDL_Renderer* renderer, SDL_Texture* spriteSheet, int frameWidth, int frameHeight, int NUM_INTRO_FRAMES, int numRows, int currentFrame, int x, int y, int sheetWidth, int sheetHeight) {
+
+    // Calculate the source rectangle for the current frame
+    int row = currentFrame / NUM_OUTRO_FRAMES;
+    int col = currentFrame % NUM_OUTRO_FRAMES;
+    SDL_Rect srcRect;
+    srcRect.x = col * frameWidth;
+    srcRect.y = row * frameHeight;
+    srcRect.w = frameWidth;
+    srcRect.h = frameHeight;
+
+    // Destination rectangle (where to render the frame on the screen)
+    SDL_Rect destRect = { x, y, sheetWidth, sheetHeight }; // Adjusted to the entire sprite sheet size
+
+    // Render the current frame
+    SDL_RenderCopy(renderer, spriteSheet, &srcRect, &destRect);
+
+}
+
 void RenderOutro() {
-    // Clear the screen
+    const int repeatCount = 5; // Render the outro 5 times longer
+
+    for (int i = 0; i < NUM_OUTRO_FRAMES * repeatCount; ++i) {
+
+        // Calculate the current frame to render
+
+        int currentFrame = i % NUM_OUTRO_FRAMES;
+
+
+
+        // Render the current frame
+
+        RenderOutroAnimation(g_renderer, g_outro, 960, 540, NUM_OUTRO_FRAMES, 1, currentFrame, 0, 0, 960, 540);
+
+        SDL_Delay(80);
+
+        SDL_RenderPresent(g_renderer);
+
+    }
+
+}
+
+
+
+
+
+
+
+void UpdateGuideFrame() {
+
+    static Uint32 lastFrameTime = SDL_GetTicks();
+
+    Uint32 currentTime = SDL_GetTicks();
+
+    Uint32 elapsedTime = currentTime - lastFrameTime;
+
+
+
+    if (elapsedTime >= (1000 / GUIDE_FRAME_RATE)) {
+
+        // Update the current frame
+
+        currentGuideFrame++;
+
+        lastFrameTime = currentTime;
+
+    }
+
+}
+
+
+
+void RenderGuideAnimation() {
+
+    static int currentGuideFrame = 0; // Static variable to retain its value across function calls
+
+    // Increment currentMenuFrame for next frame
+    currentGuideFrame = (currentGuideFrame + 1) % NUM_GUIDE_FRAMES;
+
+    // Clear the renderer
     SDL_RenderClear(g_renderer);
-    ApplyTexture1(g_outro, 0, 0);
-    // Present the renderer
+
+    // Calculate frame width and height
+    int frameWidth = 6720 / NUM_GUIDE_FRAMES;
+    int frameHeight = 540;
+    int row = 0;
+    int col = currentGuideFrame;
+
+    SDL_Rect srcRect;
+    srcRect.x = col * frameWidth;
+    srcRect.y = row * frameHeight;
+    srcRect.w = frameWidth;
+    srcRect.h = frameHeight;
+
+    // Destination rectangle (where to render the frame on the screen)
+    SDL_Rect destRect = { 0, 0, frameWidth, frameHeight }; // Adjusted to the desired size on the screen
+
+    // Render the current frame of the snake animation
+    SDL_RenderCopy(g_renderer, g_control, &srcRect, &destRect);
+    ApplyTexture1(g_returnButton, 880, 480);
+
+    // Update the screen
     SDL_RenderPresent(g_renderer);
 }
+
+void RenderSnakeMenu() {
+
+    int currentMenuFrame = 0; // Initialize current frame
+
+    while (1) {
+        RenderMenuAnimation();
+        SDL_Delay(100);
+    }
+}
+
 void RenderSkinScreen() {
     ApplyTexture1(g_skinBackground, 0, 0);
     ApplyTexture1(g_colorSkin, 173, 473);
@@ -672,18 +915,6 @@ void HandleMenuInput() {
     }
 }
 
-void HandleLoadInput() {
-    while (SDL_PollEvent(&g_event)) {
-        if (g_event.type == SDL_QUIT) {
-            SDL_Quit();
-            exit(0);
-        }
-        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
-            HandleReturnButtonInput();
-        }
-    }
-}
-
 void HandleLeadButtonInput() {
     // Open the skin selection screen when the skin button is clicked
     int mouseX, mouseY;
@@ -693,6 +924,20 @@ void HandleLeadButtonInput() {
         g_gameState = GameState::LEADERBOARD;
     }
 }
+
+void HandleGuideButtonInput() {
+
+    // Open the skin selection screen when the skin button is clicked
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    SDL_Rect guideButtonRect = { GUIDE_BUTTON_X * zoom_scale, GUIDE_BUTTON_Y * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+    if (IsPointInRect(mouseX, mouseY, guideButtonRect)) {
+        g_gameState = GameState::GUIDE;
+    }
+}
+
+
 
 
 void HandleSettingsInput() {
@@ -707,6 +952,20 @@ void HandleSettingsInput() {
             HandleSoundOffButtonInput();
             HandleSkinButtonInput();
             HandleLeadButtonInput();
+
+            HandleGuideButtonInput();
+        }
+    }
+}
+
+void HandleGuideInput() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            HandleReturnButtonSkinInput();
         }
     }
 }
@@ -910,18 +1169,90 @@ void RenderLevelStats() {
 
 void RenderMenu() {
     // Play background music when rendering the menu
-    PlayMenuBackgroundMusic();
     ApplyTexture1(g_menuBackground, 0, 0);
+    PlayMenuBackgroundMusic();
     SDL_RenderPresent(g_renderer);
 }
+
+
+// Function to render the leaderboard
+
+void RenderLoadText(const std::vector<Player>& players) {
+
+    int lineHeight = 40; // Height of each line
+    int yPos = 172; // Initial y position for rendering
+
+    // Render player entries for the first 5 players
+    for (size_t i = 0; i < min(players.size(), size_t(5)); ++i) {
+        std::string playerInfo = players[i].name + "     " + std::to_string(players[i].score) + "  " + players[i].dateAndTime;
+        RenderText(playerInfo, 245, yPos);
+        yPos += lineHeight; // Move down for next player entry
+    }
+}
+
+// Define a global variable to store the y-position of the load button
+int loadButtonY = 180;
 
 void RenderLoadScreen() {
     ApplyTexture1(g_loadGame, 0, 0);
+
+    RenderLoadText(players);
+
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
+
+    // Apply the load button texture at the updated y-position
+    ApplyTexture1(g_loadButton, 50, loadButtonY);
+
     SDL_RenderPresent(g_renderer);
 }
 
+int playerSelectCount = 1;
+
+void HandleLoadInput() {
+
+
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_KEYDOWN) {
+            switch (g_event.key.keysym.sym) {
+            case SDLK_UP:
+                loadButtonY -= 40;
+                playerSelectCount--;
+
+                break;
+
+            case SDLK_DOWN:
+                loadButtonY += 40;
+                playerSelectCount++;
+
+                break;
+
+            case SDLK_RETURN:
+                currentLevel = players[playerSelectCount - 1].score / (10 * 5);
+                g_gameState = GameState::PLAYING;
+
+                break;
+
+            }
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            HandleReturnButtonInput();
+        }
+    }
+}
+
+
+
 void RenderSettingsScreen() {
+
+    std::string soundOn = "SOUND ON";
+    std::string soundOff = "SOUND OFF";
+    std::string skinSnake = "CHOOSE YOUR SNAKE";
+    std::string leaderboard = "LEADERBOARD";
+
     ApplyTexture1(g_settings, 0, 0);
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
     ApplyTexture1(g_soundOnButton, SOUND_ON_BUTTON_X, SOUND_ON_BUTTON_Y);
@@ -929,6 +1260,12 @@ void RenderSettingsScreen() {
 
     ApplyTexture1(g_skinButton, SKIN_BUTTON_X, SKIN_BUTTON_Y);
     ApplyTexture1(g_leaderboardButton, LEADER_BUTTON_X, LEADER_BUTTON_Y);
+    ApplyTexture1(g_guideButton, GUIDE_BUTTON_X, GUIDE_BUTTON_Y);
+
+    RenderText(soundOn, 390, 220);
+    RenderText(soundOff, 285, 405);
+    RenderText(skinSnake, 575, 273);
+    RenderText(leaderboard, 575, 450);
 
     SDL_RenderPresent(g_renderer);
 }
@@ -1090,7 +1427,7 @@ void RenderPlaying_Level() {
         //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
     }
-    RenderPlaying_LevelSkin();
+    RenderPlayingSkin();
     //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
@@ -1133,7 +1470,7 @@ void RenderPlaying_Special() {
 
 
 
-    RenderPlaying_LevelSkin();
+    RenderPlayingSkin();
     //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
@@ -1151,6 +1488,13 @@ void RenderPlaying_Special() {
 
     SDL_RenderPresent(g_renderer);
 }
+
+void RenderDreamBlock() {
+    ApplyTexture1(g_dreamBlock, 0, 30);
+    ApplyTexture1(g_dreamBlock1, 500, 500);
+}
+
+
 
 void HandleGameOver() {
     while (SDL_PollEvent(&g_event)) {
@@ -1383,4 +1727,227 @@ void HandleSaveInput() {
 
 void setZoom(float zoom) {
     SDL_RenderSetScale(g_renderer, zoom, zoom);
+}
+
+Player player; // Declare an instance of the Player struct
+
+void RenderSave() {
+
+    ApplyTexture1(g_snakeEnter, 250, 30);
+
+    SDL_Color textColor = { 0, 0, 255 };
+
+    int maxWidth = 200; // Adjust as needed
+
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(g_font, player.name.c_str(), textColor, maxWidth);
+
+    if (!textSurface) {
+
+        std::cerr << "Failed to render text surface: " << TTF_GetError() << std::endl;
+
+        // Handle the error appropriately (return or other actions)
+
+    }
+
+
+
+
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
+
+    if (!textTexture) {
+
+        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+
+        SDL_FreeSurface(textSurface); // Free the surface before returning
+
+        // Handle the error appropriately (return or other actions)
+
+    }
+
+
+
+    SDL_Rect textNameRect = { 336, 375, 320, 30 };
+
+    SDL_RenderCopy(g_renderer, textTexture, nullptr, &textNameRect);
+
+
+
+    // Free the surface and texture
+
+    SDL_FreeSurface(textSurface);
+
+    SDL_DestroyTexture(textTexture);
+
+
+
+
+
+    // Present the renderer
+
+    SDL_RenderPresent(g_renderer);
+
+}
+
+// Function to save the player's name, score, and current date/time to a text file
+void SavePlayerInfo(const std::string& playerName, int score) {
+
+    // Get the current date and time
+
+    auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+    std::string dateTimeString = std::ctime(&currentTime);
+
+
+
+    // Create a new player object with the given name, score, and current date/time
+
+    Player newPlayer;
+
+    newPlayer.name = playerName;
+
+    newPlayer.score = score;
+
+    newPlayer.dateAndTime = dateTimeString;
+
+
+
+    // Add the new player to the array of players
+
+    players.push_back(newPlayer);
+
+
+
+    // Write player information to a text file
+
+    std::ofstream outputFile("player_info.txt", std::ios::app); // Open the file in append mode
+
+    if (outputFile.is_open()) {
+
+        outputFile << playerName << " " << score << " " << dateTimeString;
+
+        outputFile.close();
+
+        std::cout << "Player information saved to file." << std::endl;
+
+    }
+
+    else {
+
+        std::cerr << "Error: Unable to open file for writing." << std::endl;
+
+    }
+
+
+
+    // Print confirmation message
+
+    std::cout << "Player name saved: " << playerName << ", Score: " << score << ", Date and Time: " << dateTimeString;
+
+}
+
+// Function to handle input events and save player information
+void HandleSaveInput() {
+
+    while (SDL_PollEvent(&g_event)) {
+
+        if (g_event.type == SDL_QUIT) {
+
+            SDL_Quit();
+
+            exit(0);
+
+        }
+
+        else if (g_event.type == SDL_TEXTINPUT) {
+
+            // Append the input character to the player's name string
+
+            player.name += g_event.text.text;
+
+            std::cout << "Player name: " << player.name << std::endl; // Just for demonstration
+
+        }
+
+        else if (g_event.type == SDL_KEYDOWN) {
+
+            if (g_event.key.keysym.sym == SDLK_RETURN || g_event.key.keysym.sym == SDLK_RETURN2 || g_event.key.keysym.sym == SDLK_KP_ENTER) {
+
+                SavePlayerInfo(player.name, score);
+
+                g_gameState = GameState::QUIT;
+
+            }
+
+        }
+
+    }
+
+}
+
+void HandleLeadInput() {
+
+    while (SDL_PollEvent(&g_event)) {
+
+        if (g_event.type == SDL_QUIT) {
+
+            SDL_Quit();
+
+            exit(0);
+
+        }
+
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+
+            int mouseX, mouseY;
+
+            SDL_GetMouseState(&mouseX, &mouseY);
+
+            HandleReturnButtonInput();
+
+        }
+
+    }
+
+
+
+}
+
+// Function to render the leaderboard
+void RenderLeaderboard(const std::vector<Player>& players) {
+
+    int lineHeight = 50; // Height of each line
+
+    int yPos = 252; // Initial y position for rendering
+
+    highScore();
+
+    // Render player entries for the first 5 players
+
+    for (size_t i = 0; i < min(players.size(), size_t(5)); ++i) {
+
+        std::string playerInfo = players[i].name + "     " + std::to_string(players[i].score) + "  " + players[i].dateAndTime;
+
+        RenderText(playerInfo, 245, yPos);
+
+        yPos += lineHeight; // Move down for next player entry
+
+    }
+
+}
+
+void RenderLeadScreen() {
+
+    int x, y;
+
+    SDL_QueryTexture(g_leaderboard, NULL, NULL, &x, &y);
+
+    ApplyTexture2(g_leaderboard, 0, 0, 960, 540);
+
+    ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
+
+    RenderLeaderboard(players);
+
+    SDL_RenderPresent(g_renderer);
+
 }

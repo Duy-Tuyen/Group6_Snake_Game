@@ -27,10 +27,13 @@ int main(int argc, char** argv) {
 
         case GameState::MENU:
             HandleMenuInput();
-            RenderMenu();
+            RenderMenuAnimation();
+            // RenderSnakeMenu();
+            SDL_Delay(80);
             break;
 
         case GameState::LOAD:
+            loadFileScore();
             HandleLoadInput();
             RenderLoadScreen();
             break;
@@ -41,14 +44,20 @@ int main(int argc, char** argv) {
             break;
 
         case GameState::LEADERBOARD:
-            //HandleLeadInput();
-            //loadFileScore();
-            //RenderLeadScreen();
+            HandleLeadInput();
+            loadFileScore();
+            RenderLeadScreen();
             break;
 
         case GameState::SKIN:
             HandleSkinInput();
             RenderSkinScreen();
+            break;
+
+        case GameState::GUIDE:
+            HandleGuideInput();
+            RenderGuideAnimation();
+            SDL_Delay(80);
             break;
 
         case GameState::ABOUT:

@@ -78,4 +78,4 @@ void DrawTail();
 
 void MoveSnake(bool& running);
 
-void RenderPlaying_LevelSkin();
+void RenderPlayingSkin();

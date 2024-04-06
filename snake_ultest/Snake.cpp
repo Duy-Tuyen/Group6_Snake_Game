@@ -449,7 +449,7 @@ void MoveSnake(bool& running) {
     snakeTeleport_out_to_in(icePortals);
 }
 
-void RenderPlaying_LevelSkin() {
+void RenderPlayingSkin() {
     switch (currentColorIndex) {
     case 0: // green
         SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);
