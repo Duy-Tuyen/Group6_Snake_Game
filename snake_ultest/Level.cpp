@@ -28,6 +28,8 @@ std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
 
 std::vector<subPortal> icePortals; // Vector to store ice portals
 
+std::vector<Obstacle> fixedFood; // Vector to store fixed food
+
 
 void setRenderColor(int colorCode) {
     switch (colorCode) {
@@ -687,7 +689,6 @@ void gate_open_special() {
         subPortals.clear();
         Level_Special(currentLevel);
         gate_out4();
-        spawnFood();
         gate_open_step[3] = false;
     }
 }
@@ -808,9 +809,11 @@ void levelClear() {
 	subPortals.clear();
 	monsters.clear();
 	portals.clear();
+    icePortals.clear();
     ice_tiles.clear();
     toggle_obstacles.clear();
     moving_obstacles_direction.clear();
+    fixedFood.clear();
 
 }
 
@@ -853,8 +856,7 @@ void goInGate_check() {
 
 void goOutGate_check() {
     if (gate_open_done) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         if (currentLevel == 3) isMovingMonster = true;
 
         if (specialMode) Level_Special(currentLevel);
@@ -1523,23 +1525,38 @@ void iceTile_LevelSP1() {
     }
 
     // Obstacle
+
+    // Top Left field
     x = PLAY_AREA_LEFT + 16 * 11;
     y = PLAY_AREA_TOP + 16 * 5;
     
     obstacles.push_back({ x, y , 16 * 3, 16, 1 });
 
+    // Top Right field
     x = PLAY_AREA_RIGHT - 16 * 11;
     y = PLAY_AREA_TOP + 16 * 6;
     obstacles.push_back({ x, y, 16 * 3, 16, 1 });
 
+    x = PLAY_AREA_RIGHT - 16 * 10;
+    y = PLAY_AREA_TOP + 16 * 7 + 8;
+    obstacles.push_back({ x, y, 16, 16 * 2, 1 });
+
+    
+    // Bottom Left field
     x = PLAY_AREA_LEFT + 16 * 10;
     y = PLAY_AREA_TOP + 16 * 13;
     obstacles.push_back({ x, y, 16 * 3, 16, 1 });
 
+    // Bottom Right field
     x = PLAY_AREA_RIGHT - 16 * 10;
     y = PLAY_AREA_BOTTOM - 16 * 8;
     obstacles.push_back({ x, y, 16 * 3, 16, 1 });
 
+    x = PLAY_AREA_RIGHT - 16 * 10;
+    y = PLAY_AREA_BOTTOM - 16 * 6 - 8;
+    obstacles.push_back({ x, y, 16, 16 * 2, 1 });
+
+    // Middle field
     int n = 7;
     for (int j = 0; j <= 7; j++) {
         for (int i = 0; i <= n; i++) {
@@ -1551,6 +1568,7 @@ void iceTile_LevelSP1() {
         n--;
     }
     
+    // Around gate
     x = PLAY_AREA_RIGHT - 16 * 2 - 8;
     y = PLAY_AREA_TOP + 16 * 11;
     obstacles.push_back({ x, y, 16 * 4, 16, 1 });
@@ -1603,6 +1621,33 @@ void iceTile_LevelSP1() {
 		2
 		});
 
+    // food
+    x = PLAY_AREA_RIGHT - 16 * 13;
+    y = PLAY_AREA_TOP + 16 * 5;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_LEFT + 16 * 16;
+    y = PLAY_AREA_TOP + 16 * 7;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 18;
+    y = PLAY_AREA_TOP + 16 * 9;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_LEFT + 16 * 17;
+    y = PLAY_AREA_BOTTOM - 16 * 6;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+    x = PLAY_AREA_RIGHT - 16 * 16;
+    y = PLAY_AREA_TOP + 16 * 6;
+    fixedFood.push_back({ x, y, 16, 16 });
+
+}
+
+void RenderFixedFood() {
+    for (const auto& fixedfood : fixedFood) {
+		ApplyTexture2(g_food, fixedfood.x - 16 / 2, fixedfood.y - 16 / 2, 16, 16);
+	}
 }
 
 void RenderIcePortal() {

@@ -100,8 +100,8 @@ int main(int argc, char** argv) {
             
             SDL_RenderClear(g_renderer);
 
-            if (CheckEat() && !hasEaten) {
-                EatFood();
+            if (CheckEat_Level() && !hasEaten) {
+                EatFood_Level();
                 AddTailSegment();
 
             }
@@ -132,7 +132,6 @@ int main(int argc, char** argv) {
             HandlePauseMenuInput();
             HandlePlayingInput();
             MoveSnake(running);
-            foodSpawnedThisFrame = false;
 
             // Draw the tail on every frame
             AddTailSegment();
@@ -161,11 +160,7 @@ int main(int argc, char** argv) {
 
             SDL_RenderClear(g_renderer);
 
-            if (CheckEat() && !hasEaten) {
-                EatFood();
-                AddTailSegment();
-
-            }
+            EatFood_Special();
 
             if (toggleObstacleCollision()) {
                 //running = false;

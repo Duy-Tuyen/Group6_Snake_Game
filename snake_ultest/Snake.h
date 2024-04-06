@@ -61,8 +61,9 @@ void spawnFood();
 
 void reset();
 
-bool CheckEat();
-void EatFood();
+bool CheckEat_Level();
+void EatFood_Level();
+void EatFood_Special();
 
 bool CheckCollision_food_obstacle();
 bool CheckCollision_food_snake();

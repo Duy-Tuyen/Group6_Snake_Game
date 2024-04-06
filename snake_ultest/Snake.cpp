@@ -33,8 +33,8 @@ int foodEaten = 0; // Number of food items eaten by the snake
 bool hasEaten = false;
 
 
-int foodX;
-int foodY;
+int foodX = 0;
+int foodY = 0;
 int foodWidth_png, foodHeight_png;
 int bkWidth, bkHeight;
 int snakeWidth_png, snakeHeight_png;
@@ -47,25 +47,27 @@ bool show_food = true;
 const int TAIL_SPACE = 16;
 
 void spawnFood() {
-    int x_16pixel_range = 38;
-    int y_16pixel_range = 26;
-    int x_index;
-    int y_index;
-    if (currentLevel == 5) {
-        do {
-            x_index = rand() % x_16pixel_range;
-            y_index = rand() % y_16pixel_range;
-            foodX = PLAY_AREA_LEFT + 16 * x_index;
-            foodY = PLAY_AREA_TOP + 16 * y_index;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || (foodX >= PLAY_AREA_RIGHT - 16* 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
-    }
-    else {
-        do {
-            x_index = rand() % x_16pixel_range;
-            y_index = rand() % y_16pixel_range;
-            foodX = PLAY_AREA_LEFT + 16 * x_index;
-            foodY = PLAY_AREA_TOP + 16 * y_index;
-        } while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+    if (!specialMode) {
+        int x_16pixel_range = 38;
+        int y_16pixel_range = 26;
+        int x_index;
+        int y_index;
+        if (currentLevel == 5) {
+            do {
+                x_index = rand() % x_16pixel_range;
+                y_index = rand() % y_16pixel_range;
+                foodX = PLAY_AREA_LEFT + 16 * x_index;
+                foodY = PLAY_AREA_TOP + 16 * y_index;
+            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || (foodX >= PLAY_AREA_RIGHT - 16 * 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
+        }
+        else {
+            do {
+				x_index = rand() % x_16pixel_range;
+				y_index = rand() % y_16pixel_range;
+				foodX = PLAY_AREA_LEFT + 16 * x_index;
+				foodY = PLAY_AREA_TOP + 16 * y_index;
+			} while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+		}
     }
 }
 
@@ -95,7 +97,7 @@ void reset() {
     gate_open_step[0] = true;
 }
 
-bool CheckEat() {
+bool CheckEat_Level() {
     // Calculate the distance between the snake and the food
     int distanceX = abs(snakeX - foodX);
     int distanceY = abs(snakeY - foodY);
@@ -146,9 +148,9 @@ bool CheckCollision_food_snake() {
     return false;
 }
 
-void EatFood() {
+void EatFood_Level() {
     // Check if the snake has collided with the food
-    if (CheckEat() && !hasEaten) {
+    if (CheckEat_Level() && !hasEaten) {
         hasEaten = true;
         PlayScoreMusic();
         UpdateStats();
@@ -176,9 +178,35 @@ void EatFood() {
 
     }
 
-        // Reset hasEaten to false after the new food is spawned
-        hasEaten = false;
-    
+    // Reset hasEaten to false after the new food is spawned
+    hasEaten = false;
+}
+
+void EatFood_Special() {
+    for (int i = 0; i < fixedFood.size(); i++) {
+        // Calculate the distance between the snake and the food
+        int distanceX = abs(snakeX - fixedFood[i].x);
+        int distanceY = abs(snakeY - fixedFood[i].y);
+        int edgeDistanceX = 16;
+        int edgeDistanceY = 16;
+
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+            AddTailSegment();
+			PlayScoreMusic();
+
+            tailLength++;
+			foodEaten++;
+			UpdateStats();
+			UpdateStatsBar();
+            fixedFood.erase(fixedFood.begin() + i);
+			break;
+		}
+    }
+
+    if (foodEaten == FOOD_TO_EAT) {
+        gate_in();
+
+    }
 }
 
 bool CheckCollision_tail() {

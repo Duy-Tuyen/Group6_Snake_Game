@@ -43,6 +43,8 @@ extern std::vector<subPortal> icePortals; // Vector to store ice portals
 
 extern std::vector<Obstacle> ice_tiles; // Vector to store ice blocks
 
+extern std::vector<Obstacle> fixedFood; // Vector to store fixed food
+
 // Function to render obstacles on the screen
 void RenderObstacles(SDL_Renderer* renderer);
 void RenderPortals(SDL_Renderer* renderer);
@@ -130,3 +132,5 @@ void iceTileLogic();
 void iceTile_LevelSP1();
 
 void RenderIcePortal();
+
+void RenderFixedFood();
