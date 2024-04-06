@@ -77,6 +77,8 @@ void Level(int levelNumber);
 
 void Level_Special(int levelNumber);
 
+void levelClear();
+
 void nextLevel();
 
 void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);

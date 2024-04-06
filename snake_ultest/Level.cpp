@@ -774,6 +774,18 @@ void Level_Special(int levelNumber) {
 
 }
 
+void levelClear() {
+
+    obstacles.clear();
+	subPortals.clear();
+	monsters.clear();
+	portals.clear();
+    ice_tiles.clear();
+    toggle_obstacles.clear();
+    moving_obstacles_direction.clear();
+
+}
+
 void nextLevel() {
     currentLevel++;
     reset();

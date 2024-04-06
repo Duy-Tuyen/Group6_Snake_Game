@@ -75,13 +75,7 @@ void reset() {
     snakeDirection = RIGHT; // Reset snake direction
     lastDirection = RIGHT; // Reset last direction
 
-    // Remove all obstacles
-    obstacles.clear();
-
-    // Remove all portals
-    portals.clear();
-
-    subPortals.clear();
+    levelClear();
 
     // Reset any other game state variables as needed
     //
