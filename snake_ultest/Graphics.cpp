@@ -1183,7 +1183,7 @@ void RenderLoadText(const std::vector<Player>& players) {
     int yPos = 172; // Initial y position for rendering
 
     // Render player entries for the first 5 players
-    for (size_t i = 0; i < min(players.size(), size_t(5)); ++i) {
+    for (size_t i = 0; i < min(players.size(), size_t(8)); ++i) {
         std::string playerInfo = players[i].name + "     " + std::to_string(players[i].score) + "  " + players[i].dateAndTime;
         RenderText(playerInfo, 245, yPos);
         yPos += lineHeight; // Move down for next player entry
@@ -1231,7 +1231,7 @@ void HandleLoadInput() {
                 break;
 
             case SDLK_RETURN:
-                currentLevel = players[playerSelectCount - 1].score / (10 * 5);
+                currentLevel = players[playerSelectCount - 1].score / (10 * 5) + 1;
                 g_gameState = GameState::PLAYING;
 
                 break;
@@ -1326,7 +1326,7 @@ void RenderPauseMenu() {
     // Clear the renderer
     //SDL_RenderClear(g_renderer);
     // Render the pause menu texture onto the screen
-    ApplyTexture2(g_pauseMenu,705, 270, 194, 205);
+    ApplyTexture2(g_pauseMenu,705, 250, 194, 225);
 
     // Present the renderer
     SDL_RenderPresent(g_renderer);
@@ -1343,14 +1343,19 @@ void HandlePauseMenuInput() {
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
                 std::cout << "Mouse: " << mouseX << ", " << mouseY << std::endl;
-                SDL_Rect ContinueButtonRect = { 736 * zoom_scale, 344 * zoom_scale, 131 * zoom_scale, 18 * zoom_scale };
-                SDL_Rect QuitGameButtonRect = { 501 * zoom_scale, 445 * zoom_scale, 200 * zoom_scale, 300 * zoom_scale };
 
-                if (IsPointInRect(mouseX, mouseY, ContinueButtonRect)) {
+                SDL_Rect SaveButtonRect = { 728 * zoom_scale, 302 * zoom_scale, 150 * zoom_scale, 50 * zoom_scale };;
+                SDL_Rect ContinueButtonRect = { 728 * zoom_scale, 364 * zoom_scale, 150 * zoom_scale, 50 * zoom_scale };
+                SDL_Rect QuitGameButtonRect = { 728 * zoom_scale, 420 * zoom_scale, 150 * zoom_scale, 50 * zoom_scale };
+
+                if (IsPointInRect(mouseX, mouseY, SaveButtonRect)) {
+                    g_gameState = GameState::SAVE;
+				}
+                else if (IsPointInRect(mouseX, mouseY, ContinueButtonRect)) {
                     HandleContinueButtonInput();
                 }
                 else if (IsPointInRect(mouseX, mouseY, QuitGameButtonRect)) {
-                    //HandleQuitGameButtonInput();
+                    g_gameState = GameState::OUTRO;
                 }
             }
         }
@@ -1489,11 +1494,12 @@ void RenderPlaying_Special() {
     SDL_RenderPresent(g_renderer);
 }
 
+/*
 void RenderDreamBlock() {
     ApplyTexture1(g_dreamBlock, 0, 30);
     ApplyTexture1(g_dreamBlock1, 500, 500);
 }
-
+*/
 
 
 void HandleGameOver() {
@@ -1732,61 +1738,35 @@ void setZoom(float zoom) {
 Player player; // Declare an instance of the Player struct
 
 void RenderSave() {
-
     ApplyTexture1(g_snakeEnter, 250, 30);
 
     SDL_Color textColor = { 0, 0, 255 };
-
     int maxWidth = 200; // Adjust as needed
 
     SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(g_font, player.name.c_str(), textColor, maxWidth);
 
     if (!textSurface) {
-
         std::cerr << "Failed to render text surface: " << TTF_GetError() << std::endl;
-
         // Handle the error appropriately (return or other actions)
-
     }
-
-
-
-
 
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(g_renderer, textSurface);
-
     if (!textTexture) {
-
         std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-
         SDL_FreeSurface(textSurface); // Free the surface before returning
-
         // Handle the error appropriately (return or other actions)
-
     }
 
-
-
     SDL_Rect textNameRect = { 336, 375, 320, 30 };
-
     SDL_RenderCopy(g_renderer, textTexture, nullptr, &textNameRect);
 
-
-
     // Free the surface and texture
-
     SDL_FreeSurface(textSurface);
 
     SDL_DestroyTexture(textTexture);
 
-
-
-
-
     // Present the renderer
-
     SDL_RenderPresent(g_renderer);
-
 }
 
 // Function to save the player's name, score, and current date/time to a text file
@@ -1850,39 +1830,23 @@ void SavePlayerInfo(const std::string& playerName, int score) {
 void HandleSaveInput() {
 
     while (SDL_PollEvent(&g_event)) {
-
         if (g_event.type == SDL_QUIT) {
-
             SDL_Quit();
-
             exit(0);
-
         }
 
         else if (g_event.type == SDL_TEXTINPUT) {
-
             // Append the input character to the player's name string
-
             player.name += g_event.text.text;
-
             std::cout << "Player name: " << player.name << std::endl; // Just for demonstration
-
         }
-
         else if (g_event.type == SDL_KEYDOWN) {
-
             if (g_event.key.keysym.sym == SDLK_RETURN || g_event.key.keysym.sym == SDLK_RETURN2 || g_event.key.keysym.sym == SDLK_KP_ENTER) {
-
                 SavePlayerInfo(player.name, score);
-
-                g_gameState = GameState::QUIT;
-
+                g_gameState = GameState::OUTRO;
             }
-
         }
-
     }
-
 }
 
 void HandleLeadInput() {

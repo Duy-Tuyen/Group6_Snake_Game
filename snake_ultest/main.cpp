@@ -197,8 +197,8 @@ int main(int argc, char** argv) {
             break;
 
         case GameState::SAVE:
-            //HandleSaveInput();
-            //RenderSave();
+            HandleSaveInput();
+            RenderSave();
             break;
 
         case GameState::OUTRO:

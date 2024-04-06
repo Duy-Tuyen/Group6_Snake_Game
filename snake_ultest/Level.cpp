@@ -1312,7 +1312,6 @@ void snakeTeleport_out_to_in(std::vector<subPortal> typePortals) {
     }
 }
 
-
 void subPortalLevel3() {
     subPortals.push_back({
         {PLAY_AREA_LEFT + 16 * 17, PLAY_AREA_TOP + 16 * 13, 16, 16},
