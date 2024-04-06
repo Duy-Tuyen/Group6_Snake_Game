@@ -711,14 +711,28 @@ void wall() {
 
     int x, y;
 
-    for (x = left; x <= right; x++) {
-        AddObstacle(x, top, 16, 16);
-		AddObstacle(x, bottom, 16, 16);
-    }
+    if (specialMode) {
+        for (x = left; x <= right; x++) {
+			obstacles.push_back({ x, top, 16, 16, 1 });
+            obstacles.push_back({ x, bottom, 16, 16, 1 });
+		}
 
-    for (y = top; y <= bottom; y++) {
-		AddObstacle(left, y, 16, 16);
-        AddObstacle(right, y, 16, 16);
+		for (y = top; y <= bottom; y++) {
+            obstacles.push_back({ left, y, 16, 16, 1 });
+			obstacles.push_back({ right, y, 16, 16, 1 });
+		}
+    }
+    else {
+
+        for (x = left; x <= right; x++) {
+            AddObstacle(x, top, 16, 16);
+            AddObstacle(x, bottom, 16, 16);
+        }
+
+        for (y = top; y <= bottom; y++) {
+            AddObstacle(left, y, 16, 16);
+            AddObstacle(right, y, 16, 16);
+        }
     }
 }
 
@@ -1564,7 +1578,6 @@ void iceTile_LevelSP1() {
 
     RemoveObstacle(PLAY_AREA_RIGHT - 16 * 18, PLAY_AREA_BOTTOM - 16 * 12);
     RemoveObstacle(PLAY_AREA_RIGHT - 16 * 16, PLAY_AREA_TOP + 16 * 7);
-
     icePortals.push_back({
 		{PLAY_AREA_RIGHT - 16 * 18, PLAY_AREA_BOTTOM - 16 * 12, 16, 16},
 		{PLAY_AREA_RIGHT - 16 * 16, PLAY_AREA_TOP + 16 * 7, 16, 16},
@@ -1574,13 +1587,21 @@ void iceTile_LevelSP1() {
 
     RemoveObstacle(PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 6);
     RemoveObstacle(PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_BOTTOM - 16 * 13);
-
     icePortals.push_back({
+        {PLAY_AREA_RIGHT - 16 * 18, PLAY_AREA_TOP + 16 * 5, 16, 16},
         {PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 6, 16, 16},
-        {PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_BOTTOM - 16 * 13, 16, 16},
         3,
-        2
+        1
         });
+
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 8);
+    RemoveObstacle(PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_TOP + 16 * 13);
+    icePortals.push_back({
+		{PLAY_AREA_RIGHT - 16 * 13, PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
+		{PLAY_AREA_RIGHT - 16 * 3, PLAY_AREA_TOP + 16 * 13, 16, 16},
+		4,
+		2
+		});
 
 }
 
@@ -1603,6 +1624,11 @@ void RenderIcePortal() {
                 ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
                 ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
                 break;
+            case 4:
+                g_icePortal = LoadTexture("icePortal_Pink_1.png");
+                ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+                ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+                break;
             }
         }
         else {
@@ -1619,6 +1645,11 @@ void RenderIcePortal() {
 				break;
             case 3:
                 g_icePortal = LoadTexture("icePortal_Yellow_2.png");
+                ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
+                ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
+                break;
+            case 4:
+                g_icePortal = LoadTexture("icePortal_Pink_2.png");
                 ApplyTexture2(g_icePortal, iceportal.in.x - 16 / 2, iceportal.in.y - 16 / 2, 16, 16);
                 ApplyTexture2(g_icePortal, iceportal.out.x - 16 / 2, iceportal.out.y - 16 / 2, 16, 16);
                 break;
