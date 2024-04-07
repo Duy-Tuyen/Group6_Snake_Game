@@ -83,6 +83,8 @@ void Level(int levelNumber);
 
 void Level_Special(int levelNumber);
 
+void renderOuroboros();
+
 void levelClear();
 
 void nextLevel();

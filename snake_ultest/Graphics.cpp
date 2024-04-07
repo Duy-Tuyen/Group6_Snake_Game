@@ -77,6 +77,8 @@ SDL_Texture* g_pauseMenu = nullptr;
 SDL_Texture* g_monster1 = nullptr;
 SDL_Texture* g_monster2 = nullptr;
 
+SDL_Texture* g_ouroboros = nullptr;
+
 
 SDL_Texture* g_dreamBlock = nullptr;
 SDL_Texture* g_dreamBlock1 = nullptr;
@@ -1310,13 +1312,16 @@ void RenderText(const std::string& text, int x, int y) {
 
 
 void RenderLevelStats() {
-    std::string levelText = "Level: " + std::to_string(currentLevel);
+    
+    if (!(!specialMode && currentLevel > 4)) {
+        std::string levelText = "Level: " + std::to_string(currentLevel);
+        RenderText(levelText, 740, 10);
+    }
     std::string foodText = "Food: " + std::to_string(foodCount);
     std::string lengthText = "Length: " + std::to_string(snakeLength);
     std::string speedText = "Speed: " + std::to_string(PIXEL_PER_LOOP);
     std::string scoreText = "Score: " + std::to_string(score);
 
-    RenderText(levelText, 740, 10);
     RenderText(foodText, 720, 70);
     RenderText(lengthText, 720, 120);
     RenderText(speedText, 720, 170);
@@ -1563,6 +1568,8 @@ void setupAndQuery_Level() {
         g_monster1 = LoadTexture("monster1.gif");
         g_monster2 = LoadTexture("monster2.gif");
 
+        g_ouroboros = LoadTexture("Ouroboros.png");
+
         setupForLevel = false;
     }
 }
@@ -1595,6 +1602,8 @@ void RenderPlaying_Level() {
     ApplyTexture2(g_bkground, 0, 0, bkWidth, bkHeight);
 
     RenderLevelStats();
+
+    renderOuroboros();
 
     mapTile(1);
     

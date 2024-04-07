@@ -95,6 +95,8 @@ extern SDL_Texture* g_monster2;
 extern SDL_Texture* g_dreamBlock;
 extern SDL_Texture* g_dreamBlock1;
 
+extern SDL_Texture* g_ouroboros;
+
 // Texture for special mode
 extern SDL_Texture* g_iceTile;
 

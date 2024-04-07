@@ -314,7 +314,7 @@ void UpdateTailPosition() {
 void DrawTail() {
     for (int i = 0; i < tailX.size(); i++) {
         if (tailShow[i]) {
-            std::string filePath = std::to_string(a[i]) + ".png";
+            std::string filePath = std::to_string(a[i % 32]) + ".png";
 
 
             SDL_Texture* numberTexture = LoadTexture(filePath);
