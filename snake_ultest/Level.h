@@ -113,6 +113,8 @@ void subPortalLevel3();
 
 void subPortalLevel4();
 
+void mapLevel5();
+
 void snakeTeleport_in_to_out(std::vector<subPortal> typePortals);
 void snakeTeleport_out_to_in(std::vector<subPortal> typePortals);
 
@@ -145,6 +147,9 @@ void dreamBlock_LevelSP2();
 
 void RenderDreamBlock();
 
+extern bool dreamFlag;
+
+bool isFoodInDream();
 void DreamLogic();
 
 bool isInDream(int x, int y);

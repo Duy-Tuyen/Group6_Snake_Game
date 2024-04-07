@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 4; // Current level of the game
+int currentLevel = 5; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -795,6 +795,7 @@ void Level(int levelNumber) {
         break;
     case 5:
         wall();
+        mapLevel5();
 
         break;
 
@@ -843,7 +844,7 @@ void levelClear() {
     moving_obstacles_direction.clear();
     fixedFood.clear();
 
-    if (specialMode && currentLevel == 3) dreamBlocks.clear();
+    if ((specialMode && currentLevel != 2) || (!specialMode && currentLevel != 5)) dreamBlocks.clear();
 
 }
 
@@ -1527,6 +1528,236 @@ void subPortalLevel4() {
         });
 }
 
+bool isFoodInDream() {
+    if (!specialMode && currentLevel == 5) {
+        for (const auto& dreamblock : dreamBlocks) {
+            int distanceX = abs(foodX - dreamblock.x);
+            int distanceY = abs(foodY - dreamblock.y);
+            int edgeDistanceX = (foodWidth + dreamblock.w) / 2;
+            int edgeDistanceY = (foodHeight + dreamblock.h) / 2;
+
+            if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+void mapLevel5() {
+    // Obstacle setup
+
+   // Top Left field
+    for (int i = 0; i <= 9; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 1, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 17, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_TOP + 16 * 18, 16, 16);
+    }
+
+    // Top left maze
+    for (int i = 0; i <= 5; i++) {
+		AddObstacle(PLAY_AREA_LEFT + 16 * 1, PLAY_AREA_TOP + 16 * (5 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 3, PLAY_AREA_TOP + 16 * (5 + i), 16, 16);
+	}
+
+    for (int i = 0; i <= 2; i++) {
+		AddObstacle(PLAY_AREA_LEFT + 16 * 4, PLAY_AREA_TOP + 16 * (3 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 6, PLAY_AREA_TOP + 16 * (5 + i), 16, 16);
+	}
+
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (5 + i), PLAY_AREA_TOP + 16 * 3, 16, 16);
+		AddObstacle(PLAY_AREA_LEFT + 16 * (5 + 2 * i), PLAY_AREA_TOP + 16 * 7, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (8 + i), PLAY_AREA_TOP + 16 * 5, 16, 16);
+    }
+
+    for (int i = 0; i <= 2; i++) {
+		AddObstacle(PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * (8 + i), 16, 16);
+    }
+
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * 7, PLAY_AREA_TOP + 16 * (9 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 9, PLAY_AREA_TOP + 16 * (6 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 9, PLAY_AREA_TOP + 16 * (9 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 10, PLAY_AREA_TOP + 16 * (9 + i), 16, 16);
+    }
+
+    AddObstacle(PLAY_AREA_LEFT + 16 * 9, PLAY_AREA_TOP + 16 * 4, 16, 16);
+
+    AddObstacle(PLAY_AREA_LEFT + 16 * 2, PLAY_AREA_TOP + 16 * 3, 16, 16);
+
+    // Top middle field
+    for (int i = 0; i <= 9; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (11 + i), PLAY_AREA_TOP + 16 * 1, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (11 + i), PLAY_AREA_TOP + 16 * 12, 16, 16);
+    }
+
+    for (int i = 0; i <= 9; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * 11, PLAY_AREA_TOP + 16 * (2 + i), 16, 16);
+    }
+
+    for (int j = 0; j <= 1; j++) {
+        for (int i = 0; i <= 8; i++) {
+			AddObstacle(PLAY_AREA_LEFT + 16 * (11 + i), PLAY_AREA_TOP + 16 * (6 + j), 16, 16);
+		}
+	}
+
+    // Top right field
+    for (int i = 0; i <= 8; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (21 + i), PLAY_AREA_TOP + 16 * 1, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (29 + i), PLAY_AREA_TOP + 16 * 11, 16, 16);
+    }
+
+    AddObstacle(PLAY_AREA_LEFT + 16 * 29, PLAY_AREA_TOP + 16 * 2, 16, 16);
+
+    for (int i = 0; i <= 16; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (21 + i), PLAY_AREA_TOP + 16 * 12, 16, 16);
+    }
+
+    for (int i = 0; i <= 6; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * 1, PLAY_AREA_TOP + 16 * (3 + i), 16, 16);
+    }
+
+    // Fill between top right and upmost wall
+    for (int i = 0; i <= 7; i++) {
+        for (int j = 0; j <= 1; j++) {
+            AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_TOP + 16 * (1 + j), 16, 16);
+        }
+    }
+
+    // Bottom Middle field
+    for (int i = 0; i <= 17; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (11 + i), PLAY_AREA_BOTTOM - 16 * 1, 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * (11 + i), PLAY_AREA_BOTTOM - 16 * 13, 16, 16);
+    }
+
+    for (int i = 0; i <= 10; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * 11, PLAY_AREA_BOTTOM - 16 * (2 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 28, PLAY_AREA_BOTTOM - 16 * (2 + i), 16, 16);
+    }
+
+    AddObstacle(PLAY_AREA_RIGHT - 16 * 11, PLAY_AREA_BOTTOM - 16 * 3, 16, 16);
+
+    // Bottom right field
+    for (int i = 0; i <= 6; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * 9, PLAY_AREA_BOTTOM - 16 * (1 + i), 16, 16);
+    }
+
+    for (int i = 0; i <= 7; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 1, 16, 16);
+    }
+
+    
+
+    // Bottom left maze
+    for (int i = 0; i <= 2; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 4, 16, 16);
+    }
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(PLAY_AREA_LEFT + 16 * (2 + i), PLAY_AREA_BOTTOM - 16 * 2, 16, 16);
+		AddObstacle(PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_BOTTOM - 16 * (1 + i), 16, 16);
+        AddObstacle(PLAY_AREA_LEFT + 16 * 8, PLAY_AREA_BOTTOM - 16 * (5 + i), 16, 16);
+    }
+    AddObstacle(PLAY_AREA_LEFT + 16 * 7, PLAY_AREA_BOTTOM - 16 * 2, 16, 16);
+
+
+    // Bottom right maze
+    for (int i = 0; i <= 6; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * (2 + i), PLAY_AREA_BOTTOM - 16 * 3, 16, 16);
+        AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 5, 16, 16);
+        AddObstacle(PLAY_AREA_RIGHT - 16 * (1 + i), PLAY_AREA_BOTTOM - 16 * 11, 16, 16);
+    }
+
+    for (int i = 0; i <= 4; i++) {
+		AddObstacle(PLAY_AREA_RIGHT - 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 7, 16, 16);
+	}
+
+    for (int i = 0; i <= 1; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * 6, PLAY_AREA_BOTTOM - 16 * (8 + i), 16, 16);
+        AddObstacle(PLAY_AREA_RIGHT - 16 * 4, PLAY_AREA_BOTTOM - 16 * (9 + i), 16, 16);
+		AddObstacle(PLAY_AREA_RIGHT - 16 * 2, PLAY_AREA_BOTTOM - 16 * (6 + i), 16, 16);
+		AddObstacle(PLAY_AREA_RIGHT - 16 * 1, PLAY_AREA_BOTTOM - 16 * (6 + i), 16, 16);
+        AddObstacle(PLAY_AREA_RIGHT - 16 * (3 + i), PLAY_AREA_BOTTOM - 16 * 12, 16, 16);
+    }
+
+    for (int i = 0; i <= 3; i++) {
+        AddObstacle(PLAY_AREA_RIGHT - 16 * 8, PLAY_AREA_BOTTOM - 16 * (9 + i), 16, 16);
+    }
+
+    AddObstacle(PLAY_AREA_RIGHT - 16 * 2, PLAY_AREA_BOTTOM - 16 * 9, 16, 16);
+
+    AddObstacle(PLAY_AREA_RIGHT - 16 * 6, PLAY_AREA_BOTTOM - 16 * 13, 16, 16);
+
+    // Portal setup
+    for (int i = 0; i <= 3; i++) {
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_TOP + 16);
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * (14 + i), PLAY_AREA_TOP + 16 * 1);
+
+        subPortals.push_back({
+            {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_TOP + 16, 16, 16},
+            {PLAY_AREA_LEFT + 16 * (14 + i), PLAY_AREA_TOP + 16 * 1, 16, 16},
+            1, // 
+            0 // No tele
+            });
+    }
+
+    for (int i = 0; i <= 3; i++) {
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (2 + i));
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * (8 + i));
+
+        subPortals.push_back({
+            {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (2 + i), 16, 16},
+            {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * (8 + i), 16, 16},
+            2, // 
+            1 // tele
+            });
+    }
+
+    AddObstacle(PLAY_AREA_LEFT + 16 * 12, PLAY_AREA_BOTTOM - 16 * 6, 16, 16);
+    for (int i = 0; i <= 3; i++) {
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * 12, PLAY_AREA_BOTTOM - 16 * (2 + i));
+        RemoveObstacle(PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8);
+
+        subPortals.push_back({
+            {PLAY_AREA_LEFT + 16 * 12, PLAY_AREA_BOTTOM - 16 * (2 + i), 16, 16},
+            {PLAY_AREA_LEFT + 16 * (4 + i), PLAY_AREA_BOTTOM - 16 * 8, 16, 16},
+            3, //
+            2 // non tele
+            });
+    }
+
+    subPortals.push_back({
+        {PLAY_AREA_RIGHT - 16 * 11, PLAY_AREA_BOTTOM - 16 * 2, 16, 16},
+        {PLAY_AREA_RIGHT - 16 * 8, PLAY_AREA_BOTTOM - 16 * 2, 16, 16},
+        4, // 
+        1
+        });
+    //...
+
+    subPortals.push_back({
+        {PLAY_AREA_RIGHT - 16 * 7, PLAY_AREA_TOP + 16 * 7, 16, 16},
+        {PLAY_AREA_LEFT + 16 * 20, PLAY_AREA_TOP + 16 * 19, 16, 16},
+        5, // 
+        1 // tele
+        });
+
+    // Dream tile
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 5 + 8, PLAY_AREA_TOP + 16 * 6 + 8, 16 * 10, 16 * 10});
+
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 24 + 8, PLAY_AREA_TOP + 16 * 3 + 8, 16 * 8, 16 * 4 });
+
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 16 + 8, PLAY_AREA_TOP + 16 * 9 + 8, 16 * 6, 16 * 4 });
+
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 2, PLAY_AREA_BOTTOM - 16 * 2, 16 * 3, 16 * 3 });
+
+    dreamBlocks.push_back({ PLAY_AREA_LEFT + 16 * 5 + 8, PLAY_AREA_BOTTOM - 16 * 4, 16 * 4, 16 * 7});
+
+    dreamBlocks.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 7 - 8, 16 * 9, 16 * 12 });
+
+
+
+}
+
 void mapTile(int tile_color) {
     switch (tile_color) {
     case 1:
@@ -1829,10 +2060,14 @@ bool isInObstacle(int x, int y) {
 
 }
 
+
+bool dreamFlag = false;
+
 void DreamLogic() {
     if (isInDream(snakeX, snakeY)) {
         lockDir = true;
         loopDelay = 10;
+        dreamFlag = true;
         for (const auto& obstacle : obstacles) {
             switch (snakeDirection) {
             case UP:
@@ -1890,7 +2125,7 @@ void DreamLogic() {
         }
     }
     else {
-        if (isInDream(snakeX - 16, snakeY) || isInDream(snakeX + 16, snakeY) || isInDream(snakeX, snakeY - 16) || isInDream(snakeX, snakeY + 16))
+        if (dreamFlag)
         lockDir = false;
         loopDelay = 120;
 	}

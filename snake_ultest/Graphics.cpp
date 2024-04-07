@@ -1223,9 +1223,16 @@ void UpdateStatsBar() {
         SDL_DestroyTexture(g_statsBars);
         g_statsBars = nullptr;
     }
-    // Increment foodCount to move to the next stats bar texture
-    foodCount = (foodCount + 1) % 6; // Ensure foodCount stays within range [0, 5]
-    std::string filePath = "Foodbar." + std::to_string(foodCount) + ".png";
+    std::string filePath;
+    if (!specialMode && currentLevel < 6) {
+        // Increment foodCount to move to the next stats bar texture
+        foodCount = (foodCount + 1) % 6; // Ensure foodCount stays within range [0, 5]
+        filePath = "Foodbar." + std::to_string(foodCount) + ".png";
+    }
+    else {
+        foodCount++;
+        filePath = "Foodbar." + std::to_string(5) + ".png";
+    }
     g_statsBars = LoadTexture(filePath);
     if (g_statsBars == nullptr) {
         // Handle the case when the texture failed to load
@@ -1631,6 +1638,9 @@ void RenderPlaying_Level() {
     RenderSubPortal(g_renderer);
     
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
+
+    DreamLogic();
+    RenderDreamBlock();
 
     if (snakeDirection == PAUSE) {
 

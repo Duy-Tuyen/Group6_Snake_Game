@@ -16,7 +16,7 @@ int lock;
 std::vector<Direction> moving_obstacles_direction; // Vector to store moving obstacles direction
 
 std::deque<std::pair<int, int>> positions;
-int a[32] = { 3,1,2,7,3,0,7,2,3,1,2,7,3,1,6,2,3,1,2,7,1,4,0,2,3,1,2,7,4,1,9 };
+int a[32] = { 3,1,2,7,3,0,7,2,3,1,2,7,3,1,6,2,3,1,2,7,1,4,0,2,3,1,2,7,4,1,9,2 };
 int pause = 0;
 void MoveSnake(bool& running);
 bool running = true;
@@ -53,7 +53,7 @@ void spawnFood() {
         int y_16pixel_range = 26;
         int x_index;
         int y_index;
-        if (currentLevel == 5) {
+        if (currentLevel == 4) {
             do {
                 x_index = rand() % x_16pixel_range;
                 y_index = rand() % y_16pixel_range;
@@ -67,7 +67,7 @@ void spawnFood() {
 				y_index = rand() % y_16pixel_range;
 				foodX = PLAY_AREA_LEFT + 16 * x_index;
 				foodY = PLAY_AREA_TOP + 16 * y_index;
-			} while (CheckCollision_food_obstacle() || CheckCollision_food_snake());
+			} while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || isFoodInDream());
 		}
     }
 }
@@ -175,7 +175,7 @@ void EatFood_Level() {
     }
 
     foodEaten++;
-    if (foodEaten == FOOD_TO_EAT) {
+    if (foodEaten == FOOD_TO_EAT && currentLevel < 6) {
         gate_in();
         SDL_DestroyTexture(g_food);
         foodX = 960;
@@ -217,11 +217,9 @@ void EatFood_Special() {
 
 bool CheckCollision_tail() {
     if (goInGate_progress) return false;
-    if (specialMode) {
-        if (isInDream(snakeX, snakeY)) {
+        if (dreamFlag) {
             return false;
         }
-    }
 	for (int i = 0; i < tailX.size(); i++) {
 		int distanceX = abs(snakeX - tailX[i]);
         int distanceY = abs(snakeY - tailY[i]);
