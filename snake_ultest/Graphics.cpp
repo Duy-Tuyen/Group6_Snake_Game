@@ -33,8 +33,24 @@ SDL_Texture* g_food = nullptr;
 SDL_Texture* g_statsBars = nullptr;
 
 SDL_Texture* g_returnButton = nullptr;
+
 SDL_Texture* g_soundOnButton = nullptr;
 SDL_Texture* g_soundOffButton = nullptr;
+SDL_Texture* g_MusicOption = nullptr;
+SDL_Texture* g_soundOnButton1 = nullptr;
+SDL_Texture* g_soundOffButton1 = nullptr;
+SDL_Texture* g_soundOnButton2 = nullptr;
+SDL_Texture* g_soundOffButton2 = nullptr;
+SDL_Texture* g_soundOnButton3 = nullptr;
+SDL_Texture* g_soundOffButton3 = nullptr;
+
+const int MUSIC_OPTION_X = 100;
+const int MUSIC_OPTION_Y = 100;
+bool soundOn1 = true;
+bool soundOn2 = true;
+bool soundOn3 = true;
+
+
 
 SDL_Texture* g_leaderboardButton = nullptr;
 SDL_Texture* g_leaderboard = nullptr;
@@ -76,6 +92,8 @@ Mix_Music* g_countMusic = nullptr;
 
 bool currStop = false;
 bool isPlaying = false;
+bool levelMusicOn = true;
+bool soundEffectOn = true;
 
 SDL_Event g_event;
 GameState g_gameState = GameState::INTRO;
@@ -275,6 +293,39 @@ bool Init() {
         return false;
     }
 
+    g_MusicOption = LoadTexture("Music Option.png");
+    if (g_MusicOption == nullptr) {
+        return false;
+    }
+    g_soundOnButton1 = LoadTexture("Sound On.png");
+    if (g_soundOnButton1 == nullptr) {
+        return false;
+    }
+
+    g_soundOffButton1 = LoadTexture("Sound Off.png");
+    if (g_soundOffButton1 == nullptr) {
+        return false;
+    }
+    g_soundOnButton2 = LoadTexture("Sound On.png");
+    if (g_soundOnButton2 == nullptr) {
+        return false;
+    }
+
+    g_soundOffButton2 = LoadTexture("Sound Off.png");
+    if (g_soundOffButton2 == nullptr) {
+        return false;
+    }
+    g_soundOnButton3 = LoadTexture("Sound On.png");
+    if (g_soundOnButton3 == nullptr) {
+        return false;
+    }
+
+    g_soundOffButton3 = LoadTexture("Sound Off.png");
+    if (g_soundOffButton3 == nullptr) {
+        return false;
+    }
+
+
     g_returnButton = LoadTexture("returnButton.png");
     if (g_returnButton == nullptr) {
         return false;
@@ -431,6 +482,8 @@ void CleanUp() {
     SDL_DestroyTexture(g_colorSkin);
     SDL_DestroyTexture(g_colorSnake);
 
+    SDL_DestroyTexture(g_MusicOption);
+
 
 
     SDL_DestroyTexture(g_snake);
@@ -460,6 +513,18 @@ void StopBackgroundMusic() {
     }
 }
 
+void PauseBackgroundMusic() {
+    if (Mix_PlayingMusic() == 1) {
+		Mix_PauseMusic();
+	}
+}
+
+void ResumeBackgroundMusic() {
+    if (Mix_PausedMusic() == 1) {
+		Mix_ResumeMusic();
+    }
+}
+
 void PlayMenuBackgroundMusic() {
     if (Mix_PlayingMusic() == 0) {
         // If no music is playing, start playing the background music
@@ -468,23 +533,29 @@ void PlayMenuBackgroundMusic() {
 }
 
 void PlayLevelMusic() {
-    if (!isPlaying) {
+    if (!isPlaying && levelMusicOn) {
         Mix_PlayMusic(g_levelMusic, -1);
         isPlaying = true;
     }
 }
 
 void PlayCountMusic() {
-    Mix_PlayMusic(g_countMusic, 1);
+    if (soundEffectOn) {
+        Mix_PlayMusic(g_countMusic, 1);
+    }
 }
 
 
 void PlayScoreMusic() {
-    Mix_PlayChannel(-1, g_scoreMusic, 0);
+    if (soundEffectOn) {
+        Mix_PlayChannel(-1, g_scoreMusic, 0);
+    }
 }
 
 void PlayHurtMusic() {
-    Mix_PlayChannel(-1, g_hurtMusic, 0);
+    if (soundEffectOn) {
+        Mix_PlayChannel(-1, g_hurtMusic, 0);
+    }
 }
 
 void HandleReturnButtonInput() {
@@ -523,6 +594,76 @@ void HandleSoundOffButtonInput() {
         StopBackgroundMusic();
     }
 }
+
+void HandleSoundOnButtonInput1() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect soundOnButtonRect1 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 75) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect1) && soundOn1 == true) {
+        levelMusicOn = false;
+        soundOn1 = false;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+void HandleSoundOffButtonInput1() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect soundOnButtonRect1 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 75) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect1) && soundOn1 == false) {
+        levelMusicOn = true;
+        soundOn1 = true;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+void HandleSoundOnButtonInput2() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    SDL_Rect soundOnButtonRect2 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 160) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect2) && soundOn2 == true) {
+        soundEffectOn = false;
+        soundOn2 = false;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+void HandleSoundOffButtonInput2() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect soundOnButtonRect2 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 160) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect2) && soundOn2 == false) {
+        soundEffectOn = true;
+        soundOn2 = true;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+void HandleSoundOnButtonInput3() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect soundOnButtonRect3 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 245) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect3) && soundOn3 == true) {
+        PauseBackgroundMusic();
+        soundOn3 = false;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+void HandleSoundOffButtonInput3() {
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    SDL_Rect soundOnButtonRect3 = { (SOUND_ON_BUTTON_X + 380) * zoom_scale, (SOUND_ON_BUTTON_Y + 245) * zoom_scale, 100 * zoom_scale, 100 * zoom_scale };
+
+    if (IsPointInRect(mouseX, mouseY, soundOnButtonRect3) && soundOn3 == false) {
+        ResumeBackgroundMusic();
+        soundOn3 = true;
+        SDL_RenderPresent(g_renderer);
+    }
+}
+
 
 void UpdateTimer() {
     // Get the elapsed time since the program started
@@ -683,6 +824,7 @@ void RenderMenuAnimation() {
     // Calculate frame width and height
     int frameWidth = 496 / NUM_MENU_FRAMES;
     int frameHeight = 64;
+
     int row = 0;
     int col = currentMenuFrame;
 
@@ -851,7 +993,7 @@ void RenderSnakeMenu() {
 
     int currentMenuFrame = 0; // Initialize current frame
 
-    while (1) {
+    while (g_gameState == GameState::MENU) {
         RenderMenuAnimation();
         SDL_Delay(100);
     }
@@ -948,8 +1090,27 @@ void HandleSettingsInput() {
         }
         else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
             HandleReturnButtonInput();
-            HandleSoundOnButtonInput();
-            HandleSoundOffButtonInput();
+            if (soundOn1) {
+                HandleSoundOnButtonInput1();
+			}
+            else {
+				HandleSoundOffButtonInput1();
+            }
+
+            if (soundOn2) {
+                HandleSoundOnButtonInput2();
+            }
+            else {
+                HandleSoundOffButtonInput2();
+            }
+
+            if (soundOn3) {
+				HandleSoundOnButtonInput3();
+			}
+            else {
+				HandleSoundOffButtonInput3();
+			}
+
             HandleSkinButtonInput();
             HandleLeadButtonInput();
 
@@ -1253,15 +1414,30 @@ void RenderSettingsScreen() {
 
     ApplyTexture1(g_settings, 0, 0);
     ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
-    ApplyTexture1(g_soundOnButton, SOUND_ON_BUTTON_X, SOUND_ON_BUTTON_Y);
-    ApplyTexture1(g_soundOffButton, SOUND_OFF_BUTTON_X, SOUND_OFF_BUTTON_Y);
+   
+    if (soundOn1) {
+        ApplyTexture2(g_soundOnButton1, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 75, 100 * zoom_scale, 100 * zoom_scale);
+    }
+    else ApplyTexture2(g_soundOffButton1, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 75, 100 * zoom_scale, 100 * zoom_scale);
+    if (soundOn2) {
+        ApplyTexture2(g_soundOnButton2, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 160, 100 * zoom_scale, 100 * zoom_scale);
+    }
+    else ApplyTexture2(g_soundOffButton2, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 160, 100 * zoom_scale, 100 * zoom_scale);
+    if (soundOn3) {
+        ApplyTexture2(g_soundOnButton3, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 245, 100 * zoom_scale, 100 * zoom_scale);
+    }
+    else ApplyTexture2(g_soundOffButton3, SOUND_ON_BUTTON_X + 380, SOUND_ON_BUTTON_Y + 245, 100 * zoom_scale, 100 * zoom_scale);
+
+    //ApplyTexture1(g_soundOffButton, SOUND_OFF_BUTTON_X, SOUND_OFF_BUTTON_Y);
+    ApplyTexture2(g_MusicOption, MUSIC_OPTION_X - 100, MUSIC_OPTION_Y + 75, 500, 300);
+
+
 
     ApplyTexture1(g_skinButton, SKIN_BUTTON_X, SKIN_BUTTON_Y);
     ApplyTexture1(g_leaderboardButton, LEADER_BUTTON_X, LEADER_BUTTON_Y);
     ApplyTexture1(g_guideButton, GUIDE_BUTTON_X, GUIDE_BUTTON_Y);
 
-    RenderText(soundOn, 390, 220);
-    RenderText(soundOff, 285, 405);
+    
     RenderText(skinSnake, 575, 273);
     RenderText(leaderboard, 575, 450);
 

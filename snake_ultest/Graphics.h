@@ -63,6 +63,19 @@ extern SDL_Texture* g_returnButton;
 extern SDL_Texture* g_soundOnButton;
 extern SDL_Texture* g_soundOffButton;
 
+extern bool soundOn1;
+extern bool soundOn2;
+extern bool soundOn3;
+extern SDL_Texture* g_MusicOption;
+extern SDL_Texture* g_soundOnButton1;
+extern SDL_Texture* g_soundOffButton1;
+extern SDL_Texture* g_soundOnButton2;
+extern SDL_Texture* g_soundOffButton2;
+extern SDL_Texture* g_soundOnButton3;
+extern SDL_Texture* g_soundOffButton3;
+extern SDL_Texture* g_soundOnTemp;
+
+
 extern SDL_Texture* g_skinButton;
 extern SDL_Texture* g_skinBackground;
 extern SDL_Texture* g_speedBars;
@@ -170,6 +183,10 @@ void PlayBackgroundMusic();
 
 // Stop background music
 void StopBackgroundMusic();
+
+void PauseBackgroundMusic();
+
+void ResumeBackgroundMusic();
 
 void PlayMenuBackgroundMusic();
 
