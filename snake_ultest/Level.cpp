@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 2; // Current level of the game
+int currentLevel = 3; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -119,33 +119,29 @@ void setColor_code(int color_num) {
 }
 
 // Portal as block. render pos is automatically set when real pos change
-/*
-void RenderSubPortal_Level4(SDL_Renderer* renderer) {
+
+void RenderSubPortal(SDL_Renderer* renderer) {
     for (const auto& subportal : subPortals) {
         if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
             switch (subportal.color_code) {
             case 1:
-                g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
+                g_subPortal = LoadTexture("IcePortal_Blue_1.png");
                 ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-                g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
                 ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
                 break;
             case 2:
-                g_subPortal = LoadTexture("Portal_Green_1_Left.png");
+                g_subPortal = LoadTexture("IcePortal_Green_1.png");
 				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-				g_subPortal = LoadTexture("Portal_Green_2_Right.png");
 				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
 				break;
             case 3:
-                g_subPortal = LoadTexture("Portal_Purple_1.png");
+                g_subPortal = LoadTexture("IcePortal_Pink_1.png");
                 ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-                g_subPortal = LoadTexture("Portal_Purple_2.png");
                 ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
                 break;
             case 4:
-                g_subPortal = LoadTexture("Portal_Yellow_1_Left.png");
+                g_subPortal = LoadTexture("IcePortal_Yellow_1.png");
 				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-				g_subPortal = LoadTexture("Portal_Yellow_2_Right.png");
 				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
 				break;
             }
@@ -153,27 +149,23 @@ void RenderSubPortal_Level4(SDL_Renderer* renderer) {
         else {
             switch (subportal.color_code) {
             case 1:
-                g_subPortal = LoadTexture("Portal_Blue_2_Down.png");
+                g_subPortal = LoadTexture("IcePortal_Blue_2.png");
 				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-				g_subPortal = LoadTexture("Portal_Blue_1_Down.png");
 				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
 				break;
             case 2:
-                g_subPortal = LoadTexture("Portal_Green_2_Left.png");
+                g_subPortal = LoadTexture("IcePortal_Green_2.png");
                 ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-                g_subPortal = LoadTexture("Portal_Green_1_Right.png");
                 ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
                 break;
             case 3:
-                g_subPortal = LoadTexture("Portal_Purple_2.png");
+                g_subPortal = LoadTexture("IcePortal_Pink_2.png");
 				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-				g_subPortal = LoadTexture("Portal_Purple_1.png");
 				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
 				break;
             case 4:
-                g_subPortal = LoadTexture("Portal_Yellow_2_Left.png");
+                g_subPortal = LoadTexture("IcePortal_Yellow_2.png");
 				ApplyTexture2(g_subPortal, subportal.in.x - subportal.in.w / 2, subportal.in.y - subportal.in.h / 2, subportal.in.w, subportal.in.h);
-				g_subPortal = LoadTexture("Portal_Yellow_1_Right.png");
 				ApplyTexture2(g_subPortal, subportal.out.x - subportal.out.w / 2, subportal.out.y - subportal.out.h / 2, subportal.out.w, subportal.out.h);
 				break;
             }
@@ -186,10 +178,11 @@ void RenderSubPortal_Level4(SDL_Renderer* renderer) {
         }
     }
 }
-*/
+
 
 // Portal not as block, have to manually set render pos when real pos change
-void RenderSubPortal_Level4(SDL_Renderer* renderer) {
+/*
+void RenderSubPortal(SDL_Renderer* renderer) {
     if (currentLevel == 4) {
         int x, y;
         if (loopCounter % 10 >= 0 && loopCounter % 10 <= 4) {
@@ -296,6 +289,7 @@ void RenderSubPortal_Level4(SDL_Renderer* renderer) {
         }
     }
 }
+*/
 
 bool fixed1WhenPause = false;
 bool fixed2WhenPause = false;
@@ -634,8 +628,7 @@ void gate_open_level() {
         return;
     }
     if (gate_open_step[1]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level(currentLevel);
 		gate_out2();
 		gate_open_step[1] = false;
@@ -643,8 +636,7 @@ void gate_open_level() {
         return;
 	}
     if (gate_open_step[2]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level(currentLevel);
 		gate_out3();
 		gate_open_step[2] = false;
@@ -653,8 +645,7 @@ void gate_open_level() {
         return;
 	}
     if (gate_open_step[3]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level(currentLevel);
 		gate_out4();
         spawnFood();
@@ -670,8 +661,7 @@ void gate_open_special() {
         return;
     }
     if (gate_open_step[1]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level_Special(currentLevel);
         gate_out2();
         gate_open_step[1] = false;
@@ -679,8 +669,7 @@ void gate_open_special() {
         return;
     }
     if (gate_open_step[2]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level_Special(currentLevel);
         gate_out3();
         gate_open_step[2] = false;
@@ -689,8 +678,7 @@ void gate_open_special() {
         return;
     }
     if (gate_open_step[3]) {
-        obstacles.clear();
-        subPortals.clear();
+        levelClear();
         Level_Special(currentLevel);
         gate_out4();
         gate_open_step[3] = false;
@@ -1111,20 +1099,19 @@ void movingObstalceLevel3() {
             moving_obstacles_direction.push_back(Direction::DOWN);
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 4, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::UP);
-            
+            /*
             monsters.push_back({ PLAY_AREA_LEFT + 16 * 5, PLAY_AREA_TOP + 16 * 13, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::DOWN);
             monsters.push_back({ PLAY_AREA_RIGHT - 16 * 5, PLAY_AREA_BOTTOM - 16 * 13, 16 * 3, 16 * 3 });
             moving_obstacles_direction.push_back(Direction::UP);
-            
+            */
         }
         movingObstacleLevel3_start = false;
     }
-    
     int moving_obstacle_speed = 16;
-    if (loopCounter % 2 == 0 && !pause) {
-        for (int i = 0; i < monsters.size(); i++) {
-            if (currentLevel == 3) {
+    if (currentLevel == 3) {
+        if (loopCounter % 2 == 0 && !pause) {
+            for (int i = 0; i < monsters.size(); i++) {
                 switch (moving_obstacles_direction[i]) {
                 case RIGHT:
                     if (monsters[i].x != PLAY_AREA_RIGHT - 16 * 5) {
@@ -1169,6 +1156,23 @@ void movingObstalceLevel3() {
     if (currentLevel == 4) {
         monsters.clear();
         moving_obstacles_direction.clear();
+    }
+}
+
+bool isMonsterCollision() {
+    if (currentLevel == 3) {
+        for (const auto& monster : monsters) {
+            int distanceX = abs(snakeX - monster.x);
+            int distanceY = abs(snakeY - monster.y);
+            int edgeDistanceX = (snakeWidth + monster.w) / 2;
+            int edgeDistanceY = (snakeHeight + monster.h) / 2;
+
+            if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+                return true;
+            }
+
+        }
+            return false;
     }
 }
 
@@ -1352,9 +1356,40 @@ void subPortalLevel3() {
     subPortals.push_back({
         {PLAY_AREA_LEFT + 16 * 17, PLAY_AREA_TOP + 16 * 13, 16, 16},
         {PLAY_AREA_LEFT + 16 * 21, PLAY_AREA_TOP + 16 * 13, 16, 16},
+        1,
+        1
+        });
+
+    subPortals.push_back({
+        {PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 11, 16, 16},
+        {PLAY_AREA_LEFT + 16 * 19, PLAY_AREA_TOP + 16 * 15, 16, 16},
         2,
         1
         });
+
+    for (int i = 0; i <= 2; i++) {
+        subPortals.push_back({
+			{PLAY_AREA_LEFT + 16 * 1, PLAY_AREA_TOP + 16 * (1 + i), 16, 16},
+			{PLAY_AREA_RIGHT - 16 * 1, PLAY_AREA_TOP + 16 * (1 + i), 16, 16},
+			3,
+			1
+			});
+    }
+
+    for (int i = 0; i <= 2; i++) {
+        subPortals.push_back({
+            {PLAY_AREA_LEFT + 16 * 1, PLAY_AREA_BOTTOM - 16 * (1 + i), 16, 16},
+            {PLAY_AREA_RIGHT - 16 * 1, PLAY_AREA_BOTTOM - 16 * (1 + i), 16, 16},
+            4,
+            1
+            });
+    }
+
+    for (int i = 0; i <= 1; i++) {
+        obstacles.push_back({ PLAY_AREA_LEFT + 16 * (1 + 36 * i), PLAY_AREA_TOP + 16 * 4, 16, 16});
+        obstacles.push_back({ PLAY_AREA_LEFT + 16 * (1 + 36 * i), PLAY_AREA_BOTTOM - 16 * 4, 16, 16 });
+    }
+
 }
 
 void subPortalLevel4() {

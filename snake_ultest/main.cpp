@@ -128,6 +128,10 @@ int main(int argc, char** argv) {
                 //running = false;
             }
 
+            if (isMonsterCollision()) {
+				//running = false;
+			}
+
             goInGate_check();
             goOutGate_check();
 

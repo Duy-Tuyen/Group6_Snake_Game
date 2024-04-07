@@ -91,6 +91,8 @@ void RenderHitbox(SDL_Renderer* renderer, int x, int y, int w, int h);
 
 void movingObstalceLevel3();
 
+bool isMonsterCollision();
+
 void renderMonster();
 
 void toggleObstacleLevel2();
@@ -101,7 +103,7 @@ void RenderToggleObstacles_Fill_Level2();
 
 bool toggleObstacleCollision();
 
-void RenderSubPortal_Level4(SDL_Renderer* renderer);
+void RenderSubPortal(SDL_Renderer* renderer);
 
 void RenderIceTile(SDL_Renderer* renderer);
 
