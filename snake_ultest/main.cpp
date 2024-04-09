@@ -117,19 +117,27 @@ int main(int argc, char** argv) {
             }
 
             if (toggleObstacleCollision()) {
-                //running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
             }
 
             if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
-                //running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
             }
             if (CheckCollision_tail()) {
-                //running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
             }
 
             if (isMonsterCollision()) {
-				//running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
 			}
 
             goInGate_check();
@@ -188,15 +196,21 @@ int main(int argc, char** argv) {
             EatFood_Special();
 
             if (toggleObstacleCollision()) {
-                //running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
             }
 
             if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
                 //running = false;
             }
             if (CheckCollision_tail()) {
-                //running = false;
+                PlayHurtMusic();
+                HandleGameOver();
+                RenderGameOver();
             }
 
             goInGate_check();
