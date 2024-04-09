@@ -118,26 +118,21 @@ int main(int argc, char** argv) {
 
             if (toggleObstacleCollision()) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
             }
 
             if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
-                PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
             }
             if (CheckCollision_tail()) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
             }
 
             if (isMonsterCollision()) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
 			}
 
             goInGate_check();
@@ -197,20 +192,17 @@ int main(int argc, char** argv) {
 
             if (toggleObstacleCollision()) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
             }
 
             if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
                 //running = false;
             }
             if (CheckCollision_tail()) {
                 PlayHurtMusic();
-                HandleGameOver();
-                RenderGameOver();
+                g_gameState = GameState::ASK;
             }
 
             goInGate_check();
