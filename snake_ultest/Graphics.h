@@ -35,7 +35,8 @@ enum class GameState {
     QUIT,
     OUTRO,
     SPECIAL,
-    MODE
+    MODE,
+    WINNING
 };
 
 extern int loopCounter;
@@ -88,6 +89,8 @@ extern SDL_Texture* g_subPortal;
 extern SDL_Texture* g_icePortal;
 
 extern SDL_Texture* g_pauseMenu;
+
+extern SDL_Texture* g_snakeWon;
 
 extern SDL_Texture* g_monster1;
 extern SDL_Texture* g_monster2;
@@ -283,6 +286,10 @@ void setupAndQuery_Special();
 void RenderPauseMenu();
 void HandlePauseMenuInput();
 void HandleContinueButtonInput();
+
+void HandleWinning();
+
+void RenderWinningScreen();
 
 void HandleTimer();
 

@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 5; // Current level of the game
+int currentLevel = 3; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -809,7 +809,7 @@ void Level(int levelNumber) {
 }
 
 void renderOuroboros() {
-    if (!specialMode && currentLevel > 4) {
+    if (!specialMode && currentLevel > 5) {
         ApplyTexture2(g_ouroboros, 770, 0, 60, 60);
     }
 }

@@ -142,6 +142,8 @@ int main(int argc, char** argv) {
             StopBackgroundMusic();
             PlayLevelMusic();
 
+            if (currentLevel == 3) g_gameState = GameState::WINNING;
+
             setupAndQuery_Special();
 
             HandlePauseMenuInput();
@@ -194,6 +196,11 @@ int main(int argc, char** argv) {
 
             SDL_Delay(loopDelay); // Adjust delay for smoother movement
             break;
+
+        case GameState::WINNING:
+            HandleWinning();
+			RenderWinningScreen();
+			break;
 
         case GameState::ASK:
             HandleGameOver();

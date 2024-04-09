@@ -68,6 +68,7 @@ SDL_Texture* g_intro = nullptr;
 SDL_Texture* g_outro = nullptr;
 SDL_Texture* g_gameOver = nullptr;
 SDL_Texture* g_snakeEnter = nullptr;
+SDL_Texture* g_snakeWon = nullptr;
 
 SDL_Texture* g_subPortal = nullptr;
 SDL_Texture* g_icePortal = nullptr;
@@ -327,7 +328,6 @@ bool Init() {
         return false;
     }
 
-
     g_returnButton = LoadTexture("returnButton.png");
     if (g_returnButton == nullptr) {
         return false;
@@ -397,6 +397,11 @@ bool Init() {
     if (g_bkground == nullptr) {
         return false;
     }
+    
+    g_snakeWon = LoadTexture("SnakeWon.png");
+    if (g_snakeWon == nullptr) {
+		return false;
+	}
 
     g_snake = LoadTexture("2.png");
     if (g_snake == nullptr) {
@@ -1224,7 +1229,7 @@ void UpdateStatsBar() {
         g_statsBars = nullptr;
     }
     std::string filePath;
-    if (!specialMode && currentLevel < 6) {
+    if ((!specialMode && currentLevel < 6) || specialMode) {
         // Increment foodCount to move to the next stats bar texture
         foodCount = (foodCount + 1) % 6; // Ensure foodCount stays within range [0, 5]
         filePath = "Foodbar." + std::to_string(foodCount) + ".png";
@@ -1320,7 +1325,7 @@ void RenderText(const std::string& text, int x, int y) {
 
 void RenderLevelStats() {
     
-    if (!(!specialMode && currentLevel > 4)) {
+    if (!(!specialMode && currentLevel > 5)) {
         std::string levelText = "Level: " + std::to_string(currentLevel);
         RenderText(levelText, 740, 10);
     }
@@ -1550,6 +1555,35 @@ void HandleContinueButtonInput() {
 
     snakeDirection = lastDirection;
 
+}
+
+void HandleWinning() {
+    while (SDL_PollEvent(&g_event)) {
+        if (g_event.type == SDL_QUIT) {
+            SDL_Quit();
+            exit(0);
+        }
+        else if (g_event.type == SDL_MOUSEBUTTONDOWN) {
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            cout << "Mouse: " << mouseX << ", " << mouseY << endl;
+            SDL_Rect returnButtonRect = { 180 * zoom_scale, 320 * zoom_scale, 640 * zoom_scale, 80 * zoom_scale };
+            if (IsPointInRect(mouseX, mouseY, returnButtonRect)) {
+                g_gameState = GameState::MENU;
+            }
+
+            SDL_Rect quitButtonRect = { 360 * zoom_scale, 425 * zoom_scale, 200 * zoom_scale, 75 * zoom_scale };
+            if (IsPointInRect(mouseX, mouseY, quitButtonRect)) {
+                g_gameState = GameState::OUTRO;
+            }
+        }
+    }
+}
+
+void RenderWinningScreen() {
+	ApplyTexture2(g_snakeWon, 0, 0, SCREEN_WIDTH * zoom_scale, SCREEN_HEIGHT * zoom_scale);
+	ApplyTexture1(g_returnButton, RETURN_BUTTON_X, RETURN_BUTTON_Y);
+	SDL_RenderPresent(g_renderer);
 }
 
 
