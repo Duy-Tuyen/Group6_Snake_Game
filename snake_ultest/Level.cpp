@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 1; // Current level of the game
+int currentLevel = 5; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -843,7 +843,7 @@ void levelClear() {
     moving_obstacles_direction.clear();
     fixedFood.clear();
 
-    if ((specialMode && currentLevel != 2) || (!specialMode && currentLevel != 5)) dreamBlocks.clear();
+    dreamBlocks.clear();
 
 }
 
@@ -2429,7 +2429,7 @@ void dreamBlock_LevelSP2() {
 
 void DrawDreamBlock(int x, int y, int w, int h) {
     SDL_Rect dreamRect = { x - w / 2, y - h / 2, w, h };
-    SDL_SetTextureAlphaMod(g_dreamBlock1, 60);
+    SDL_SetTextureAlphaMod(g_dreamBlock1, 180);
     SDL_RenderCopy(g_renderer, g_dreamBlock1, NULL, &dreamRect);
 }
 
