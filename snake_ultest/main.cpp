@@ -153,6 +153,10 @@ int main(int argc, char** argv) {
             PlayLevelMusic();
 
             if (currentLevel == 3) {
+                continueGame = true;
+                StopBackgroundMusic();
+                PlayBackgroundMusic();
+                isPlaying = false;
                 levelClear();
                 currentLevel = 1;
                 specialMode = false;

@@ -1787,7 +1787,11 @@ void HandleGameOver() {
                     g_gameState = GameState::SPECIAL;
                 }
             }
-            else if (IsPointInRect(mouseX, mouseY, noButtonRect)) { 
+            else if (IsPointInRect(mouseX, mouseY, noButtonRect)) {
+                continueGame = true;
+                StopBackgroundMusic();
+                PlayBackgroundMusic();
+                isPlaying = false;
                 levelClear();
                 currentLevel = 1;
                 specialMode = false;

@@ -914,15 +914,12 @@ void goOutGate_check() {
             for (int i = 0; i < tailLength - 1; i++) {
                 if (tailX[i] >= PLAY_AREA_LEFT - 8 || tailX[i] <= PLAY_AREA_RIGHT + 8 || tailY[i] >= PLAY_AREA_TOP - 8 || tailY[i] <= PLAY_AREA_BOTTOM + 8) {
                     tailShow[i] = true;
-                    cout << "TailX: " << tailX[i] << " TailY: " << tailY[i] << "\n";
                     SDL_Delay(1);
                 }
             }
 
             if (tailX[tailX.size() - 1] >= PLAY_AREA_LEFT - 8 || tailX[tailX.size() - 1] <= PLAY_AREA_RIGHT + 8 || tailY[tailX.size() - 1] >= PLAY_AREA_TOP - 8 || tailY[tailX.size() - 1] <= PLAY_AREA_BOTTOM + 8) {
                 tailShow[tailX.size() - 1] = true;
-                cout << "TailX: " << tailX[tailX.size() - 1] << " TailY: " << tailY[tailX.size() - 1] << "\n";
-                cout << "Tail size: " << tailX.size() << "\n";
                 SDL_Delay(1);
                 gate_open_done = true;
                 goOutGate_progress = false;
