@@ -1596,7 +1596,7 @@ void setupAndQuery_Level() {
 
         foodWidth = 16, foodHeight = 16;
         snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
-
+        
 
         // Play background music when rendering the menu
         //PlayBackgroundMusic();
@@ -1612,6 +1612,8 @@ void setupAndQuery_Level() {
         g_ouroboros = LoadTexture("Ouroboros.png");
 
         setupForLevel = false;
+
+        reset();
     }
 }
 
@@ -1635,6 +1637,8 @@ void setupAndQuery_Special() {
         g_statsBars = LoadTexture("Foodbar.0.png");
 
         setupForSpecial = false;
+
+        reset();
     }
 }
 
@@ -1749,9 +1753,36 @@ void HandleGameOver() {
             SDL_Rect noButtonRect = { 562 * zoom_scale, 464 * zoom_scale, buttonWidth, buttonHeight };
 
             if (IsPointInRect(mouseX, mouseY, yesButtonRect)) {
-                g_gameState = GameState::SAVE;
+                if (!specialMode) {
+                    g_gameState = GameState::PLAYING;
+                    reset();
+                    score = 50 * (currentLevel - 1);
+                    while (tailX.size() > 5 * currentLevel) {
+						tailX.pop_back();
+						tailY.pop_back();
+                        snakeLength--;
+                        tailLength--;
+					}
+                }
+                else {
+                    g_gameState = GameState::SPECIAL;
+					reset();
+					score = 50 * (currentLevel - 1);
+                    while (tailX.size() > 5 * currentLevel) {
+						tailX.pop_back();
+						tailY.pop_back();
+						snakeLength--;
+						tailLength--;
+					}
+				
+                }
             }
-            else if (IsPointInRect(mouseX, mouseY, noButtonRect)) {
+            else if (IsPointInRect(mouseX, mouseY, noButtonRect)) { 
+                levelClear();
+                currentLevel = 1;
+                specialMode = false;
+                setupForLevel = true;
+                setupForSpecial = true;
                 g_gameState = GameState::MENU;
             }
         }

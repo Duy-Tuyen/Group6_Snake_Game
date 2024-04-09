@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
             }
-
+            
             if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;

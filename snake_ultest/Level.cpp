@@ -6,7 +6,7 @@ const int PLAY_AREA_RIGHT = 658;
 const int PLAY_AREA_TOP = 50;
 const int PLAY_AREA_BOTTOM = 466;
 
-int currentLevel = 3; // Current level of the game
+int currentLevel = 2; // Current level of the game
 
 bool goInGate_progress = false;
 bool goOutGate_progress = false;
@@ -1179,8 +1179,8 @@ bool isMonsterCollision() {
             }
 
         }
-            return false;
     }
+            return false;
 }
 
 void snakeTeleport_in_to_out(std::vector<subPortal> typePortals) {
