@@ -59,7 +59,7 @@ void spawnFood() {
                 y_index = rand() % y_16pixel_range;
                 foodX = PLAY_AREA_LEFT + 16 * x_index;
                 foodY = PLAY_AREA_TOP + 16 * y_index;
-            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || (foodX >= PLAY_AREA_RIGHT - 16 * 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
+            } while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || CheckCollision_food_subPortal() || (foodX >= PLAY_AREA_RIGHT - 16 * 8 && foodY >= PLAY_AREA_TOP + 16 * 13));
         }
         else {
             do {
@@ -67,7 +67,7 @@ void spawnFood() {
 				y_index = rand() % y_16pixel_range;
 				foodX = PLAY_AREA_LEFT + 16 * x_index;
 				foodY = PLAY_AREA_TOP + 16 * y_index;
-			} while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || isFoodInDream());
+			} while (CheckCollision_food_obstacle() || CheckCollision_food_snake() || CheckCollision_food_subPortal() || isFoodInDream());
 		}
     }
 }
@@ -129,7 +129,6 @@ bool CheckCollision_food_obstacle() {
     return false;
 }
 
-
 bool CheckCollision_food_snake() {
     for (int i = 0; i < tailX.size(); i++) {
 		double distanceX = abs(foodX - tailX[i]);
@@ -152,6 +151,30 @@ bool CheckCollision_food_snake() {
     }
     
     return false;
+}
+
+bool CheckCollision_food_subPortal() {
+    for (const auto& portal : subPortals) {
+        // in
+        int distanceX = abs(foodX - portal.in.x);
+        int distanceY = abs(foodY - portal.in.y);
+        int edgeDistanceX = (foodWidth + portal.in.w) / 2;
+        int edgeDistanceY = (foodHeight + portal.in.h) / 2;
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+			return true;
+		}
+
+        // out
+		distanceX = abs(foodX - portal.out.x);
+		distanceY = abs(foodY - portal.out.y);
+		edgeDistanceX = (foodWidth + portal.out.w) / 2;
+		edgeDistanceY = (foodHeight + portal.out.h) / 2;
+        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+			return true;
+		}
+	}
+    return false;
+
 }
 
 void EatFood_Level() {

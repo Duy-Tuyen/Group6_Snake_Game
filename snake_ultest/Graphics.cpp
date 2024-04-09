@@ -1598,9 +1598,6 @@ void setupAndQuery_Level() {
         snakeWidth = snakeWidth_png * snakeScale, snakeHeight = snakeHeight_png * snakeScale;
         
 
-        // Play background music when rendering the menu
-        //PlayBackgroundMusic();
-
         // Initialize level
         Level(currentLevel);
 
@@ -1764,10 +1761,11 @@ void HandleGameOver() {
                         snakeLength--;
                         tailLength--;
 					}
-                    for (int i = 0; i < tailX.size(); i++) {
-                        tailX[i] = 0;
-						tailY[i] = 0;
+
+                    for (int i = 0; i < positions.size(); i++) {
+                        positions[i] = { 0, 0 };
                     }
+
 
                     g_gameState = GameState::PLAYING;
                 }
@@ -1782,9 +1780,8 @@ void HandleGameOver() {
 						tailLength--;
 					}
 
-                    for (int i = 0; i < tailX.size(); i++) {
-                        tailX[i] = 0;
-                        tailY[i] = 0;
+                    for (int i = 0; i < positions.size(); i++) {
+                        positions[i] = { 0, 0 };
                     }
 				
                     g_gameState = GameState::SPECIAL;
