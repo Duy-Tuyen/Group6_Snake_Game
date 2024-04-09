@@ -1736,6 +1736,7 @@ void RenderDreamBlock() {
 }
 */
 
+bool continueGame = false;
 
 void HandleGameOver() {
     while (SDL_PollEvent(&g_event)) {
@@ -1754,7 +1755,7 @@ void HandleGameOver() {
 
             if (IsPointInRect(mouseX, mouseY, yesButtonRect)) {
                 if (!specialMode) {
-                    g_gameState = GameState::PLAYING;
+                    continueGame = true;
                     reset();
                     score = 50 * (currentLevel - 1);
                     while (tailX.size() > 5 * currentLevel) {
@@ -1763,9 +1764,15 @@ void HandleGameOver() {
                         snakeLength--;
                         tailLength--;
 					}
+                    for (int i = 0; i < tailX.size(); i++) {
+                        tailX[i] = 0;
+						tailY[i] = 0;
+                    }
+
+                    g_gameState = GameState::PLAYING;
                 }
                 else {
-                    g_gameState = GameState::SPECIAL;
+                    continueGame = true;
 					reset();
 					score = 50 * (currentLevel - 1);
                     while (tailX.size() > 5 * currentLevel) {
@@ -1774,7 +1781,13 @@ void HandleGameOver() {
 						snakeLength--;
 						tailLength--;
 					}
+
+                    for (int i = 0; i < tailX.size(); i++) {
+                        tailX[i] = 0;
+                        tailY[i] = 0;
+                    }
 				
+                    g_gameState = GameState::SPECIAL;
                 }
             }
             else if (IsPointInRect(mouseX, mouseY, noButtonRect)) { 

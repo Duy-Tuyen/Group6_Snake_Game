@@ -85,9 +85,14 @@ int main(int argc, char** argv) {
             AddTailSegment();
 
             movingObstalceLevel3();
-
-            RenderPlaying_Level();
-            SDL_RenderPresent(g_renderer);
+            if (!continueGame) {
+                RenderPlaying_Level();
+                SDL_RenderPresent(g_renderer);
+            }
+            else {
+				continueGame = false;
+			}
+            
 
             if (gate_open_step[0]) {
                 SDL_DestroyTexture(g_snake);
@@ -98,6 +103,8 @@ int main(int argc, char** argv) {
                     tailY[i] = 0;
                     tailShow[i] = false;
                 }
+
+                spawnFood();
                 
                 lockMovement = true;
                 goOutGate_progress = true;
@@ -164,8 +171,13 @@ int main(int argc, char** argv) {
             // Draw the tail on every frame
             AddTailSegment();
 
-            RenderPlaying_Special();
-            SDL_RenderPresent(g_renderer);
+            if (!continueGame) {
+                RenderPlaying_Special();
+                SDL_RenderPresent(g_renderer);
+            }
+            else {
+				continueGame = false;
+			}
 
             if (gate_open_step[0]) {
                 SDL_DestroyTexture(g_snake);

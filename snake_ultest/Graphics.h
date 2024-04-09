@@ -169,6 +169,8 @@ extern const int NUM_OUTRO_FRAMES;
 extern bool outroFinished;
 extern int currentOutroFrame;
 
+extern bool continueGame;
+
 // Define variables for timer
 extern int currentTimerFrame;
 
