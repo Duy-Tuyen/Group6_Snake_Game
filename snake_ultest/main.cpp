@@ -142,7 +142,15 @@ int main(int argc, char** argv) {
             StopBackgroundMusic();
             PlayLevelMusic();
 
-            if (currentLevel == 3) g_gameState = GameState::WINNING;
+            if (currentLevel == 3) {
+                levelClear();
+                currentLevel = 1;
+                specialMode = false;
+                setupForLevel = true;
+                setupForSpecial = true;
+                g_gameState = GameState::WINNING;
+                break;
+            }
 
             setupAndQuery_Special();
 

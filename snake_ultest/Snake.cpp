@@ -317,10 +317,9 @@ void DrawTail() {
 
             SDL_Texture* numberTexture = LoadTexture(filePath);
 
-            if (specialMode)
-                if (isInDream(tailX[i], tailY[i])) {
-                    numberTexture = LoadTexture("0.png");
-                }
+            if (isInDream(tailX[i], tailY[i])) {
+                numberTexture = LoadTexture("0.png");
+            }
 
             if (numberTexture != nullptr) {
                 ApplyTexture2(numberTexture, tailX[i] - snakeWidth / 2, tailY[i] - snakeHeight / 2, snakeWidth, snakeHeight);
