@@ -351,6 +351,10 @@ void DrawTail() {
             else {
                 std::cout << "Failed";
             }
+
+            SDL_Rect whiteRect = { 0, 0, 50, 50 };
+            SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+            SDL_RenderFillRect(g_renderer, &whiteRect);
         }
     }
 }

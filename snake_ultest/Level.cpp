@@ -1527,22 +1527,6 @@ void subPortalLevel4() {
         });
 }
 
-bool isFoodInDream() {
-    if (!specialMode && currentLevel == 5) {
-        for (const auto& dreamblock : dreamBlocks) {
-            int distanceX = abs(foodX - dreamblock.x);
-            int distanceY = abs(foodY - dreamblock.y);
-            int edgeDistanceX = (foodWidth + dreamblock.w) / 2;
-            int edgeDistanceY = (foodHeight + dreamblock.h) / 2;
-
-            if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-
 void mapLevel5() {
     // Obstacle setup
 
@@ -2059,6 +2043,21 @@ bool isInObstacle(int x, int y) {
 
 }
 
+bool isFoodInDream() {
+    if (!specialMode && currentLevel == 5) {
+        for (const auto& dreamblock : dreamBlocks) {
+            int distanceX = abs(foodX - dreamblock.x);
+            int distanceY = abs(foodY - dreamblock.y);
+            int edgeDistanceX = (foodWidth + dreamblock.w) / 2;
+            int edgeDistanceY = (foodHeight + dreamblock.h) / 2;
+
+            if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 bool dreamFlag = false;
 
