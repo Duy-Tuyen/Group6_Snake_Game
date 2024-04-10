@@ -1663,6 +1663,10 @@ void RenderPlaying_Level() {
 
     DrawTail();
 
+    SDL_Rect whiteRect = { 0, 0, 960 * zoom_scale, 40 * zoom_scale };
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(g_renderer, &whiteRect);
+
     renderMonster();
 
     RenderToggleObstacles_Fill_Level2();
@@ -1712,6 +1716,10 @@ void RenderPlaying_Special() {
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
     DrawTail();
+
+    SDL_Rect whiteRect = { 0, 0, 960 * zoom_scale, 40 * zoom_scale };
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(g_renderer, &whiteRect);
 
     RenderObstacles(g_renderer);
     RenderPortals(g_renderer);

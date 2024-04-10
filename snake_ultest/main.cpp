@@ -81,7 +81,6 @@ int main(int argc, char** argv) {
             MoveSnake(running);
             foodSpawnedThisFrame = false;
 
-            // Draw the tail on every frame
             AddTailSegment();
 
             movingObstalceLevel3();
@@ -185,7 +184,6 @@ int main(int argc, char** argv) {
             HandlePlayingInput();
             MoveSnake(running);
 
-            // Draw the tail on every frame
             AddTailSegment();
 
             if (!continueGame) {
