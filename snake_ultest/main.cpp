@@ -156,6 +156,18 @@ int main(int argc, char** argv) {
                 continueGame = true;
                 StopBackgroundMusic();
                 PlayBackgroundMusic();
+
+                while (tailX.size() > 5) {
+                    tailX.pop_back();
+                    tailY.pop_back();
+                    snakeLength--;
+                    tailLength--;
+                }
+
+                for (int i = 0; i < positions.size(); i++) {
+                    positions[i] = { 0, 0 };
+                }
+
                 isPlaying = false;
                 levelClear();
                 currentLevel = 1;
