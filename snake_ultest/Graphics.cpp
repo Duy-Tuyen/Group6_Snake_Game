@@ -1793,6 +1793,19 @@ void HandleGameOver() {
                 PlayBackgroundMusic();
                 isPlaying = false;
                 levelClear();
+
+                while (tailX.size() > 5) {
+                    tailX.pop_back();
+                    tailY.pop_back();
+                    snakeLength--;
+                    tailLength--;
+                }
+
+                for (int i = 0; i < positions.size(); i++) {
+                    positions[i] = { 0, 0 };
+                }
+
+
                 currentLevel = 1;
                 specialMode = false;
                 setupForLevel = true;
