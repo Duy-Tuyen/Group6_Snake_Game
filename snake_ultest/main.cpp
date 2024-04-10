@@ -145,7 +145,8 @@ int main(int argc, char** argv) {
             goInGate_check();
             goOutGate_check();
 
-            SDL_Delay(loopDelay); // Adjust delay for smoother movement
+            trueDelay = (speed == 1) ? loopDelay : (speed == 2) ? (int)(loopDelay / 1.5) : (int)(loopDelay / 2);
+            SDL_Delay(trueDelay); // Adjust delay for smoother movement
             break;
 
         case GameState::SPECIAL:
@@ -236,7 +237,8 @@ int main(int argc, char** argv) {
             goInGate_check();
             goOutGate_check();
 
-            SDL_Delay(loopDelay); // Adjust delay for smoother movement
+            trueDelay = (speed == 1) ? loopDelay : (speed == 2) ? (int)(loopDelay / 1.5) : (int)(loopDelay / 2);
+            SDL_Delay(trueDelay); // Adjust delay for smoother movement
             break;
 
         case GameState::WINNING:

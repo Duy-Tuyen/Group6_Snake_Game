@@ -134,6 +134,8 @@ bool setupForSpecial = true;
 
 bool specialMode = false;
 
+int trueDelay = loopDelay;
+
 
 // Font for rendering text
 TTF_Font* g_font = nullptr;
@@ -1261,7 +1263,7 @@ void UpdateSpeedSkinBar() {
 
 void HandleSkinInput() {
     while (SDL_PollEvent(&g_event)) {
-
+        UpdateSpeedSkinBar();
         if (g_event.type == SDL_QUIT) {
             SDL_Quit();
             exit(0);

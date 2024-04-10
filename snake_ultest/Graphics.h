@@ -138,6 +138,8 @@ extern bool setupForSpecial;
 
 extern bool specialMode;
 
+extern int trueDelay;
+
 // Font for rendering text
 extern TTF_Font* g_font;
 
