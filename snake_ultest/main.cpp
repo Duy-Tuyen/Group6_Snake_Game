@@ -122,12 +122,12 @@ int main(int argc, char** argv) {
 
             }
 
-            if (toggleObstacleCollision()) {
+            if (CheckCollision_snake_toggleObstacle()) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
             }
             
-            if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
+            if (CheckCollision_snake_obstacle()) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
             }
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
                 g_gameState = GameState::ASK;
             }
 
-            if (isMonsterCollision()) {
+            if (CheckCollision_snake_monster()) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
 			}
@@ -217,12 +217,12 @@ int main(int argc, char** argv) {
 
             EatFood_Special();
 
-            if (toggleObstacleCollision()) {
+            if (CheckCollision_snake_toggleObstacle()) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
             }
 
-            if (CheckCollisionWithObstacles(snakeX, snakeY, 16, 16)) {
+            if (CheckCollision_snake_obstacle()) {
                 PlayHurtMusic();
                 g_gameState = GameState::ASK;
                 //running = false;

@@ -114,69 +114,6 @@ bool CheckEat_Level() {
     return (!foodSpawnedThisFrame && distanceX < edgeDistanceX && distanceY < edgeDistanceY);
 }
 
-bool CheckCollision_food_obstacle() {
-    for (int i = 0; i < obstacles.size(); i++) {
-        int distanceX = abs(foodX - obstacles[i].x);
-        int distanceY = abs(foodY - obstacles[i].y);
-        int edgeDistanceX = (foodWidth + obstacles[i].w) / 2;
-        int edgeDistanceY = (foodHeight + obstacles[i].h) / 2;
-
-        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-            std::cout << "Collision with obstacle\n";
-            return true;
-        }
-    }
-    return false;
-}
-
-bool CheckCollision_food_snake() {
-    for (int i = 0; i < tailX.size(); i++) {
-		double distanceX = abs(foodX - tailX[i]);
-		double distanceY = abs(foodY - tailY[i]);
-		double edgeDistanceX = snakeWidth + foodWidth;
-		double edgeDistanceY = snakeHeight + foodHeight;
-        if (distanceX <= edgeDistanceX && distanceY <= edgeDistanceY) {
-			std::cout << "Collision with tail\n";
-			return true;
-		}
-	}
-
-    double distanceX = abs(foodX - snakeX);
-    double distanceY = abs(foodY - snakeY);
-    double edgeDistanceX = snakeWidth + foodWidth;
-    double edgeDistanceY = snakeHeight+ foodHeight;
-    if (distanceX <= edgeDistanceX && distanceY <= edgeDistanceY) {
-        std::cout << "Collision with tail\n";
-        return true;
-    }
-    
-    return false;
-}
-
-bool CheckCollision_food_subPortal() {
-    for (const auto& portal : subPortals) {
-        // in
-        int distanceX = abs(foodX - portal.in.x);
-        int distanceY = abs(foodY - portal.in.y);
-        int edgeDistanceX = (foodWidth + portal.in.w) / 2;
-        int edgeDistanceY = (foodHeight + portal.in.h) / 2;
-        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-			return true;
-		}
-
-        // out
-		distanceX = abs(foodX - portal.out.x);
-		distanceY = abs(foodY - portal.out.y);
-		edgeDistanceX = (foodWidth + portal.out.w) / 2;
-		edgeDistanceY = (foodHeight + portal.out.h) / 2;
-        if (distanceX < edgeDistanceX && distanceY < edgeDistanceY) {
-			return true;
-		}
-	}
-    return false;
-
-}
-
 void EatFood_Level() {
     // Check if the snake has collided with the food
     if (CheckEat_Level() && !hasEaten) {
@@ -238,32 +175,6 @@ void EatFood_Special() {
     }
 }
 
-bool CheckCollision_tail() {
-    if (goInGate_progress) return false;
-        if (dreamFlag) {
-            return false;
-        }
-	for (int i = 0; i < tailX.size(); i++) {
-		int distanceX = abs(snakeX - tailX[i]);
-        int distanceY = abs(snakeY - tailY[i]);
-    if (distanceX < snakeWidth && distanceY < snakeHeight) {
-        std::cout << "Collision with tail\n";
-        return true;
-        }
-    }
-	return false;
-}
-
-bool CheckCollision() {
-    //Check collision with the boundaries of the play area
-    if (snakeX - snakeWidth / 2 < PLAY_AREA_LEFT + 8 || snakeX + snakeWidth / 2 > PLAY_AREA_RIGHT - 8 || snakeY - snakeHeight / 2 < PLAY_AREA_TOP + 8 || snakeY + snakeHeight / 2 > PLAY_AREA_BOTTOM - 8) {
-        return true; // Snake collided with the wall
-    }
-
-    // Add additional collision detection logic here for other game objects if needed
-
-    return false; // No collision detected
-}
 
 void AddTailSegment() {
 

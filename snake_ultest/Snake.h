@@ -66,12 +66,6 @@ bool CheckEat_Level();
 void EatFood_Level();
 void EatFood_Special();
 
-bool CheckCollision_food_obstacle();
-bool CheckCollision_food_snake();
-bool CheckCollision_food_subPortal();
-bool CheckCollision();
-bool CheckCollision_tail();
-
 void AddTailSegment();
 
 void UpdateTailPosition();

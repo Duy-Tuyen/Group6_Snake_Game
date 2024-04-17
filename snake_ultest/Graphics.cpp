@@ -1654,11 +1654,9 @@ void RenderPlaying_Level() {
     RenderToggleObstacles_Draw_Level2();
 
     if (show_food) {
-        //RenderHitbox(g_renderer, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
         ApplyTexture2(g_food, foodX - foodWidth / 2, foodY - foodHeight / 2, foodWidth, foodHeight);
     }
     RenderPlayingSkin();
-    //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
     DrawTail();
@@ -1671,12 +1669,11 @@ void RenderPlaying_Level() {
 
     RenderToggleObstacles_Fill_Level2();
 
-    RenderMovingObstacles(g_renderer);
 
-    RenderObstacles(g_renderer);
-    RenderPortals(g_renderer);
+    RenderObstacles();
+    RenderPortals();
 
-    RenderSubPortal(g_renderer);
+    RenderSubPortal();
     
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
 
@@ -1700,7 +1697,7 @@ void RenderPlaying_Special() {
     else mapTile(3);
 
 
-    RenderIceTile(g_renderer);
+    RenderIceTile();
 
     iceTileLogic();
     DreamLogic();
@@ -1712,7 +1709,6 @@ void RenderPlaying_Special() {
 
 
     RenderPlayingSkin();
-    //RenderHitbox(g_renderer, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
     ApplyTexture2(g_snake, snakeX - snakeWidth / 2, snakeY - snakeHeight / 2, snakeWidth, snakeHeight);
 
     DrawTail();
@@ -1721,8 +1717,8 @@ void RenderPlaying_Special() {
     SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(g_renderer, &whiteRect);
 
-    RenderObstacles(g_renderer);
-    RenderPortals(g_renderer);
+    RenderObstacles();
+    RenderPortals();
 
     if (!gate_open_step[0] && !gate_open_step[1] && goOutGate_progress) fake_portal_gate();
 
