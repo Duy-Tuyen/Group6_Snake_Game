@@ -79,6 +79,9 @@ bool CheckCollision_food_obstacle();
 bool CheckCollision_food_snake();
 bool CheckCollision_food_subPortal();
 bool CheckCollision_tail();
+
+void HandleCollision_Level();
+void HandleCollision_Special();
 // -----------------------------------------------
 
 // Add - remove obstacles vector and gate portal vector
@@ -122,11 +125,8 @@ void mapSpecial2();
 void goOutGate_check();
 
 void gate_out1();
-
 void gate_out2();
-
 void gate_out3();
-
 void gate_out4();
 
 void gate_open_level();
@@ -141,9 +141,7 @@ void goInGate_check();
 
 // Level status:
 void Level(int levelNumber);
-
 void Level_Special(int levelNumber);
-
 
 void levelClear();
 
@@ -166,7 +164,6 @@ void RenderIcePortal(); // Actually sub portal
 void renderMonster();
 
 void renderOuroboros(); // For infinity level (after level 5 and normal mode only)
-
 
 void RenderFixedFood(); // Special only
 

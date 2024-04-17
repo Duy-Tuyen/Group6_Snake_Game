@@ -122,24 +122,7 @@ int main(int argc, char** argv) {
 
             }
 
-            if (CheckCollision_snake_toggleObstacle()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-            }
-            
-            if (CheckCollision_snake_obstacle()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-            }
-            if (CheckCollision_tail()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-            }
-
-            if (CheckCollision_snake_monster()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-			}
+            HandleCollision_Level();
 
             goInGate_check();
             goOutGate_check();
@@ -217,20 +200,7 @@ int main(int argc, char** argv) {
 
             EatFood_Special();
 
-            if (CheckCollision_snake_toggleObstacle()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-            }
-
-            if (CheckCollision_snake_obstacle()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-                //running = false;
-            }
-            if (CheckCollision_tail()) {
-                PlayHurtMusic();
-                g_gameState = GameState::ASK;
-            }
+            HandleCollision_Special();
 
             goInGate_check();
             goOutGate_check();

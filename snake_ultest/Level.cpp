@@ -256,6 +256,20 @@ bool CheckCollision_food_subPortal() {
     return false;
 
 }
+
+void HandleCollision_Level() {
+    if (CheckCollision_snake_toggleObstacle() || CheckCollision_snake_obstacle() || CheckCollision_tail() || CheckCollision_snake_monster()) {
+        PlayHurtMusic();
+        g_gameState = GameState::ASK;
+    }
+}
+
+void HandleCollision_Special() {
+    if (CheckCollision_snake_obstacle() || CheckCollision_tail()) {
+		PlayHurtMusic();
+		g_gameState = GameState::ASK;
+	}
+}
 //--------------------------------------------------------------
 
 // Add - remove obstacles vector and gate portal vector
